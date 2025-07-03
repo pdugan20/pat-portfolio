@@ -1,36 +1,110 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Pat Dugan's Portfolio
+
+A modern portfolio website built with Next.js 15, TypeScript, and Tailwind CSS. Features a blog section with MDX support for writing technical articles and project showcases.
+
+## Features
+
+- **Portfolio Section**: Showcase your projects, skills, and experience
+- **Blog Section**: Write and publish technical articles using MDX
+- **Responsive Design**: Mobile-first approach with Tailwind CSS
+- **Theme System**: Light, dark, and system theme support with automatic preference detection
+- **TypeScript**: Full type safety throughout the application
+- **MDX Support**: Write blog posts with Markdown and React components
+
+## Project Structure
+
+```
+pat-portfolio/
+├── app/                    # Next.js App Router
+│   ├── page.tsx            # Home (portfolio)
+│   ├── globals.css         # Global styles
+│   └── blog/
+│       ├── page.tsx        # Blog index
+│       └── [slug]/page.tsx # Individual posts
+├── content/
+│   └── blog/               # MDX blog posts
+├── components/             # Reusable UI components
+├── lib/                    # Utility functions
+├── styles/                 # Additional CSS styles
+├── public/                 # Static assets
+└── next.config.ts          # Next.js configuration
+```
 
 ## Getting Started
 
-First, run the development server:
+1. **Install dependencies**:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+   ```bash
+   npm install
+   ```
+
+2. **Run the development server**:
+
+   ```bash
+   npm run dev
+   ```
+
+3. **Open your browser** and navigate to `http://localhost:3000`
+
+## Writing Blog Posts
+
+Blog posts are written in MDX format and stored in the `content/blog/` directory. Each post should include frontmatter with the following fields:
+
+```mdx
+---
+title: 'Your Post Title'
+date: '2024-01-15'
+description: 'A brief description of your post'
+tags: ['tag1', 'tag2', 'tag3']
+---
+
+# Your Post Content
+
+Write your blog post content here using Markdown syntax.
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Customization
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Portfolio Content
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Edit `app/page.tsx` to customize your portfolio content, including:
 
-## Learn More
+- Personal information
+- Skills and experience
+- Project showcases
+- Contact information
 
-To learn more about Next.js, take a look at the following resources:
+### Styling
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- Global styles: `app/globals.css`
+- Blog-specific styles: `styles/blog.css`
+- Component styles: Use Tailwind CSS classes
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Components
 
-## Deploy on Vercel
+- Layout: `components/Layout.tsx`
+- Blog cards: `components/BlogCard.tsx`
+- Add new components in the `components/` directory
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Technologies Used
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **Next.js 15**: React framework with App Router
+- **TypeScript**: Type safety
+- **Tailwind CSS**: Utility-first CSS framework
+- **MDX**: Markdown with JSX support
+- **next-mdx-remote**: MDX rendering
+- **gray-matter**: Frontmatter parsing
+- **next-themes**: Theme management with system preference detection
+
+## Deployment
+
+This project can be deployed to Vercel, Netlify, or any other platform that supports Next.js.
+
+```bash
+npm run build
+npm start
+```
+
+## License
+
+MIT License - feel free to use this template for your own portfolio!
