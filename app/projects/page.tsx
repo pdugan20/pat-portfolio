@@ -16,10 +16,10 @@ export default function ProjectsPage() {
     <Layout>
       <div className='mx-auto max-w-6xl'>
         <div className='mb-12 text-center'>
-          <h1 className='mb-4 text-4xl font-bold text-gray-900 dark:text-white'>
+          <h1 className='text-text-primary dark:text-text-dark-primary mb-4 text-4xl font-bold'>
             Projects
           </h1>
-          <p className='text-xl text-gray-600 dark:text-gray-300'>
+          <p className='text-text-secondary dark:text-text-dark-secondary text-xl'>
             A collection of my work, showcasing various technologies and
             solutions
           </p>
@@ -27,7 +27,7 @@ export default function ProjectsPage() {
 
         {projects.length === 0 ? (
           <div className='py-12 text-center'>
-            <p className='text-gray-600 dark:text-gray-300'>
+            <p className='text-text-secondary dark:text-text-dark-secondary'>
               No projects yet. Check back soon!
             </p>
           </div>

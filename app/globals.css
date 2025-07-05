@@ -1,5 +1,53 @@
 @import 'tailwindcss';
-@import '../styles/blog.css';
+
+@theme {
+  /* Primary Colors */
+  --color-primary: #2563eb;
+  --color-primary-hover: #1d4ed8;
+  --color-primary-light: #60a5fa;
+  --color-primary-lighter: #93c5fd;
+
+  /* Background Colors */
+  --color-bg-primary: #ffffff;
+  --color-bg-secondary: #f9fafb;
+  --color-bg-tertiary: #f3f4f6;
+  --color-bg-dark-primary: #111827;
+  --color-bg-dark-secondary: #1f2937;
+  --color-bg-dark-tertiary: #374151;
+
+  /* Text Colors */
+  --color-text-primary: #111827;
+  --color-text-secondary: #6b7280;
+  --color-text-tertiary: #9ca3af;
+  --color-text-muted: #6e6e73;
+  --color-text-dark-primary: #f9fafb;
+  --color-text-dark-secondary: #d1d5db;
+  --color-text-dark-tertiary: #9ca3af;
+  --color-text-dark-muted: #9ca3af;
+
+  /* Border Colors */
+  --color-border-primary: #e5e7eb;
+  --color-border-secondary: #d1d5db;
+  --color-border-dark-primary: #4b5563;
+  --color-border-dark-secondary: #6b7280;
+
+  /* Status Colors */
+  --color-success: #10b981;
+  --color-success-light: #34d399;
+  --color-success-bg: #d1fae5;
+  --color-success-text: #065f46;
+  --color-success-dark-bg: #064e3b;
+  --color-success-dark-text: #6ee7b7;
+
+  /* Code Colors */
+  --color-code-bg: #f3f4f6;
+  --color-code-text: #111827;
+  --color-code-dark-bg: #1f2937;
+  --color-code-dark-text: #e5e7eb;
+
+  /* Legacy black color */
+  --color-black: #1d1d1f;
+}
 
 @custom-variant dark (&:where(.dark, .dark *));
 

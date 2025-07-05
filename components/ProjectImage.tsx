@@ -9,7 +9,7 @@ interface ProjectImageProps {
 export default function ProjectImage({ src, alt, caption }: ProjectImageProps) {
   return (
     <figure className='my-8'>
-      <div className='overflow-hidden rounded-lg border border-gray-200 dark:border-gray-700'>
+      <div className='border-border-primary dark:border-border-dark-primary overflow-hidden rounded-lg border'>
         <Image
           src={src}
           alt={alt}
@@ -19,7 +19,7 @@ export default function ProjectImage({ src, alt, caption }: ProjectImageProps) {
         />
       </div>
       {caption && (
-        <figcaption className='mt-2 text-center text-sm text-gray-600 dark:text-gray-400'>
+        <figcaption className='text-text-secondary dark:text-text-dark-secondary mt-2 text-center text-sm'>
           {caption}
         </figcaption>
       )}

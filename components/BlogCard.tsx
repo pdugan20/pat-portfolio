@@ -7,9 +7,9 @@ interface BlogCardProps {
 
 export default function BlogCard({ post }: BlogCardProps) {
   return (
-    <article className='overflow-hidden rounded-lg bg-white shadow-md transition-shadow duration-300 hover:shadow-lg dark:bg-gray-800'>
+    <article className='bg-bg-primary dark:bg-bg-dark-secondary overflow-hidden rounded-lg shadow-md transition-shadow duration-300 hover:shadow-lg'>
       <div className='p-6'>
-        <div className='mb-2 flex items-center text-sm text-gray-500 dark:text-gray-400'>
+        <div className='text-text-tertiary dark:text-text-dark-tertiary mb-2 flex items-center text-sm'>
           <time dateTime={post.date}>
             {new Date(post.date).toLocaleDateString('en-US', {
               year: 'numeric',
@@ -19,18 +19,18 @@ export default function BlogCard({ post }: BlogCardProps) {
           </time>
         </div>
         <Link href={`/blog/${post.slug}`} className='block'>
-          <h2 className='mb-2 text-xl font-semibold text-gray-900 hover:text-blue-600 dark:text-white dark:hover:text-blue-400'>
+          <h2 className='text-text-primary hover:text-primary dark:text-text-dark-primary dark:hover:text-primary-light mb-2 text-xl font-semibold'>
             {post.title}
           </h2>
         </Link>
-        <p className='mb-4 line-clamp-3 text-gray-600 dark:text-gray-300'>
+        <p className='text-text-secondary dark:text-text-dark-secondary mb-4 line-clamp-3'>
           {post.description}
         </p>
         <div className='flex flex-wrap gap-2'>
           {post.tags.map(tag => (
             <span
               key={tag}
-              className='inline-block rounded-full bg-gray-100 px-2 py-1 text-xs text-gray-700 dark:bg-gray-700 dark:text-gray-300'
+              className='bg-bg-tertiary text-text-secondary dark:bg-bg-dark-tertiary dark:text-text-dark-secondary inline-block rounded-full px-2 py-1 text-xs'
             >
               {tag}
             </span>

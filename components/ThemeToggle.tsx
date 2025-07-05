@@ -14,7 +14,7 @@ export function ThemeToggle() {
 
   if (!mounted) {
     return (
-      <div className='h-8 w-8 animate-pulse rounded-md bg-gray-200 dark:bg-gray-700' />
+      <div className='bg-bg-tertiary dark:bg-bg-dark-tertiary h-8 w-8 animate-pulse rounded-md' />
     );
   }
 
@@ -23,7 +23,7 @@ export function ThemeToggle() {
       <select
         value={theme}
         onChange={e => setTheme(e.target.value)}
-        className='appearance-none rounded-md border border-gray-300 bg-white px-3 py-1.5 pr-8 text-sm text-gray-700 focus:border-transparent focus:ring-2 focus:ring-blue-500 focus:outline-none dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300'
+        className='border-border-primary bg-bg-primary text-text-secondary focus:ring-primary dark:border-border-dark-primary dark:bg-bg-dark-secondary dark:text-text-dark-secondary appearance-none rounded-md border px-3 py-1.5 pr-8 text-sm focus:border-transparent focus:ring-2 focus:outline-none'
       >
         <option value='system'>System</option>
         <option value='light'>Light</option>
@@ -31,7 +31,7 @@ export function ThemeToggle() {
       </select>
       <div className='pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2'>
         <svg
-          className='h-4 w-4 text-gray-400'
+          className='text-text-tertiary h-4 w-4'
           fill='none'
           stroke='currentColor'
           viewBox='0 0 24 24'
