@@ -1,11 +1,22 @@
 import type { Metadata } from 'next';
+import { Inter } from 'next/font/google';
 import './globals.css';
+import '@/styles/mdx.css';
 import { ThemeProvider } from '@/components/ThemeProvider';
+import { SITE_CONFIG } from '@/lib/constants';
+
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-inter',
+  display: 'swap',
+});
 
 export const metadata: Metadata = {
-  title: 'Pat Dugan - Software Developer',
-  description:
-    'Software developer passionate about creating beautiful, functional, and user-friendly applications',
+  title: `${SITE_CONFIG.author} - ${SITE_CONFIG.title}`,
+  description: SITE_CONFIG.description,
+  icons: {
+    icon: '/favicon.svg',
+  },
 };
 
 export default function RootLayout({
@@ -14,31 +25,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang='en' suppressHydrationWarning>
+    <html lang='en' suppressHydrationWarning className={inter.variable}>
       <head>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              (function() {
-                try {
-                  var theme = localStorage.getItem('theme');
-                  var systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-                  
-                  if (theme === 'dark' || (!theme && systemPrefersDark)) {
-                    document.documentElement.classList.add('dark');
-                  } else {
-                    document.documentElement.classList.remove('dark');
-                  }
-                } catch (e) {
-                  // Fallback to light mode if there's an error
-                  document.documentElement.classList.remove('dark');
-                }
-              })();
-            `,
-          }}
-        />
+        <link rel='icon' type='image/svg+xml' href='/favicon.svg' />
       </head>
-      <body className='antialiased'>
+      <body className='font-sans antialiased'>
         <ThemeProvider>{children}</ThemeProvider>
       </body>
     </html>

@@ -8,7 +8,17 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['SF Pro Display', 'Helevtica Neue', 'Arial', 'sans-serif'],
+        sans: [
+          'SF Pro Display',
+          '-apple-system',
+          'BlinkMacSystemFont',
+          'Segoe UI',
+          'Roboto',
+          'Helvetica Neue',
+          'Arial',
+          'var(--font-inter)',
+          'sans-serif',
+        ],
       },
       colors: {
         // Primary colors

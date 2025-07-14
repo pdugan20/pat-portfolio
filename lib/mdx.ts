@@ -14,7 +14,7 @@ export interface BlogPost {
 }
 
 export function getBlogPosts(): BlogPost[] {
-  const blogDirectory = path.join(contentDirectory, 'blog');
+  const blogDirectory = path.join(contentDirectory, 'writing');
   const fileNames = fs.readdirSync(blogDirectory);
 
   const posts = fileNames
@@ -41,7 +41,7 @@ export function getBlogPosts(): BlogPost[] {
 
 export function getBlogPost(slug: string): BlogPost | null {
   try {
-    const fullPath = path.join(contentDirectory, 'blog', `${slug}.mdx`);
+    const fullPath = path.join(contentDirectory, 'writing', `${slug}.mdx`);
     const fileContents = fs.readFileSync(fullPath, 'utf8');
     const { data, content } = matter(fileContents);
 
@@ -59,7 +59,7 @@ export function getBlogPost(slug: string): BlogPost | null {
 }
 
 export function getAllBlogSlugs(): string[] {
-  const blogDirectory = path.join(contentDirectory, 'blog');
+  const blogDirectory = path.join(contentDirectory, 'writing');
   const fileNames = fs.readdirSync(blogDirectory);
 
   return fileNames

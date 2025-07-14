@@ -18,7 +18,7 @@ export default function BlogCard({ post }: BlogCardProps) {
             })}
           </time>
         </div>
-        <Link href={`/blog/${post.slug}`} className='block'>
+        <Link href={`/writing/${post.slug}`} className='block'>
           <h2 className='text-text-primary hover:text-primary dark:text-text-dark-primary dark:hover:text-primary-light mb-2 text-xl font-semibold'>
             {post.title}
           </h2>

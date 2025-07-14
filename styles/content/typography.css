@@ -1,0 +1,79 @@
+/* Typography Styles */
+
+.mdx-content h1 {
+  color: var(--color-text-primary);
+  font-weight: 800;
+  font-size: 2.25em;
+  margin-top: 0;
+  margin-bottom: 0.8888889em;
+  line-height: 1.1111111;
+}
+
+.mdx-content h2 {
+  color: var(--color-text-primary);
+  font-weight: 700;
+  font-size: 1.5em;
+  margin-top: 2em;
+  margin-bottom: 0.5em;
+  line-height: 1.3333333;
+}
+
+.mdx-content h3 {
+  color: var(--color-text-primary);
+  font-weight: 600;
+  font-size: 1.25em;
+  margin-top: 1.6em;
+  margin-bottom: 0.6em;
+  line-height: 1.6;
+}
+
+.mdx-content h4 {
+  color: var(--color-text-primary);
+  font-weight: 600;
+  margin-top: 1.5em;
+  margin-bottom: 0.5em;
+  line-height: 1.5;
+}
+
+.mdx-content p {
+  margin-bottom: 1.25em;
+  font-size: 19px;
+  line-height: 1.421103;
+  font-weight: 400;
+  letter-spacing: 0.012em;
+  color: var(--color-text-primary);
+}
+
+.mdx-content li {
+  margin-bottom: 1.5em;
+  font-size: 19px;
+  line-height: 1.421103;
+  font-weight: 400;
+  letter-spacing: 0.012em;
+  color: var(--color-text-primary);
+}
+
+.mdx-content blockquote {
+  font-weight: 500;
+  font-style: italic;
+  color: var(--color-text-primary);
+  border-left: 0.25rem solid var(--color-border-primary);
+  margin-top: 1.6em;
+  margin-bottom: 1.6em;
+  padding-left: 1em;
+}
+
+/* Dark mode typography */
+.dark .mdx-content h1,
+.dark .mdx-content h2,
+.dark .mdx-content h3,
+.dark .mdx-content h4,
+.dark .mdx-content p,
+.dark .mdx-content li {
+  color: var(--color-text-dark-primary);
+}
+
+.dark .mdx-content blockquote {
+  color: var(--color-text-dark-primary);
+  border-left-color: var(--color-border-dark-primary);
+}

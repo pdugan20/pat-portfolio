@@ -1,0 +1,84 @@
+---
+title: 'Building an AI-ready design system in Figma'
+date: '2025-07-03'
+description: 'Architecting a modern design system that can seamlessly plug-in to first and third-party AI tools in Figma.'
+---
+
+Last month, I published an [iMessage-centric UI kit](https://www.figma.com/community/file/1519446101653617639/imessage-chat-builder) in the Figma community - the purpose of which was to act as the source components for a [companion AI plugin](https://www.figma.com/community/plugin/1519731262843198057/imessage-ai-chat-builder) I wanted to develop. In the course of building out and documenting that design system at a component and variable level, I thought it would be fun to put together a list of best practices with an eye toward calling out specific choices that might contribute toward making design systems work well with Figma's native AI toolset as well as with third-party AI tools like the one I built.
+
+## Background
+
+In my role as a designer at Meta, I helped design the system that [Facebook Messenger](http://messenger.com) is constructed from - both in Figma and in code. Whenever you're working with a mature design system, in this case one that that saw its last major facelift almost [half a decade ago](https://design.facebook.com/blog/the-new-messenger-brand-nothings-changed-everythings-changed/), many of the contributions you'll end up making will be smaller, intentionally scoped changes that incrementally make improvements while aiming to be minimally disruptive to users. That adage becomes more true when you're working on a system that powers a product with a large installed user-base that also happens to be change averse.
+
+While I've built design systems from scratch at [Quora](https://www.qurora.com), at the [Chan Zuckerberg Initiative](https://www.czi.com), and for various zero-to-one work I've taken on over the years, the last time I had truly built a design system end-to-end when I was still actively working on [Hikearound](https://www.tryhikearound.com), so it was quite a bit of fun to jump into a blank file and get rolling.
+
+Funnily enough, I didn't actually set out to build out Apple's messaging design system in Figma. Apple released their own [messaging design library](https://www.figma.com/community/file/1367916269438172112/imessage-apps-and-stickers) in 2024, and I initially thought I'd be able to leverage this resource for the [plugin I wanted to build](https://www.figma.com/community/file/1519446101653617639/imessage-chat-builder). I realized pretty quickly unfortunately that wasn't going to be possible.
+
+Despite being less than a year old, Apple's self-published library was designed somewhat crudely. The components weren't built with auto-layout support and in many cases the UI throughout the file didn't match the production versions of Apple iMessage. Additionally the color and typography variables included in the file were all over the place. Rather than try to modify and update their library as needed, I pivoted to building my own.
+
+## Getting started
+
+At the start of any project, and building out a design system is no different, it's key to understand what your goals are and the audience you'll be designing for. In this case I wanted a library to would work well at a programatic level, but also one that designers could use to construct UI independent of any AI tooling.
+
+With that in mind I landed on designing a system that:
+
+- Was limited primarily to two screens: the iMessage **Inbox and Thread** views
+- **Limited its typographic and color variable system**, primarily for simplicity
+- Included standalone components that covered common use-cases while also **building and documenting primitives** for anyone looking to extend the system further
+- Included **standard utility components** for common use-cases like documenting component usage and easily applying personas
+
+It would be easy for a project like this to increase in scope to an unnecessary degree, so I approached stack-ranking what features and components I would need in my initial pass as only what would make the library the most useful to others.
+
+I consider a standout example of how to architect a small(ish) self-contained design system as being Figma's self-published [Simple Design System](https://www.figma.com/community/file/1380235722331273046/simple-design-system), and I used this as a jumping off point for my own to get started.
+
+<PostImage
+  images={[
+    {
+      src: '/assets/building-an-ai-ready-design-system/img/01.jpg',
+      alt: 'Figma design system interface showing component library structure',
+      caption:
+        'The iMessage design system built in Figma, featuring organized component hierarchy and variable sets optimized for AI integration.',
+    },
+  ]}
+  className='my-12'
+/>
+
+<PostMovie
+  videos={[
+    {
+      src: '/assets/mov/01.mp4',
+      alt: 'Video demonstration of the design system in action',
+      caption:
+        'A demonstration video showing the iMessage design system components in use, highlighting the AI-ready architecture and component interactions.',
+    },
+  ]}
+  className='my-12'
+/>
+
+## Creating a variable set
+
+In any design system, a best practice is to start with defining your primitives and then to extend said primitives to a higher-order set of variables that actually propagate out into your components. This is especially important when designing systems that play nicely with AI.
+
+Let's take the primary blue in Apple iMessage <ColorSwatch>#0078FF</ColorSwatch> as an example. In a variable set, you'd always want to assign that color first as a primitive, something like <ColorSwatch label="Blue/Base">#0078FF</ColorSwatch>. Then, having defined a standalone set of primitives, you'd extend those to a set of variables applied to directly to component properties like <ColorSwatch label="Background/Bubbles/iOS">#0078FF</ColorSwatch>.
+
+You'd generally follow this same practice for typography primitives like font-size and font-weight, for example defining a <FontSizeSwatch label="Size 16">16</FontSizeSwatch> font-size primitive, and then applying that primitive as the font-size for a text style <TextStyleSwatch label="Bubble/Standard">Standard</TextStyleSwatch>.
+
+While it's a best practice to scale your variable sets numerically, e.g. <ColorSwatch label="Gray/100">#EEEEEF</ColorSwatch> and that approach generally makes sense for larger expansive systems designed to accommodate many different use-cases, for smaller self-contained systems I sometimes prefer a simplified naming convention like <ColorSwatch label="Gray/Light">#EEEEEF</ColorSwatch>. Using a streamlined variable system can help reduce variability and orient around constrained consistency, and given that I knew the system I was constructing would be limited in scope, this is the approach I took here.
+
+<PostImage
+  images={[
+    {
+      src: '/assets/building-an-ai-ready-design-system/img/01.jpg',
+      alt: 'Figma design system interface showing component library structure',
+      caption:
+        'The main component library view, showcasing the organized hierarchy of iMessage components with clear naming conventions.',
+    },
+    {
+      src: '/assets/building-an-ai-ready-design-system/img/02.jpg',
+      alt: 'Figma variable sets panel showing color and typography variables',
+      caption:
+        'Variable sets panel displaying the streamlined color and typography system, optimized for AI tool integration and consistency.',
+    },
+  ]}
+  className='my-12'
+/>

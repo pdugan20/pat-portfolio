@@ -1,11 +1,11 @@
 import Layout from '@/components/Layout';
 import Link from 'next/link';
 import type { Metadata } from 'next';
+import { SITE_CONFIG } from '@/lib/constants';
 
 export const metadata: Metadata = {
-  title: 'Pat Dugan - Software Developer',
-  description:
-    'Software developer passionate about creating beautiful, functional, and user-friendly applications',
+  title: `${SITE_CONFIG.author} - ${SITE_CONFIG.title}`,
+  description: SITE_CONFIG.description,
 };
 
 export default function Home() {
@@ -17,7 +17,7 @@ export default function Home() {
           <h1 className='text-text-primary dark:text-text-dark-primary mb-6 text-4xl font-bold md:text-6xl'>
             Hi, I&apos;m{' '}
             <span className='text-primary dark:text-primary-light'>
-              Pat Dugan
+              {SITE_CONFIG.author}
             </span>
           </h1>
           <p className='text-text-secondary dark:text-text-dark-secondary mx-auto mb-8 max-w-2xl text-xl'>
@@ -27,10 +27,10 @@ export default function Home() {
           </p>
           <div className='flex flex-col justify-center gap-4 sm:flex-row'>
             <Link
-              href='/blog'
+              href='/writing'
               className='bg-primary hover:bg-primary-hover rounded-lg px-8 py-3 font-medium text-white transition-colors'
             >
-              Read My Blog
+              Read My Writing
             </Link>
             <Link
               href='/projects'

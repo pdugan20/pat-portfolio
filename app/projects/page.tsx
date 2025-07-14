@@ -2,9 +2,10 @@ import Layout from '@/components/Layout';
 import ProjectCard from '@/components/ProjectCard';
 import { getAllProjects } from '@/lib/projects';
 import type { Metadata } from 'next';
+import { SITE_CONFIG } from '@/lib/constants';
 
 export const metadata: Metadata = {
-  title: 'Projects - Pat Dugan',
+  title: `Projects - ${SITE_CONFIG.author}`,
   description:
     'A collection of my work, showcasing various technologies and solutions',
 };

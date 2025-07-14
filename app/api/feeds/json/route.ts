@@ -1,4 +1,5 @@
 import { getBlogPosts } from '@/lib/mdx';
+import { SITE_CONFIG } from '@/lib/constants';
 import { NextResponse } from 'next/server';
 
 export async function GET() {
@@ -7,7 +8,7 @@ export async function GET() {
 
   const jsonFeed = {
     version: 'https://jsonfeed.org/version/1.1',
-    title: "Pat Dugan's Blog",
+    title: `${SITE_CONFIG.author}'s Writing`,
     description:
       'Thoughts, tutorials, and insights about web development and technology',
     home_page_url: baseUrl,
@@ -15,12 +16,12 @@ export async function GET() {
     language: 'en-US',
     authors: [
       {
-        name: 'Pat Dugan',
+        name: SITE_CONFIG.author,
       },
     ],
     items: posts.map(post => ({
-      id: `${baseUrl}/blog/${post.slug}`,
-      url: `${baseUrl}/blog/${post.slug}`,
+      id: `${baseUrl}/writing/${post.slug}`,
+      url: `${baseUrl}/writing/${post.slug}`,
       title: post.title,
       summary: post.description,
       date_published: new Date(post.date).toISOString(),

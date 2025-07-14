@@ -1,5 +1,38 @@
 @import 'tailwindcss';
 
+/* Font loading optimization */
+@font-face {
+  font-family: 'SF Pro Display';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('SF Pro Display');
+}
+
+@font-face {
+  font-family: 'SF Pro Display';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: local('SF Pro Display');
+}
+
+@font-face {
+  font-family: 'SF Pro Display';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: local('SF Pro Display');
+}
+
+@font-face {
+  font-family: 'SF Pro Display';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('SF Pro Display');
+}
+
 @theme {
   /* Primary Colors */
   --color-primary: #2563eb;
@@ -11,9 +44,9 @@
   --color-bg-primary: #ffffff;
   --color-bg-secondary: #f9fafb;
   --color-bg-tertiary: #f3f4f6;
-  --color-bg-dark-primary: #111827;
-  --color-bg-dark-secondary: #1f2937;
-  --color-bg-dark-tertiary: #374151;
+  --color-bg-dark-primary: #0a0a0a;
+  --color-bg-dark-secondary: #0f0f0f;
+  --color-bg-dark-tertiary: #2a2a2a;
 
   /* Text Colors */
   --color-text-primary: #111827;

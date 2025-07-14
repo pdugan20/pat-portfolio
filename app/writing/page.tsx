@@ -2,9 +2,10 @@ import Layout from '@/components/Layout';
 import BlogCard from '@/components/BlogCard';
 import { getBlogPosts } from '@/lib/mdx';
 import type { Metadata } from 'next';
+import { SITE_CONFIG } from '@/lib/constants';
 
 export const metadata: Metadata = {
-  title: 'Blog - Pat Dugan',
+  title: `Writing - ${SITE_CONFIG.author}`,
   description:
     'Thoughts, tutorials, and insights about web development and technology',
   alternates: {
@@ -24,7 +25,7 @@ export default function BlogPage() {
       <div className='mx-auto max-w-4xl'>
         <div className='mb-12 text-center'>
           <h1 className='text-text-primary dark:text-text-dark-primary mb-4 text-4xl font-bold'>
-            Blog
+            Writing
           </h1>
           <p className='text-text-secondary dark:text-text-dark-secondary text-xl'>
             Thoughts, tutorials, and insights about web development and
@@ -73,7 +74,7 @@ export default function BlogPage() {
         {posts.length === 0 ? (
           <div className='py-12 text-center'>
             <p className='text-text-secondary dark:text-text-dark-secondary'>
-              No blog posts yet. Check back soon!
+              No writing yet. Check back soon!
             </p>
           </div>
         ) : (

@@ -1,0 +1,14 @@
+/* MDX Content Styles - Main File */
+
+/* Base content styles */
+.mdx-content {
+  max-width: none;
+}
+
+/* Import content element styles */
+@import './content/typography.css';
+@import './content/lists.css';
+@import './content/code.css';
+
+/* Import component-specific styles */
+@import './components/swatches.css';

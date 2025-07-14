@@ -1,4 +1,5 @@
 import { getBlogPosts } from '@/lib/mdx';
+import { SITE_CONFIG } from '@/lib/constants';
 import { NextResponse } from 'next/server';
 
 export async function GET() {
@@ -7,14 +8,14 @@ export async function GET() {
 
   const atom = `<?xml version="1.0" encoding="UTF-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-  <title>Pat Dugan's Blog</title>
+  <title>${SITE_CONFIG.author}'s Writing</title>
   <subtitle>Thoughts, tutorials, and insights about web development and technology</subtitle>
   <link href="${baseUrl}" />
   <link href="${baseUrl}/api/feeds/atom" rel="self" type="application/atom+xml" />
   <id>${baseUrl}</id>
   <updated>${new Date().toISOString()}</updated>
   <author>
-    <name>Pat Dugan</name>
+    <name>${SITE_CONFIG.author}</name>
   </author>
   ${posts
     .map(
@@ -22,8 +23,8 @@ export async function GET() {
   <entry>
     <title>${post.title}</title>
     <summary>${post.description}</summary>
-    <link href="${baseUrl}/blog/${post.slug}" />
-    <id>${baseUrl}/blog/${post.slug}</id>
+    <link href="${baseUrl}/writing/${post.slug}" />
+    <id>${baseUrl}/writing/${post.slug}</id>
     <published>${new Date(post.date).toISOString()}</published>
     <updated>${new Date(post.date).toISOString()}</updated>
     ${post.tags.map(tag => `<category term="${tag}" />`).join('')}

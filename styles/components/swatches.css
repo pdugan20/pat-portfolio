@@ -1,0 +1,128 @@
+:root {
+  --swatch-font-family:
+    'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', 'Source Code Pro',
+    'Menlo', 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Courier New',
+    monospace;
+  --swatch-font-size: 13px;
+  --swatch-gap: 0.3rem;
+  --swatch-padding: 0.25rem 6px;
+  --swatch-border-radius: 0.25rem;
+  --swatch-margin: 2px 0;
+  --swatch-preview-size: 14px;
+  --swatch-preview-border-radius: 3px;
+  --swatch-preview-symbol-font-size: 10px;
+  --swatch-preview-symbol-padding-top: 2px;
+}
+
+/* Color swatch styles */
+.color-swatch {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--swatch-gap);
+  font-family: var(--swatch-font-family);
+  font-size: var(--swatch-font-size);
+  font-weight: 400;
+  line-height: 1;
+  vertical-align: middle;
+  background-color: var(--color-code-bg);
+  padding: var(--swatch-padding);
+  border-radius: var(--swatch-border-radius);
+  border: 1px solid var(--color-border-primary);
+  margin: var(--swatch-margin);
+}
+
+.color-swatch-preview {
+  width: var(--swatch-preview-size);
+  height: var(--swatch-preview-size);
+  border-radius: var(--swatch-preview-border-radius);
+  border: 1px solid var(--color-border-primary);
+  flex-shrink: 0;
+}
+
+/* Font size swatch styles */
+.font-size-swatch {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--swatch-gap);
+  font-family: var(--swatch-font-family);
+  font-size: var(--swatch-font-size);
+  font-weight: 400;
+  line-height: 1;
+  vertical-align: middle;
+  background-color: var(--color-code-bg);
+  padding: var(--swatch-padding);
+  border-radius: var(--swatch-border-radius);
+  border: 1px solid var(--color-border-primary);
+  margin: var(--swatch-margin);
+}
+
+.font-size-swatch-preview {
+  width: var(--swatch-preview-size);
+  height: var(--swatch-preview-size);
+  border-radius: var(--swatch-preview-border-radius);
+  border: 1px solid var(--color-border-primary);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--swatch-preview-symbol-font-size);
+  font-weight: 600;
+  line-height: 1;
+  color: var(--color-text-secondary);
+  background-color: var(--color-bg-secondary);
+  padding-top: var(--swatch-preview-symbol-padding-top);
+}
+
+/* Text style swatch styles */
+.text-style-swatch {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--swatch-gap);
+  font-family: var(--swatch-font-family);
+  font-size: var(--swatch-font-size);
+  font-weight: 400;
+  line-height: 1;
+  vertical-align: middle;
+  background-color: var(--color-code-bg);
+  padding: var(--swatch-padding);
+  border-radius: var(--swatch-border-radius);
+  border: 1px solid var(--color-border-primary);
+  margin: var(--swatch-margin);
+}
+
+.text-style-swatch-preview {
+  width: var(--swatch-preview-size);
+  height: var(--swatch-preview-size);
+  border-radius: var(--swatch-preview-border-radius);
+  border: 1px solid var(--color-border-primary);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--swatch-preview-symbol-font-size);
+  font-weight: 600;
+  line-height: 1;
+  color: var(--color-text-secondary);
+  background-color: var(--color-bg-secondary);
+  padding-top: var(--swatch-preview-symbol-padding-top);
+}
+
+/* Dark mode styles for swatches */
+.dark .color-swatch,
+.dark .font-size-swatch,
+.dark .text-style-swatch {
+  background-color: var(--color-bg-dark-tertiary);
+  border-color: var(--color-border-dark-primary);
+}
+
+.dark .color-swatch-preview,
+.dark .font-size-swatch-preview,
+.dark .text-style-swatch-preview {
+  border-color: var(--color-border-dark-primary);
+}
+
+.dark .font-size-swatch-preview,
+.dark .text-style-swatch-preview {
+  color: var(--color-text-dark-secondary);
+  background-color: var(--color-bg-dark-secondary);
+}

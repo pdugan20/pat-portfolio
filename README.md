@@ -1,4 +1,4 @@
-# Pat Dugan's Portfolio
+# Patrick Dugan's Portfolio
 
 A modern portfolio website built with Next.js 15, TypeScript, and Tailwind CSS. Features a blog section with MDX support for writing technical articles and project showcases.
 
@@ -107,4 +107,4 @@ npm start
 
 ## License
 
-MIT License - feel free to use this template for your own portfolio!
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

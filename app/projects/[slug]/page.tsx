@@ -6,6 +6,7 @@ import CodeBlock from '@/components/CodeBlock';
 import ProjectImage from '@/components/ProjectImage';
 import Link from 'next/link';
 import type { Metadata } from 'next';
+import { SITE_CONFIG } from '@/lib/constants';
 
 // MDX components that can be used in project files
 const mdxComponents = {
@@ -15,9 +16,9 @@ const mdxComponents = {
 };
 
 interface ProjectPageProps {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 }
 
 export async function generateMetadata({
@@ -28,12 +29,12 @@ export async function generateMetadata({
 
   if (!project) {
     return {
-      title: 'Project Not Found - Pat Dugan',
+      title: `Project Not Found - ${SITE_CONFIG.author}`,
     };
   }
 
   return {
-    title: `${project.title} - Pat Dugan`,
+    title: `${project.title} - ${SITE_CONFIG.author}`,
     description: project.longDescription,
   };
 }
