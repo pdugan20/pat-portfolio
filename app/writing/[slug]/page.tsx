@@ -8,6 +8,8 @@ import FontSizeSwatch from '@/components/swatches/FontSizeSwatch';
 import TextStyleSwatch from '@/components/swatches/TextStyleSwatch';
 import PostImage from '@/components/PostImage';
 import PostMovie from '@/components/PostMovie';
+import AboutAuthor from '@/components/AboutAuthor';
+import RelatedWriting from '@/components/RelatedWriting';
 import type { Metadata } from 'next';
 import { SITE_CONFIG } from '@/lib/constants';
 
@@ -53,7 +55,7 @@ export default async function BlogPostPage({
   return (
     <Layout>
       <div className='-mx-4 sm:-mx-6 lg:-mx-8'>
-        <article className='text-text-primary mx-auto w-full max-w-[653px] px-4 pt-8 font-sans leading-relaxed sm:px-6 lg:px-0'>
+        <article className='text-text-primary mx-auto w-full max-w-[653px] px-4 pt-8 pb-[20px] font-sans leading-relaxed sm:px-6 lg:px-0'>
           <header className='mb-8'>
             <div className='mb-5 flex items-center'>
               <time
@@ -88,6 +90,12 @@ export default async function BlogPostPage({
               }}
             />
           </div>
+
+          <AboutAuthor />
+
+          {post.relatedWriting && post.relatedWriting.length > 0 && (
+            <RelatedWriting posts={post.relatedWriting} />
+          )}
         </article>
       </div>
     </Layout>

@@ -44,7 +44,7 @@ function ButtonDropdown() {
     <div className='theme-dropdown relative'>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className='border-border-primary bg-bg-primary text-text-secondary dark:border-border-dark-primary dark:bg-bg-dark-secondary dark:text-text-dark-secondary w-24 cursor-pointer rounded-md border px-3 py-1.5 pr-8 text-left text-sm font-medium transition-colors hover:border-gray-300 focus:outline-none dark:hover:border-gray-400'
+        className='bg-bg-primary text-text-secondary dark:bg-bg-dark-secondary dark:text-text-dark-secondary w-24 cursor-pointer rounded-md border border-gray-200 px-3 py-1.5 pr-8 text-left text-sm font-medium transition-colors hover:border-gray-300 focus:outline-none dark:border-gray-800 dark:hover:border-gray-600'
       >
         {themes.find(t => t.value === theme)?.label}
         <svg
@@ -63,7 +63,7 @@ function ButtonDropdown() {
       </button>
 
       {isOpen && (
-        <div className='border-border-primary bg-bg-primary dark:border-border-dark-primary dark:bg-bg-dark-secondary theme-dropdown absolute top-full right-0 z-50 mt-1 overflow-hidden rounded-md border shadow-lg'>
+        <div className='bg-bg-primary dark:bg-bg-dark-secondary theme-dropdown absolute top-full right-0 z-50 mt-1 overflow-hidden rounded-md border border-gray-200 shadow-lg dark:border-gray-800'>
           {themes.map((t, index) => (
             <button
               key={t.value}

@@ -48,7 +48,7 @@ export default function PostImage({ images, className = '' }: PostImageProps) {
   return (
     <div
       ref={containerRef}
-      className={`relative w-full transition-all duration-600 ease-out ${
+      className={`relative my-12 w-full transition-all duration-600 ease-out ${
         isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
       } ${className}`}
     >
@@ -120,14 +120,16 @@ export default function PostImage({ images, className = '' }: PostImageProps) {
       {/* Caption */}
       <div className='relative mt-4 flex items-start justify-between'>
         {images.map((image, index) => (
-          <p
+          <div
             key={`${image.src}-caption`}
-            className={`!text-text-muted !dark:text-text-dark-muted !pr-[10%] !text-xs !leading-[1.333373] !font-semibold !tracking-[-0.01em] transition-opacity duration-500 ease-in-out ${
+            className={`flex w-full items-start justify-between transition-opacity duration-500 ease-in-out ${
               index === currentIndex ? 'opacity-100' : 'absolute opacity-0'
             }`}
           >
-            {image.caption}
-          </p>
+            <p className='!text-text-muted !dark:text-text-dark-muted !text-xs !leading-[1.333373] !font-semibold !tracking-[-0.01em]'>
+              {image.caption}
+            </p>
+          </div>
         ))}
       </div>
 

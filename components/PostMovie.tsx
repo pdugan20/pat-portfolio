@@ -14,7 +14,6 @@ interface PostMovieProps {
 }
 
 export default function PostMovie({ videos, className = '' }: PostMovieProps) {
-  const [isVisible, setIsVisible] = useState(false);
   const [hasInitiallyAppeared, setHasInitiallyAppeared] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [hasStartedPlaying, setHasStartedPlaying] = useState(false);
@@ -37,7 +36,6 @@ export default function PostMovie({ videos, className = '' }: PostMovieProps) {
     const autoplayObserver = new IntersectionObserver(
       ([entry]) => {
         const isIntersecting = entry.isIntersecting;
-        setIsVisible(isIntersecting);
 
         // Auto-play when entering viewport, pause when leaving
         if (videoRef.current) {
@@ -69,7 +67,7 @@ export default function PostMovie({ videos, className = '' }: PostMovieProps) {
       fadeObserver.disconnect();
       autoplayObserver.disconnect();
     };
-  }, [hasEnded, hasInitiallyAppeared]);
+  }, [hasEnded, hasInitiallyAppeared, hasStartedPlaying]);
 
   const togglePlay = () => {
     if (videoRef.current) {
@@ -77,11 +75,12 @@ export default function PostMovie({ videos, className = '' }: PostMovieProps) {
         videoRef.current.pause();
         setIsPlaying(false);
       } else {
+        // Reset ended state when manually playing
+        setHasEnded(false);
         videoRef.current.play().catch(() => {
           console.log('Play prevented by browser');
         });
         setIsPlaying(true);
-        setHasEnded(false);
       }
     }
   };
@@ -94,22 +93,24 @@ export default function PostMovie({ videos, className = '' }: PostMovieProps) {
   const restartVideo = () => {
     if (videoRef.current) {
       videoRef.current.currentTime = 0;
+      setHasEnded(false);
       videoRef.current.play().catch(() => {
         console.log('Restart prevented by browser');
       });
       setIsPlaying(true);
-      setHasEnded(false);
     }
   };
 
   const handleVideoPlay = () => {
     setHasStartedPlaying(true);
+    // Reset ended state when video starts playing
+    setHasEnded(false);
   };
 
   return (
     <div
       ref={containerRef}
-      className={`relative w-full transition-all duration-600 ease-out ${
+      className={`relative my-12 w-full transition-all duration-600 ease-out ${
         hasInitiallyAppeared
           ? 'translate-y-0 opacity-100'
           : 'translate-y-8 opacity-0'
@@ -155,6 +156,12 @@ export default function PostMovie({ videos, className = '' }: PostMovieProps) {
               muted
               onEnded={handleVideoEnded}
               onPlay={handleVideoPlay}
+              onTimeUpdate={() => {
+                // Ensure ended state is false when video is playing
+                if (videoRef.current && !videoRef.current.ended && hasEnded) {
+                  setHasEnded(false);
+                }
+              }}
               style={{
                 outline: 'none',
                 border: 'none',
@@ -171,11 +178,7 @@ export default function PostMovie({ videos, className = '' }: PostMovieProps) {
         <div className='absolute bottom-6 left-6'>
           <button
             onClick={hasEnded ? restartVideo : togglePlay}
-            className={`rounded-full p-2.5 text-gray-500 transition-all duration-200 hover:cursor-pointer ${
-              isVisible && isPlaying && !hasEnded
-                ? 'bg-gray-200/40 hover:bg-gray-200/60'
-                : 'bg-gray-200/80 hover:bg-gray-300/80'
-            }`}
+            className='rounded-full bg-gray-200/80 p-2.5 text-gray-500 transition-all duration-200 hover:cursor-pointer hover:bg-gray-300/80'
           >
             {hasEnded ? (
               <svg className='h-6 w-6' fill='currentColor' viewBox='0 0 24 24'>
@@ -196,8 +199,8 @@ export default function PostMovie({ videos, className = '' }: PostMovieProps) {
 
       {/* Caption */}
       {videos[0]?.caption && (
-        <div className='relative mt-4'>
-          <p className='!text-text-muted !dark:text-text-dark-muted !pr-[10%] !text-xs !leading-[1.333373] !font-semibold !tracking-[-0.01em] transition-opacity duration-500 ease-in-out'>
+        <div className='relative mt-4 flex items-start justify-between'>
+          <p className='!text-text-muted !dark:text-text-dark-muted !text-xs !leading-[1.333373] !font-semibold !tracking-[-0.01em] transition-opacity duration-500 ease-in-out'>
             {videos[0].caption}
           </p>
         </div>

@@ -1,20 +1,20 @@
 ---
-title: 'Building an AI-ready design system in Figma'
-date: '2025-07-03'
-description: 'Architecting a modern design system that can seamlessly plug-in to first and third-party AI tools in Figma.'
+title: 'Building an AI-ready design system in Figma - Part 2'
+date: '2025-07-10'
+description: 'Advanced techniques for architecting design systems that seamlessly integrate with AI tools and workflows in Figma.'
 relatedWriting:
+  - title: 'Building an AI-ready design system in Figma'
+    slug: 'building-an-ai-ready-design-system'
+    description: 'Architecting a modern design system that can seamlessly plug-in to first and third-party AI tools in Figma.'
+    date: '2025-07-03'
+    imageSrc: '/assets/building-an-ai-ready-design-system/img/01.jpg'
+    imageAlt: 'Building an AI-Ready Design System'
   - title: 'Second Post'
     slug: 'second-post'
     description: 'Another interesting article about design and technology. Exploring modern web development practices and the latest trends in digital design.'
     date: '2024-01-20'
     imageSrc: '/assets/mov/poster/01.jpg'
     imageAlt: 'Second Post'
-  - title: 'Design Systems in Practice'
-    slug: 'design-systems-practice'
-    description: 'Real-world insights into implementing and maintaining design systems at scale across different organizations and platforms.'
-    date: '2024-06-15'
-    imageSrc: '/assets/building-an-ai-ready-design-system/img/02.jpg'
-    imageAlt: 'Design Systems in Practice'
 ---
 
 Last month, I published an [iMessage-centric UI kit](https://www.figma.com/community/file/1519446101653617639/imessage-chat-builder) in the Figma community - the purpose of which was to act as the source components for a [companion AI plugin](https://www.figma.com/community/plugin/1519731262843198057/imessage-ai-chat-builder) I wanted to develop. In the course of building out and documenting that design system at a component and variable level, I thought it would be fun to put together a list of best practices with an eye toward calling out specific choices that might contribute toward making design systems work well with Figma's native AI toolset as well as with third-party AI tools like the one I built.
@@ -39,7 +39,6 @@ With that in mind I landed on designing a system that:
 - **Limited its typographic and color variable system**, primarily for simplicity
 - Included standalone components that covered common use-cases while also **building and documenting primitives** for anyone looking to extend the system further
 - Included **standard utility components** for common use-cases like documenting component usage and easily applying personas
-- Would work well for for designers in addition to working well programmatically
 
 It would be easy for a project like this to increase in scope to an unnecessary degree, so I approached stack-ranking what features and components I would need in my initial pass as only what would make the library the most useful to others.
 
@@ -93,13 +92,3 @@ While it's a best practice to scale your variable sets numerically, e.g. <ColorS
     },
   ]}
 />
-
-## Ensuring the system is self-contained
-
-While a bit counterintuitive, ensuring a UI kit is self-contained is very beneficial when doing anything programmatically. In my case, that meant porting over standard UI elements like the Home Indicator and Status Bar from [Apple's official iOS UI kit](https://www.figma.com/community/file/1385659531316001292/ios-18-and-ipados-18). It also meant creating standard utility components, one example being the persona utility class.
-
-Why create utility components when third-party Figma plugins exist that achieve similar results, and why port components that exist elsewhere and include them within this file? The answer is two-fold. First, for individuals using the design kit it makes things simpler. There's no linked file they need to reference. And second, programmatically it ensures any plugin we use, or any exported version of the library we reference has access to every component in a way that can easily be documented and iterated on top of. As features like importing[ Figma Design styles into Figma Make](https://help.figma.com/hc/en-us/articles/33024539096471-Bring-style-context-from-a-Figma-Design-library-into-Figma-Make) or [exporting them into tools like Vercel's v0](https://vercel.com/blog/working-with-figma-and-custom-design-systems-in-v0) become more common and robust, the importance of having those styles well constructed and documented will remain if not grow in importance.
-
-## Showing not telling with examples
-
-It's also critical not just to document and clearly describe component usage, but to show with well constructed examples how those components work when used in aggregate with one another.

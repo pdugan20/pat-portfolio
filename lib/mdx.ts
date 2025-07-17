@@ -4,6 +4,15 @@ import matter from 'gray-matter';
 
 const contentDirectory = path.join(process.cwd(), 'content');
 
+export interface RelatedPost {
+  title: string;
+  slug: string;
+  description: string;
+  date: string;
+  imageSrc: string;
+  imageAlt: string;
+}
+
 export interface BlogPost {
   slug: string;
   title: string;
@@ -11,6 +20,7 @@ export interface BlogPost {
   description: string;
   tags: string[];
   content: string;
+  relatedWriting?: RelatedPost[];
 }
 
 export function getBlogPosts(): BlogPost[] {
@@ -32,6 +42,7 @@ export function getBlogPosts(): BlogPost[] {
         description: data.description,
         tags: data.tags || [],
         content,
+        relatedWriting: data.relatedWriting || [],
       };
     })
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
@@ -52,6 +63,7 @@ export function getBlogPost(slug: string): BlogPost | null {
       description: data.description,
       tags: data.tags || [],
       content,
+      relatedWriting: data.relatedWriting || [],
     };
   } catch {
     return null;
