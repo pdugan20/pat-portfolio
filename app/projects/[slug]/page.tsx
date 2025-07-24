@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation';
 import { MDXRemote } from 'next-mdx-remote/rsc';
 import Layout from '@/components/Layout';
 import { getProject, getAllProjectSlugs } from '@/lib/projects';
-import CodeBlock from '@/components/CodeBlock';
+
 import ProjectImage from '@/components/ProjectImage';
 import Link from 'next/link';
 import type { Metadata } from 'next';
@@ -10,7 +10,6 @@ import { SITE_CONFIG } from '@/lib/constants';
 
 // MDX components that can be used in project files
 const mdxComponents = {
-  CodeBlock,
   ProjectImage,
   // You can add more custom components here
 };

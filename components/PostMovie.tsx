@@ -1,6 +1,7 @@
 'use client';
 
 import { useRef, useEffect, useState } from 'react';
+import { PlayIcon, PauseIcon, RestartIcon } from './icons';
 
 interface VideoItem {
   src: string;
@@ -15,8 +16,8 @@ interface PostMovieProps {
 
 export default function PostMovie({ videos, className = '' }: PostMovieProps) {
   const [hasInitiallyAppeared, setHasInitiallyAppeared] = useState(false);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [hasStartedPlaying, setHasStartedPlaying] = useState(false);
+  const [isCurrentlyPlaying, setIsCurrentlyPlaying] = useState(false);
+  const [hasEverStarted, setHasEverStarted] = useState(false);
   const [hasEnded, setHasEnded] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -44,14 +45,14 @@ export default function PostMovie({ videos, className = '' }: PostMovieProps) {
               // Handle autoplay restrictions gracefully
               console.log('Autoplay prevented by browser');
             });
-            setIsPlaying(true);
-            // Only set hasStartedPlaying once, not every time it enters viewport
-            if (!hasStartedPlaying) {
-              setHasStartedPlaying(true);
+            setIsCurrentlyPlaying(true);
+            // Only set hasEverStarted once, not every time it enters viewport
+            if (!hasEverStarted) {
+              setHasEverStarted(true);
             }
           } else if (!isIntersecting) {
             videoRef.current.pause();
-            setIsPlaying(false);
+            setIsCurrentlyPlaying(false);
           }
         }
       },
@@ -67,26 +68,26 @@ export default function PostMovie({ videos, className = '' }: PostMovieProps) {
       fadeObserver.disconnect();
       autoplayObserver.disconnect();
     };
-  }, [hasEnded, hasInitiallyAppeared, hasStartedPlaying]);
+  }, [hasEnded, hasInitiallyAppeared, hasEverStarted]);
 
   const togglePlay = () => {
     if (videoRef.current) {
-      if (isPlaying) {
+      if (isCurrentlyPlaying) {
         videoRef.current.pause();
-        setIsPlaying(false);
+        setIsCurrentlyPlaying(false);
       } else {
         // Reset ended state when manually playing
         setHasEnded(false);
         videoRef.current.play().catch(() => {
           console.log('Play prevented by browser');
         });
-        setIsPlaying(true);
+        setIsCurrentlyPlaying(true);
       }
     }
   };
 
   const handleVideoEnded = () => {
-    setIsPlaying(false);
+    setIsCurrentlyPlaying(false);
     setHasEnded(true);
   };
 
@@ -97,12 +98,12 @@ export default function PostMovie({ videos, className = '' }: PostMovieProps) {
       videoRef.current.play().catch(() => {
         console.log('Restart prevented by browser');
       });
-      setIsPlaying(true);
+      setIsCurrentlyPlaying(true);
     }
   };
 
   const handleVideoPlay = () => {
-    setHasStartedPlaying(true);
+    setHasEverStarted(true);
     // Reset ended state when video starts playing
     setHasEnded(false);
   };
@@ -149,7 +150,7 @@ export default function PostMovie({ videos, className = '' }: PostMovieProps) {
               ref={videoRef}
               src={video.src}
               className={`h-auto w-full border-0 transition-opacity duration-300 ${
-                hasStartedPlaying ? 'opacity-100' : 'opacity-0'
+                hasEverStarted ? 'opacity-100' : 'opacity-0'
               }`}
               playsInline
               preload='auto'
@@ -181,17 +182,11 @@ export default function PostMovie({ videos, className = '' }: PostMovieProps) {
             className='rounded-full bg-gray-200/80 p-2.5 text-gray-500 transition-all duration-200 hover:cursor-pointer hover:bg-gray-300/80'
           >
             {hasEnded ? (
-              <svg className='h-6 w-6' fill='currentColor' viewBox='0 0 24 24'>
-                <path d='M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z' />
-              </svg>
-            ) : isPlaying ? (
-              <svg className='h-6 w-6' fill='currentColor' viewBox='0 0 24 24'>
-                <path d='M6 19h4V5H6v14zm8-14v14h4V5h-4z' />
-              </svg>
+              <RestartIcon />
+            ) : isCurrentlyPlaying ? (
+              <PauseIcon />
             ) : (
-              <svg className='h-6 w-6' fill='currentColor' viewBox='0 0 24 24'>
-                <path d='M8 5v14l11-7z' />
-              </svg>
+              <PlayIcon />
             )}
           </button>
         </div>
@@ -200,7 +195,7 @@ export default function PostMovie({ videos, className = '' }: PostMovieProps) {
       {/* Caption */}
       {videos[0]?.caption && (
         <div className='relative mt-4 flex items-start justify-between'>
-          <p className='!text-text-muted !dark:text-text-dark-muted !text-xs !leading-[1.333373] !font-semibold !tracking-[-0.01em] transition-opacity duration-500 ease-in-out'>
+          <p className='text-text-muted dark:text-text-dark-muted post-movie-caption !text-xs !leading-[1.333373] !font-semibold !tracking-[-0.01em] transition-opacity duration-500 ease-in-out'>
             {videos[0].caption}
           </p>
         </div>

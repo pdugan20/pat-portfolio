@@ -92,3 +92,70 @@ While it's a best practice to scale your variable sets numerically, e.g. <ColorS
     },
   ]}
 />
+
+```typescript title="MessageBubble.tsx"
+// Example component structure for the iMessage design system
+interface MessageBubbleProps {
+	content: string;
+	isFromUser: boolean;
+	timestamp: string;
+	status?: 'sent' | 'delivered' | 'read';
+}
+
+const MessageBubble = ({ content, isFromUser, timestamp, status }: MessageBubbleProps) => {
+	const bubbleClass = isFromUser
+		? 'bg-blue-500 text-white'
+		: 'bg-gray-200 text-gray-900';
+
+	return (
+		<div className="message-bubble">
+			<div className="message-content">{content}</div>
+			<div className="message-meta">
+				<span className="timestamp">{timestamp}</span>
+				{isFromUser && status && (
+					<span className="status"}>
+						{status === 'read' ? '✓✓' : '✓'}
+					</span>
+				)}
+			</div>
+		</div>
+	);
+};
+```
+
+{/* prettier-ignore-start */}
+```markdown caption="An example of the hierarchy used in the iMessage Chat Builder UI kit."
+Replies
+├── Recipient Reply
+└── Sender Reply
+Photos
+└── Navigation
+    ├── Inbox Row Photo
+    └── Navigation Bar Photo
+```
+{/* prettier-ignore-end */}
+
+```javascript title="example.js"
+function foo() {
+  console.log('tabbed');
+  if (true) {
+    console.log('double tab');
+  }
+}
+```
+
+{/* prettier-ignore-start */}
+```markdown title="Guidelines.md"
+## Sender Reply
+A grouping of a recipient preview text bubble and a full-size sender text bubble.
+
+### Usage
+It can exist either in 1:1 or in group threads, and with or without mustache text
+attached to the preview bubble denoting the total number of replies.
+
+### Variants
+* Is group chat=No, Has mustache text=No
+  * Purpose : Used when a sender is replying to a recipients message
+  * Usage : Used in 1:1 chats when there is only a single reply to sender's message
+```
+{/* prettier-ignore-end */}

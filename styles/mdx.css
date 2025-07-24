@@ -1,5 +1,3 @@
-/* MDX Content Styles - Main File */
-
 /* Base content styles */
 .mdx-content {
   max-width: none;
@@ -12,3 +10,4 @@
 
 /* Import component-specific styles */
 @import './components/swatches.css';
+@import './components/post-image.css';

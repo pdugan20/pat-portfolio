@@ -1,0 +1,17 @@
+/* PostImage Component Styles */
+
+.post-image-wide-xl {
+  max-width: 100vw;
+  width: 980px;
+  margin-left: 50%;
+  transform: translateX(-50%);
+}
+
+@media (max-width: 1199px) {
+  .post-image-wide-xl {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-left: 0 !important;
+    transform: none !important;
+  }
+}

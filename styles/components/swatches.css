@@ -1,16 +1,13 @@
 :root {
-  --swatch-font-family:
-    'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', 'Source Code Pro',
-    'Menlo', 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Courier New',
-    monospace;
-  --swatch-font-size: 13px;
+  --swatch-font-family: var(--font-mono);
+  --swatch-font-size: var(--text-sm-custom);
   --swatch-gap: 0.3rem;
-  --swatch-padding: 0.25rem 6px;
-  --swatch-border-radius: 0.25rem;
+  --swatch-padding: var(--spacing-1) 6px;
+  --swatch-border-radius: var(--spacing-1);
   --swatch-margin: 2px 0;
   --swatch-preview-size: 14px;
-  --swatch-preview-border-radius: 3px;
-  --swatch-preview-symbol-font-size: 10px;
+  --swatch-preview-border-radius: var(--rounded-sm);
+  --swatch-preview-symbol-font-size: var(--text-xs-custom);
   --swatch-preview-symbol-padding-top: 2px;
 }
 
@@ -21,8 +18,8 @@
   gap: var(--swatch-gap);
   font-family: var(--swatch-font-family);
   font-size: var(--swatch-font-size);
-  font-weight: 400;
-  line-height: 1;
+  font-weight: var(--font-weight-normal);
+  line-height: var(--leading-none);
   vertical-align: middle;
   background-color: var(--color-code-bg);
   padding: var(--swatch-padding);
@@ -46,8 +43,8 @@
   gap: var(--swatch-gap);
   font-family: var(--swatch-font-family);
   font-size: var(--swatch-font-size);
-  font-weight: 400;
-  line-height: 1;
+  font-weight: var(--font-weight-normal);
+  line-height: var(--leading-none);
   vertical-align: middle;
   background-color: var(--color-code-bg);
   padding: var(--swatch-padding);
@@ -66,8 +63,8 @@
   align-items: center;
   justify-content: center;
   font-size: var(--swatch-preview-symbol-font-size);
-  font-weight: 600;
-  line-height: 1;
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--leading-none);
   color: var(--color-text-secondary);
   background-color: var(--color-bg-secondary);
   padding-top: var(--swatch-preview-symbol-padding-top);
@@ -80,8 +77,8 @@
   gap: var(--swatch-gap);
   font-family: var(--swatch-font-family);
   font-size: var(--swatch-font-size);
-  font-weight: 400;
-  line-height: 1;
+  font-weight: var(--font-weight-normal);
+  line-height: var(--leading-none);
   vertical-align: middle;
   background-color: var(--color-code-bg);
   padding: var(--swatch-padding);
@@ -100,17 +97,35 @@
   align-items: center;
   justify-content: center;
   font-size: var(--swatch-preview-symbol-font-size);
-  font-weight: 600;
-  line-height: 1;
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--leading-none);
   color: var(--color-text-secondary);
   background-color: var(--color-bg-secondary);
   padding-top: var(--swatch-preview-symbol-padding-top);
 }
 
+/* Text swatch styles - no icon or square */
+.text-swatch {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--swatch-font-family);
+  font-size: var(--swatch-font-size);
+  font-weight: var(--font-weight-normal);
+  line-height: var(--leading-none);
+  vertical-align: middle;
+  background-color: var(--color-code-bg);
+  padding: var(--swatch-padding);
+  border-radius: var(--swatch-border-radius);
+  border: 1px solid var(--color-border-primary);
+  margin: var(--swatch-margin);
+}
+
 /* Dark mode styles for swatches */
 .dark .color-swatch,
 .dark .font-size-swatch,
-.dark .text-style-swatch {
+.dark .text-style-swatch,
+.dark .text-swatch {
   background-color: var(--color-bg-dark-tertiary);
   border-color: var(--color-border-dark-primary);
 }

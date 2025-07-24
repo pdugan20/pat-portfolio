@@ -28,6 +28,18 @@ export default function RootLayout({
     <html lang='en' suppressHydrationWarning className={inter.variable}>
       <head>
         <link rel='icon' type='image/svg+xml' href='/favicon.svg' />
+        {/* Light mode */}
+        <meta
+          name='theme-color'
+          content='#FFFFFF'
+          media='(prefers-color-scheme: light)'
+        />
+        {/* Dark mode */}
+        <meta
+          name='theme-color'
+          content='#000000'
+          media='(prefers-color-scheme: dark)'
+        />
       </head>
       <body className='font-sans antialiased'>
         <ThemeProvider>{children}</ThemeProvider>

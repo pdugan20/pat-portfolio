@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
+import { PreviousIcon, NextIcon } from './icons';
 
 interface ImageItem {
   src: string;
@@ -12,9 +13,14 @@ interface ImageItem {
 interface PostImageProps {
   images: ImageItem[];
   className?: string;
+  width?: number;
 }
 
-export default function PostImage({ images, className = '' }: PostImageProps) {
+export default function PostImage({
+  images,
+  className = '',
+  width,
+}: PostImageProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -48,12 +54,18 @@ export default function PostImage({ images, className = '' }: PostImageProps) {
   return (
     <div
       ref={containerRef}
-      className={`relative my-12 w-full transition-all duration-600 ease-out ${
+      className={`relative my-12 transition-all duration-600 ease-out ${
         isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
       } ${className}`}
+      style={width ? {} : { width: '100%' }}
     >
       {/* Image Container */}
-      <div className='relative w-full overflow-hidden rounded-2xl bg-gray-100 dark:bg-gray-900'>
+      <div
+        className={`relative w-full overflow-hidden rounded-2xl bg-gray-100 dark:bg-gray-900 ${
+          width ? 'post-image-wide-xl' : ''
+        }`}
+        style={width ? {} : {}}
+      >
         {images.map((image, index) => (
           <Image
             key={image.src}
@@ -81,18 +93,7 @@ export default function PostImage({ images, className = '' }: PostImageProps) {
             className='absolute top-1/2 -left-16 hidden -translate-y-1/2 rounded-full bg-gray-100/80 p-3 text-gray-500 backdrop-blur-sm transition-all duration-300 ease-in-out hover:cursor-pointer hover:bg-gray-200/50 focus:ring-2 focus:ring-gray-500 focus:outline-none lg:block dark:bg-gray-800/80 dark:text-gray-400 dark:hover:bg-gray-700/80 dark:focus:ring-gray-400'
             aria-label='Previous image'
           >
-            <svg
-              width='24'
-              height='24'
-              viewBox='0 0 24 24'
-              fill='none'
-              stroke='currentColor'
-              strokeWidth='2.5'
-              strokeLinecap='round'
-              strokeLinejoin='round'
-            >
-              <path d='m15 18-6-6 6-6' />
-            </svg>
+            <PreviousIcon />
           </button>
 
           {/* Next Button */}
@@ -101,18 +102,7 @@ export default function PostImage({ images, className = '' }: PostImageProps) {
             className='absolute top-1/2 -right-16 hidden -translate-y-1/2 rounded-full bg-gray-100/80 p-3 text-gray-500 backdrop-blur-sm transition-all duration-300 ease-in-out hover:cursor-pointer hover:bg-gray-200/50 focus:ring-2 focus:ring-gray-500 focus:outline-none lg:block dark:bg-gray-800/80 dark:text-gray-400 dark:hover:bg-gray-700/80 dark:focus:ring-gray-400'
             aria-label='Next image'
           >
-            <svg
-              width='24'
-              height='24'
-              viewBox='0 0 24 24'
-              fill='none'
-              stroke='currentColor'
-              strokeWidth='2.5'
-              strokeLinecap='round'
-              strokeLinejoin='round'
-            >
-              <path d='m9 18 6-6-6-6' />
-            </svg>
+            <NextIcon />
           </button>
         </>
       )}
@@ -126,7 +116,7 @@ export default function PostImage({ images, className = '' }: PostImageProps) {
               index === currentIndex ? 'opacity-100' : 'absolute opacity-0'
             }`}
           >
-            <p className='!text-text-muted !dark:text-text-dark-muted !text-xs !leading-[1.333373] !font-semibold !tracking-[-0.01em]'>
+            <p className='text-text-muted dark:text-text-dark-muted post-image-caption !text-xs !leading-[1.333373] !font-semibold !tracking-[-0.01em]'>
               {image.caption}
             </p>
           </div>

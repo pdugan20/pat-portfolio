@@ -39,15 +39,16 @@ A comprehensive portfolio website that showcases my work, skills, and experience
 
 This portfolio uses Next.js 15 with the App Router for optimal performance and developer experience. Here's an example of the layout structure:
 
-<CodeBlock language="tsx" title="app/layout.tsx">
-{`import type { Metadata } from 'next';
+```tsx title="app/layout.tsx"
+import type { Metadata } from 'next';
 import { Geist } from 'next/font/google';
 import './globals.css';
 import { ThemeProvider } from '@/components/ThemeProvider';
 
 export const metadata: Metadata = {
   title: 'Software Developer',
-  description: 'Software developer passionate about creating beautiful applications',
+  description:
+    'Software developer passionate about creating beautiful applications',
 };
 
 export default function RootLayout({
@@ -56,14 +57,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang='en' suppressHydrationWarning>
       <body className={geistSans.variable}>
         <ThemeProvider>{children}</ThemeProvider>
       </body>
     </html>
   );
-}`}
-</CodeBlock>
+}
+```
 
 ## Project Screenshots
 
