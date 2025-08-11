@@ -13,36 +13,34 @@ relatedWriting:
     slug: 'second-post'
     description: 'Another interesting article about design and technology. Exploring modern web development practices and the latest trends in digital design.'
     date: '2024-01-20'
-    imageSrc: '/assets/mov/poster/01.jpg'
+    imageSrc: '/assets/building-an-ai-ready-design-system/mov/poster/01.jpg'
     imageAlt: 'Second Post'
 ---
 
-Last month, I published an [iMessage-centric UI kit](https://www.figma.com/community/file/1519446101653617639/imessage-chat-builder) in the Figma community - the purpose of which was to act as the source components for a [companion AI plugin](https://www.figma.com/community/plugin/1519731262843198057/imessage-ai-chat-builder) I wanted to develop. In the course of building out and documenting that design system at a component and variable level, I thought it would be fun to put together a list of best practices with an eye toward calling out specific choices that might contribute toward making design systems work well with Figma's native AI toolset as well as with third-party AI tools like the one I built.
+Last month, I published an [iMessage-centric UI kit](https://www.figma.com/community/file/1519446101653617639/imessage-chat-builder) in the Figma community - the purpose of which was to act as the source components for a [companion AI plugin](https://www.figma.com/community/plugin/1519731262843198057/imessage-ai-chat-builder) I wanted to develop. In the course of building out and documenting that UI kit at a component and variable level, I began gathering a list of best practices. This post highlights the design and system architecture choices that contribute to making a design system not only scalable but also compatible with Figma’s native AI tools and third-party AI integrations.
 
 ## Background
 
-In my role as a designer at Meta, I helped design the system that [Facebook Messenger](http://messenger.com) is constructed from - both in Figma and in code. Whenever you're working with a mature design system, in this case one that that saw its last major facelift almost [half a decade ago](https://design.facebook.com/blog/the-new-messenger-brand-nothings-changed-everythings-changed/), many of the contributions you'll end up making will be smaller, intentionally scoped changes that incrementally make improvements while aiming to be minimally disruptive to users. That adage becomes more true when you're working on a system that powers a product with a large installed user-base that also happens to be change averse.
+In my role as a designer at Meta, I helped design the system that [Facebook Messenger](http://messenger.com) is constructed from - both in Figma and in code. Whenever you're working with a mature design system, in this case one that that saw its last major facelift almost [half a decade ago](https://design.facebook.com/blog/the-new-messenger-brand-nothings-changed-everythings-changed/), most contributions tend to be incremental, scoped carefully to avoid disruption. That’s especially true when working on a product with a massive and change-averse user base.
 
-While I've built design systems from scratch at [Quora](https://www.qurora.com), at the [Chan Zuckerberg Initiative](https://www.czi.com), and for various zero-to-one work I've taken on over the years, the last time I had truly built a design system end-to-end when I was still actively working on [Hikearound](https://www.tryhikearound.com), so it was quite a bit of fun to jump into a blank file and get rolling.
+I’ve also built design systems from scratch at Quora, the [Chan Zuckerberg Initiative](https://www.czi.com/), and for smaller-scale zero-to-one efforts like [Hikearound](https://www.tryhikearound.com/). But this project marked the first time in a while that I’d built something end-to-end—components, variables, documentation, and all starting from a blank Figma file.
 
-Funnily enough, I didn't actually set out to build out Apple's messaging design system in Figma. Apple released their own [messaging design library](https://www.figma.com/community/file/1367916269438172112/imessage-apps-and-stickers) in 2024, and I initially thought I'd be able to leverage this resource for the [plugin I wanted to build](https://www.figma.com/community/file/1519446101653617639/imessage-chat-builder). I realized pretty quickly unfortunately that wasn't going to be possible.
+Funnily enough, I didn’t set out to recreate the Apple iMessage UI in Figma. Apple published its own [messaging design library](https://www.figma.com/community/file/1367916269438172112/imessage-apps-and-stickers) in 2024, and I initially assumed I could build my plugin on top of it. Unfortunately, I quickly realized that wouldn’t work.
 
-Despite being less than a year old, Apple's self-published library was designed somewhat crudely. The components weren't built with auto-layout support and in many cases the UI throughout the file didn't match the production versions of Apple iMessage. Additionally the color and typography variables included in the file were all over the place. Rather than try to modify and update their library as needed, I pivoted to building my own.
+Despite being relatively new, Apple’s file was inconsistent: no auto-layout support, visual mismatches with the actual iMessage UI, and a scattered variable system. Rather than attempting to retrofit it, I decided to start from scratch.
 
-## Getting started
+## Getting Started: Defining Scope and Audience
 
-At the start of any project, and building out a design system is no different, it's key to understand what your goals are and the audience you'll be designing for. In this case I wanted a library to would work well at a programatic level, but also one that designers could use to construct UI independent of any AI tooling.
+At the start of any project, and building out a component-based design system is no different, it's key to understand what your goals are and the audience you'll be designing for. In this case I wanted a library that would work well at a programatic level, but also one that designers could use to construct UI independent of any AI tooling.
 
 With that in mind I landed on designing a system that:
 
-- Was limited primarily to two screens: the iMessage **Inbox and Thread** views
-- **Limited its typographic and color variable system**, primarily for simplicity
-- Included standalone components that covered common use-cases while also **building and documenting primitives** for anyone looking to extend the system further
-- Included **standard utility components** for common use-cases like documenting component usage and easily applying personas
+- Was **limited in scope** to core iMessage screens
+- **Kept the variable system lean** for simplicity and readability
+- Included **modular component primitives** to encourage future extensibility
+- Incorporated a set of **utility components** - for common use-cases like documenting component usage and applying user personas
 
-It would be easy for a project like this to increase in scope to an unnecessary degree, so I approached stack-ranking what features and components I would need in my initial pass as only what would make the library the most useful to others.
-
-I consider a standout example of how to architect a small(ish) self-contained design system as being Figma's self-published [Simple Design System](https://www.figma.com/community/file/1380235722331273046/simple-design-system), and I used this as a jumping off point for my own to get started.
+A helpful reference point for getting started was Figma’s [Simple Design System](https://www.figma.com/community/file/1380235722331273046/simple-design-system). I've always considered this a standout example of how to architect a small(ish) self-contained design system.
 
 <PostImage
   images={[
@@ -58,7 +56,7 @@ I consider a standout example of how to architect a small(ish) self-contained de
 <PostMovie
   videos={[
     {
-      src: '/assets/mov/01.mp4',
+      src: '/assets/building-an-ai-ready-design-system/mov/01.mp4',
       alt: 'Video demonstration of the design system in action',
       caption:
         'A demonstration video showing the iMessage design system components in use, highlighting the AI-ready architecture and component interactions.',
@@ -66,15 +64,17 @@ I consider a standout example of how to architect a small(ish) self-contained de
   ]}
 />
 
-## Creating a variable set
+## Building from Primitives
 
-In any design system, a best practice is to start with defining your primitives and then to extend said primitives to a higher-order set of variables that actually propagate out into your components. This is especially important when designing systems that play nicely with AI.
+As with any design system, a best practice is to start with defining your primitives and then to extend said primitives to a higher-order set of variables that propagate out into your components. This is especially important when designing systems that play nicely with AI.
 
-Let's take the primary blue in Apple iMessage <ColorSwatch>#0078FF</ColorSwatch> as an example. In a variable set, you'd always want to assign that color first as a primitive, something like <ColorSwatch label="Blue/Base">#0078FF</ColorSwatch>. Then, having defined a standalone set of primitives, you'd extend those to a set of variables applied to directly to component properties like <ColorSwatch label="Background/Bubbles/iOS">#0078FF</ColorSwatch>.
+Let's take the primary blue in Apple iMessage <ColorSwatch>#0078FF</ColorSwatch> as an example. In a variable set, you'd always want to assign that color first as a primitive, something like <ColorSwatch label="Blue/Base">#0078FF</ColorSwatch>. Then, having defined a standalone set of primitives, you'd extend those to a set of variables applied directly to component properties like <ColorSwatch label="Background/Bubbles/iOS">#0078FF</ColorSwatch>.
 
 You'd generally follow this same practice for typography primitives like font-size and font-weight, for example defining a <FontSizeSwatch label="Size 16">16</FontSizeSwatch> font-size primitive, and then applying that primitive as the font-size for a text style <TextStyleSwatch label="Bubble/Standard">Standard</TextStyleSwatch>.
 
-While it's a best practice to scale your variable sets numerically, e.g. <ColorSwatch label="Gray/100">#EEEEEF</ColorSwatch> and that approach generally makes sense for larger expansive systems designed to accommodate many different use-cases, for smaller self-contained systems I sometimes prefer a simplified naming convention like <ColorSwatch label="Gray/Light">#EEEEEF</ColorSwatch>. Using a streamlined variable system can help reduce variability and orient around constrained consistency, and given that I knew the system I was constructing would be limited in scope, this is the approach I took here.
+While it's a best practice to scale your variable sets numerically, e.g. <ColorSwatch label="Gray/100">#EEEEEF</ColorSwatch> and that approach generally makes sense for larger expansive systems designed to accommodate many different use-cases, for smaller self-contained systems I sometimes prefer a simplified naming convention like <ColorSwatch label="Gray/Light">#EEEEEF</ColorSwatch>.
+
+Using a streamlined variable system can help reduce variability and orient around constrained consistency, and given that I knew the system I was constructing would be limited in scope, this is the approach I took here.
 
 <PostImage
   images={[
@@ -93,56 +93,37 @@ While it's a best practice to scale your variable sets numerically, e.g. <ColorS
   ]}
 />
 
-```typescript title="MessageBubble.tsx"
-// Example component structure for the iMessage design system
-interface MessageBubbleProps {
-	content: string;
-	isFromUser: boolean;
-	timestamp: string;
-	status?: 'sent' | 'delivered' | 'read';
-}
+## Minimizing External Dependencies
 
-const MessageBubble = ({ content, isFromUser, timestamp, status }: MessageBubbleProps) => {
-	const bubbleClass = isFromUser
-		? 'bg-blue-500 text-white'
-		: 'bg-gray-200 text-gray-900';
+While a bit counterintuitive, ensuring a UI kit is self-contained is very beneficial when doing anything programmatically. In my case, that meant porting over standard UI elements like the Home Indicator and Status Bar from [Apple's official iOS UI kit](https://www.figma.com/community/file/1385659531316001292/ios-18-and-ipados-18). It also meant creating standard utility components, one example being a utility component consisting of different users personas.
 
-	return (
-		<div className="message-bubble">
-			<div className="message-content">{content}</div>
-			<div className="message-meta">
-				<span className="timestamp">{timestamp}</span>
-				{isFromUser && status && (
-					<span className="status"}>
-						{status === 'read' ? '✓✓' : '✓'}
-					</span>
-				)}
-			</div>
-		</div>
-	);
-};
-```
+You might ask - why create utility components when third-party Figma plugins exist that achieve similar results, and why port components that exist elsewhere and include them within this file? The answer is two-fold. First, for individuals using the design kit it makes things simpler. There's no linked file they need to reference. And second, programmatically it ensures any plugin we use, or any exported version of the library we reference has access to every component in a way that can easily be documented and iterated on top of.
 
-{/* prettier-ignore-start */}
-```markdown caption="An example of the hierarchy used in the iMessage Chat Builder UI kit."
-Replies
-├── Recipient Reply
-└── Sender Reply
-Photos
-└── Navigation
-    ├── Inbox Row Photo
-    └── Navigation Bar Photo
-```
-{/* prettier-ignore-end */}
+<PostImage
+  images={[
+    {
+      src: '/assets/building-an-ai-ready-design-system/img/03.jpg',
+      alt: 'Detailed view of component variants and properties',
+      caption:
+        'Component variants and properties panel showing the structured approach to organizing design system elements for AI compatibility.',
+    },
+  ]}
+  width={980}
+/>
 
-```javascript title="example.js"
-function foo() {
-  console.log('tabbed');
-  if (true) {
-    console.log('double tab');
-  }
-}
-```
+As features like importing[ Figma Design styles into Figma Make](https://help.figma.com/hc/en-us/articles/33024539096471-Bring-style-context-from-a-Figma-Design-library-into-Figma-Make) or exporting them into tools like [Vercel's v0](https://vercel.com/blog/working-with-figma-and-custom-design-systems-in-v0) become more common, the importance of having those styles well constructed and documented will remain if not grow in importance.
+
+## Documenting by Showing and Telling
+
+While UI kits and design systems are inherently visual, it can oftentimes be just as important to _describe and document_ how they work as it is to show how they look. There are some tricks to striking the right balance between these two.
+
+For example, I generally try to avoid nesting components too deep within a tree hierarchy to promote discoverability and easy of access to components. In this case, rather than group text bubble replies under a text bubble parent <TextSwatch>Text Bubbles → Replies → Recipient Reply</TextSwatch>, I instead made replies a top-level component <TextSwatch>Replies → Recipient Reply</TextSwatch>.
+
+When it comes to documenting usage, its important to provide details and context to meet designers where they are. Using Figma's built in component description field is always a best practice, as is including keywords that make the component more readily searchable.
+
+Figma is also, as of July 2025, testing allowing designers to document guidelines for how existing component libraries can be used within Figma Make in a programatic fashion. In addition to allowing generalized system documentation like <TextSwatch>Use a base font-size of 14px</TextSwatch>, it also allows designers to document usage principles at a component and variable level.
+
+In my case, the documentation of a sender reply component variant I built looks like this:
 
 {/* prettier-ignore-start */}
 ```markdown title="Guidelines.md"
@@ -159,3 +140,32 @@ attached to the preview bubble denoting the total number of replies.
   * Usage : Used in 1:1 chats when there is only a single reply to sender's message
 ```
 {/* prettier-ignore-end */}
+
+Beyond all that, I also always like having utility components highly visible within Figma itself, especially when they can be used to document recent or breaking changes with component usage that designers might not otherwise catch.
+
+## Future-Proofing Within Reason
+
+The pace of change in design tooling right now is faster than anything I’ve seen in my career. That means the best way to prepare for the future is to design systems that are clear, adaptable, and well-documented.
+
+Figma’s [Code Connect](https://help.figma.com/hc/en-us/articles/23920389749655-Code-Connect) and the [MCP Server beta](https://www.figma.com/blog/introducing-figmas-dev-mode-mcp-server/) are examples of upcoming features that could reshape how designs get translated into code.
+
+<PostImage
+  images={[
+    {
+      src: '/assets/building-an-ai-ready-design-system/img/04.jpg',
+      alt: 'Component documentation and usage guidelines',
+      caption:
+        'Detailed component documentation showing usage guidelines and best practices for AI-ready design system implementation.',
+    },
+  ]}
+/>
+
+Designing specifically for unreleased features isn’t practical—but being aware of the trends (self-contained systems, structured variables, markdown-based documentation) helps ensure your system won’t need to be rebuilt from scratch next year.
+
+## Final Thoughts
+
+At their core, design systems are about solving problems at scale—reducing friction, improving collaboration, and increasing confidence that the things we’re building will work.
+
+Making those systems AI-compatible just takes it one step further. A cleanly documented, self-contained system can serve not just designers and developers, but also intelligent agents and tooling pipelines.
+
+If you want to explore the iMessage kit or build your own AI-ready system, check out the [full UI kit](https://www.figma.com/community/file/1519446101653617639/imessage-chat-builder) on the Figma Community. And if you're experimenting with AI and design systems, I'd love to hear more about what projects you're working on.

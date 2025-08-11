@@ -2,15 +2,7 @@ import { notFound } from 'next/navigation';
 import { MDXRemote } from 'next-mdx-remote/rsc';
 import Layout from '@/components/Layout';
 import { getBlogPost, getAllBlogSlugs } from '@/lib/mdx';
-import MDXLink from '@/components/MDXLink';
-import ColorSwatch from '@/components/swatches/ColorSwatch';
-import FontSizeSwatch from '@/components/swatches/FontSizeSwatch';
-import TextStyleSwatch from '@/components/swatches/TextStyleSwatch';
-import TextSwatch from '@/components/swatches/TextSwatch';
-import PostImage from '@/components/PostImage';
-import PostMovie from '@/components/PostMovie';
-
-import PullQuote from '@/components/PullQuote';
+import { getMDXComponents } from '@/lib/mdx-components';
 import AboutAuthor from '@/components/AboutAuthor';
 import RelatedWriting from '@/components/RelatedWriting';
 import type { Metadata } from 'next';
@@ -57,18 +49,21 @@ export default async function BlogPostPage({
     notFound();
   }
 
+  // Get only the components that are actually used in this post
+  const components = await getMDXComponents(resolvedParams.slug);
+
   return (
     <Layout>
       <div className='-mx-4 sm:-mx-6 lg:-mx-8'>
         <article
-          className='text-text-primary mx-auto w-full max-w-[653px] px-4 pt-8 pb-[20px] font-sans leading-relaxed sm:px-6 lg:px-0'
+          className='text-text-primary mx-auto w-full max-w-[653px] px-4 pt-8 pb-5 font-sans leading-relaxed sm:px-6 lg:px-0'
           data-slug={resolvedParams.slug}
         >
           <header className='mb-8'>
             <div className='mb-5 flex items-center'>
               <time
                 dateTime={post.date}
-                className='text-text-muted dark:text-text-dark-muted text-[14px] leading-[1.2857742857] font-semibold tracking-[-0.016em]'
+                className='text-text-muted dark:text-text-dark-muted text-sm leading-[1.2857742857] font-semibold tracking-[-0.016em]'
               >
                 {new Date(post.date).toLocaleDateString('en-US', {
                   year: 'numeric',
@@ -77,10 +72,10 @@ export default async function BlogPostPage({
                 })}
               </time>
             </div>
-            <h1 className='text-text-primary dark:text-text-dark-primary mb-5 text-[32px] leading-[1.08] font-bold tracking-[-0.003em] sm:text-[40px] lg:text-[48px]'>
+            <h1 className='text-text-primary dark:text-text-dark-primary mb-5 text-3xl leading-[1.08] font-bold tracking-[-0.003em] sm:text-4xl lg:text-5xl'>
               {post.title}
             </h1>
-            <p className='text-text-primary dark:text-text-dark-primary mb-6 text-[20px] leading-[1.1666666667] font-medium tracking-[0.009em] sm:text-[22px] lg:text-[24px]'>
+            <p className='text-text-primary dark:text-text-dark-primary mb-6 text-xl leading-[1.1666666667] font-medium tracking-[0.009em] sm:text-xl lg:text-2xl'>
               {post.description}
             </p>
           </header>
@@ -93,17 +88,7 @@ export default async function BlogPostPage({
                   rehypePlugins: [[rehypePrettyCode, rehypePrettyCodeOptions]],
                 },
               }}
-              components={{
-                a: MDXLink,
-                ColorSwatch,
-                FontSizeSwatch,
-                TextStyleSwatch,
-                TextSwatch,
-                PostImage,
-                PostMovie,
-
-                PullQuote,
-              }}
+              components={components}
             />
           </div>
 

@@ -88,6 +88,7 @@
   --color-border-secondary: #d1d5db;
   --color-border-dark-primary: #4b5563;
   --color-border-dark-secondary: #6b7280;
+  --color-border-dark-muted: rgb(75 85 99 / 0.6);
 
   /* Status Colors */
   --color-success: #10b981;

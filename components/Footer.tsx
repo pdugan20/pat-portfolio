@@ -4,7 +4,7 @@ import SocialPill from './SocialPill';
 
 export default function Footer() {
   return (
-    <footer className='bg-bg-secondary dark:bg-bg-dark-secondary border-t border-gray-200 dark:border-gray-800'>
+    <footer className='bg-bg-secondary dark:bg-bg-dark-secondary border-t border-gray-200 dark:dark:border-gray-600/60'>
       <div className='mx-auto max-w-2xl px-4 py-12 sm:px-6 lg:px-8'>
         <div className='text-center'>
           <div className='text-text-muted dark:text-text-dark-muted mb-4 text-sm'>

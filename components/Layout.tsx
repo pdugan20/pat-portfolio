@@ -54,7 +54,7 @@ export default function Layout({ children }: LayoutProps) {
   return (
     <div className='bg-bg-primary text-text-primary dark:bg-bg-dark-primary dark:text-text-dark-primary min-h-screen'>
       <nav
-        className='bg-bg-primary dark:bg-bg-dark-secondary fixed top-0 right-0 left-0 z-50 border-b border-gray-200 transition-transform duration-0 dark:border-gray-800'
+        className='bg-bg-primary dark:bg-bg-dark-secondary fixed top-0 right-0 left-0 z-50 border-b border-gray-200 transition-transform duration-0 dark:dark:border-gray-600/60'
         style={{ transform: `translateY(-${headerOffset}px)` }}
       >
         <div className='mx-auto max-w-7xl px-4 sm:px-6 lg:px-8'>
