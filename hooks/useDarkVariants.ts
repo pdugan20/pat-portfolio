@@ -39,5 +39,5 @@ export function useDarkVariants() {
     return darkVariant || originalSrc;
   };
 
-  return { getImageSrc, manifestLoaded: !!manifest };
+  return { getImageSrc, manifest, manifestLoaded: !!manifest };
 }

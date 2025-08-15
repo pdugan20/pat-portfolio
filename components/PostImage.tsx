@@ -4,6 +4,8 @@ import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import { PreviousIcon, NextIcon } from './icons';
 import { useDarkVariants } from '../hooks/useDarkVariants';
+import { useAssetPreloader } from '../hooks/useAssetPreloader';
+import { useTheme } from 'next-themes';
 
 interface ImageItem {
   src: string;
@@ -28,9 +30,16 @@ export default function PostImage({
 }: PostImageProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const isCarousel = images.length > 1;
-  const { getImageSrc } = useDarkVariants();
+  const { getImageSrc, manifest } = useDarkVariants();
+  const { allAssetsLoaded } = useAssetPreloader();
+  const { theme } = useTheme();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -79,23 +88,54 @@ export default function PostImage({
             const imgWidth = image.width || width || 1200;
             const imgHeight = image.height || height || 800;
 
-            const imageSrc = getImageSrc(image.src);
+            const lightSrc = image.src;
+            const darkSrc = manifest?.[image.src] || image.src;
+            const hasDarkVariant = darkSrc !== lightSrc;
+            const isDark = mounted && (theme === 'dark' || 
+              (theme === 'system' && 
+               typeof window !== 'undefined' && 
+               window.matchMedia('(prefers-color-scheme: dark)').matches));
 
             return (
-              <Image
-                key={`${image.src}-${imageSrc}`}
-                src={imageSrc}
-                alt={image.alt}
-                width={imgWidth}
-                height={imgHeight}
-                className={`h-auto w-full object-contain transition-opacity duration-[800ms] ease-in-out ${
+              <div
+                key={image.src}
+                className={`${
                   index === currentIndex
-                    ? 'relative z-10 opacity-100'
-                    : 'absolute inset-0 z-0 opacity-0'
+                    ? 'relative z-10'
+                    : 'absolute inset-0 z-0'
                 }`}
-                sizes='(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px'
-                priority={index === 0}
-              />
+              >
+                {/* Light mode image */}
+                <Image
+                  src={lightSrc}
+                  alt={image.alt}
+                  width={imgWidth}
+                  height={imgHeight}
+                  className={`h-auto w-full object-contain transition-opacity duration-300 ease-in-out ${
+                    index === currentIndex
+                      ? (isDark && hasDarkVariant) ? 'opacity-0' : 'opacity-100'
+                      : 'opacity-0'
+                  }`}
+                  sizes='(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px'
+                  priority={index === 0}
+                />
+                {/* Dark mode image (if exists) */}
+                {hasDarkVariant && (
+                  <Image
+                    src={darkSrc}
+                    alt={image.alt}
+                    width={imgWidth}
+                    height={imgHeight}
+                    className={`absolute inset-0 h-auto w-full object-contain transition-opacity duration-300 ease-in-out ${
+                      index === currentIndex
+                        ? isDark ? 'opacity-100' : 'opacity-0'
+                        : 'opacity-0'
+                    }`}
+                    sizes='(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px'
+                    priority={index === 0}
+                  />
+                )}
+              </div>
             );
           })}
         </div>

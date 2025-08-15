@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google';
 import './globals.css';
 import '@/styles/mdx.css';
 import { ThemeProvider } from '@/components/ThemeProvider';
+import { AssetPreloader } from '@/components/AssetPreloader';
 import { SITE_CONFIG } from '@/lib/constants';
 
 const inter = Inter({
@@ -42,7 +43,9 @@ export default function RootLayout({
         />
       </head>
       <body className='font-sans antialiased'>
-        <ThemeProvider>{children}</ThemeProvider>
+        <ThemeProvider>
+          <AssetPreloader>{children}</AssetPreloader>
+        </ThemeProvider>
       </body>
     </html>
   );
