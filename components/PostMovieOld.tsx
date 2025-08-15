@@ -4,6 +4,7 @@ import { useRef, useEffect, useState } from 'react';
 import { useTheme } from 'next-themes';
 import { PlayIcon, PauseIcon, RestartIcon } from './icons';
 import { useDarkVariants } from '../hooks/useDarkVariants';
+import { useAssetPreloader } from '../hooks/useAssetPreloader';
 
 interface VideoItem {
   src: string;
@@ -28,7 +29,9 @@ export default function PostMovie({ videos, className = '' }: PostMovieProps) {
   } | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
-  const { getImageSrc } = useDarkVariants();
+  const darkVideoRef = useRef<HTMLVideoElement>(null);
+  const { manifest } = useDarkVariants();
+  const { allAssetsLoaded } = useAssetPreloader();
   const { theme } = useTheme();
 
   useEffect(() => {
@@ -55,9 +58,12 @@ export default function PostMovie({ videos, className = '' }: PostMovieProps) {
         if (videoRef.current) {
           if (isIntersecting && !hasEnded) {
             videoRef.current.play().catch(() => {
-              // Handle autoplay restrictions gracefully
-              console.log('Autoplay prevented by browser');
+              // Autoplay prevented - expected browser behavior
             });
+            if (darkVideoRef.current) {
+              darkVideoRef.current.currentTime = videoRef.current.currentTime;
+              darkVideoRef.current.play().catch(() => {});
+            }
             setIsCurrentlyPlaying(true);
             // Only set hasEverStarted once, not every time it enters viewport
             if (!hasEverStarted) {
@@ -65,6 +71,7 @@ export default function PostMovie({ videos, className = '' }: PostMovieProps) {
             }
           } else if (!isIntersecting) {
             videoRef.current.pause();
+            if (darkVideoRef.current) darkVideoRef.current.pause();
             setIsCurrentlyPlaying(false);
           }
         }
@@ -87,13 +94,19 @@ export default function PostMovie({ videos, className = '' }: PostMovieProps) {
     if (videoRef.current) {
       if (isCurrentlyPlaying) {
         videoRef.current.pause();
+        if (darkVideoRef.current) darkVideoRef.current.pause();
         setIsCurrentlyPlaying(false);
       } else {
         // Reset ended state when manually playing
         setHasEnded(false);
         videoRef.current.play().catch(() => {
-          console.log('Play prevented by browser');
+          // Play prevented - user interaction required
         });
+        // Sync dark video if it exists
+        if (darkVideoRef.current) {
+          darkVideoRef.current.currentTime = videoRef.current.currentTime;
+          darkVideoRef.current.play().catch(() => {});
+        }
         setIsCurrentlyPlaying(true);
       }
     }
@@ -107,10 +120,14 @@ export default function PostMovie({ videos, className = '' }: PostMovieProps) {
   const restartVideo = () => {
     if (videoRef.current) {
       videoRef.current.currentTime = 0;
+      if (darkVideoRef.current) darkVideoRef.current.currentTime = 0;
       setHasEnded(false);
       videoRef.current.play().catch(() => {
-        console.log('Restart prevented by browser');
+        // Restart prevented - user interaction required
       });
+      if (darkVideoRef.current) {
+        darkVideoRef.current.play().catch(() => {});
+      }
       setIsCurrentlyPlaying(true);
     }
   };
@@ -135,14 +152,16 @@ export default function PostMovie({ videos, className = '' }: PostMovieProps) {
     }
   };
 
-  // Reset player controls when theme changes
+  // Sync videos when theme changes
   useEffect(() => {
     if (videoRef.current && mounted) {
-      // Reset to paused state when theme changes
-      setIsCurrentlyPlaying(false);
-      setHasEnded(false);
+      // Sync dark video if it exists
+      if (darkVideoRef.current && isCurrentlyPlaying) {
+        darkVideoRef.current.currentTime = videoRef.current.currentTime;
+        darkVideoRef.current.play().catch(() => {});
+      }
     }
-  }, [theme, mounted]);
+  }, [theme, mounted, isCurrentlyPlaying]);
 
   return (
     <div
@@ -172,31 +191,40 @@ export default function PostMovie({ videos, className = '' }: PostMovieProps) {
           }
         `}</style>
         {videos.map(video => {
-          const videoSrc = getImageSrc(video.src);
-          const posterSrc = getImageSrc(
-            video.src.replace('.mp4', '.jpg').replace('/mov/', '/mov/poster/')
-          );
+          const lightVideoSrc = video.src;
+          const darkVideoSrc = manifest?.[video.src] || video.src;
+          const hasDarkVideoVariant = darkVideoSrc !== lightVideoSrc;
+          const lightPosterSrc = video.src.replace('.mp4', '.jpg').replace('/mov/', '/mov/poster/');
+          const darkPosterSrc = manifest?.[lightPosterSrc] || lightPosterSrc;
+          
+          const isDark = mounted && (theme === 'dark' || 
+            (theme === 'system' && 
+             typeof window !== 'undefined' && 
+             window.matchMedia('(prefers-color-scheme: dark)').matches));
+          
+          const posterSrc = (isDark && darkPosterSrc !== lightPosterSrc) ? darkPosterSrc : lightPosterSrc;
 
           return (
             <div
               key={video.src}
-              className='relative h-full w-full'
+              className='relative w-full'
               style={{
                 backgroundImage: `url(${posterSrc})`,
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
                 backgroundRepeat: 'no-repeat',
+                aspectRatio: videoDimensions ? `${videoDimensions.width} / ${videoDimensions.height}` : '16 / 9',
               }}
             >
+              {/* Light mode video */}
               <video
-                key={`${video.src}-${videoSrc}`} // Force re-render when src changes
                 ref={videoRef}
-                src={videoSrc}
-                className={`h-auto w-full border-0 transition-opacity duration-300 outline-none ${
-                  hasEverStarted ? 'opacity-100' : 'opacity-0'
+                src={lightVideoSrc}
+                className={`absolute inset-0 h-full w-full object-contain border-0 outline-none transition-opacity duration-300 ${
+                  (isDark && hasDarkVideoVariant) ? 'opacity-0' : hasEverStarted ? 'opacity-100' : 'opacity-0'
                 }`}
                 playsInline
-                preload='auto'
+                preload='metadata'
                 muted
                 onEnded={handleVideoEnded}
                 onPlay={handleVideoPlay}
@@ -212,22 +240,37 @@ export default function PostMovie({ videos, className = '' }: PostMovieProps) {
                   // Reset ended state when video loads
                   setHasEnded(false);
                 }}
-                style={{
-                  outline: 'none',
-                  border: 'none',
-                  background: 'transparent',
-                  display: 'block',
-                  boxShadow: 'none',
-                  WebkitBoxShadow: 'none',
-                  MozBoxShadow: 'none',
-                  ...(videoDimensions &&
-                    hasEverStarted && {
-                      aspectRatio: `${videoDimensions.width} / ${videoDimensions.height}`,
-                    }),
-                }}
               >
                 Your browser does not support the video tag.
-              </video>
+                </video>
+                
+              {/* Dark mode video (if exists) */}
+              {hasDarkVideoVariant && (
+                <video
+                  ref={darkVideoRef}
+                  src={darkVideoSrc}
+                  className={`absolute inset-0 h-full w-full object-contain border-0 outline-none transition-opacity duration-300 ${
+                    isDark && hasEverStarted ? 'opacity-100' : 'opacity-0'
+                  }`}
+                  playsInline
+                  preload='metadata'
+                  muted
+                  onEnded={handleVideoEnded}
+                  onPlay={handleVideoPlay}
+                  onPause={handleVideoPause}
+                  onLoadedMetadata={handleVideoLoadedMetadata}
+                  onTimeUpdate={() => {
+                    if (darkVideoRef.current && !darkVideoRef.current.ended && hasEnded) {
+                      setHasEnded(false);
+                    }
+                  }}
+                  onLoadedData={() => {
+                    setHasEnded(false);
+                  }}
+                >
+                  Your browser does not support the video tag.
+                </video>
+              )}
             </div>
           );
         })}
