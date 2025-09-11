@@ -11,7 +11,9 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "lint:fix": "next lint --fix",
-    "generate-dark-variants": "node scripts/generate-dark-variants.js"
+    "generate-dark-variants": "node scripts/generate-dark-variants.js",
+    "prepare": "husky",
+    "install-hooks": "husky"
   },
   "dependencies": {
     "gray-matter": "^4.0.3",
@@ -35,9 +37,20 @@
     "eslint-config-next": "15.3.4",
     "eslint-config-prettier": "^10.1.5",
     "eslint-plugin-prettier": "^5.5.1",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.1.6",
     "prettier": "^3.6.2",
     "prettier-plugin-tailwindcss": "^0.6.13",
     "tailwindcss": "^4",
     "typescript": "^5"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md,mdx,css}": [
+      "prettier --write"
+    ]
   }
 }
