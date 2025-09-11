@@ -19,7 +19,9 @@ export function useAssetPreloader() {
     loaded: 0,
     isComplete: false,
   });
-  const [preloadedAssets, setPreloadedAssets] = useState<Set<string>>(new Set());
+  const [preloadedAssets, setPreloadedAssets] = useState<Set<string>>(
+    new Set()
+  );
 
   // Load manifest on mount
   useEffect(() => {
@@ -36,52 +38,55 @@ export function useAssetPreloader() {
       });
   }, []);
 
-  const preloadAllAssets = useCallback(async (manifestData: DarkVariantsManifest) => {
-    const assetsToPreload: string[] = [];
-    
-    // Collect all assets (both light and dark variants)
-    Object.entries(manifestData).forEach(([lightPath, darkPath]) => {
-      assetsToPreload.push(lightPath, darkPath);
-    });
+  const preloadAllAssets = useCallback(
+    async (manifestData: DarkVariantsManifest) => {
+      const assetsToPreload: string[] = [];
 
-    setPreloadProgress({
-      total: assetsToPreload.length,
-      loaded: 0,
-      isComplete: false,
-    });
+      // Collect all assets (both light and dark variants)
+      Object.entries(manifestData).forEach(([lightPath, darkPath]) => {
+        assetsToPreload.push(lightPath, darkPath);
+      });
 
-    const loadPromises = assetsToPreload.map(async (src) => {
-      try {
-        if (src.endsWith('.mp4')) {
-          // Preload video
-          await preloadVideo(src);
-        } else {
-          // Preload image
-          await preloadImage(src);
+      setPreloadProgress({
+        total: assetsToPreload.length,
+        loaded: 0,
+        isComplete: false,
+      });
+
+      const loadPromises = assetsToPreload.map(async src => {
+        try {
+          if (src.endsWith('.mp4')) {
+            // Preload video
+            await preloadVideo(src);
+          } else {
+            // Preload image
+            await preloadImage(src);
+          }
+
+          setPreloadedAssets(prev => new Set(prev).add(src));
+          setPreloadProgress(prev => ({
+            ...prev,
+            loaded: prev.loaded + 1,
+          }));
+        } catch (error) {
+          console.warn(`Failed to preload asset: ${src}`, error);
+          // Still mark as "loaded" to not block progress
+          setPreloadProgress(prev => ({
+            ...prev,
+            loaded: prev.loaded + 1,
+          }));
         }
-        
-        setPreloadedAssets(prev => new Set(prev).add(src));
-        setPreloadProgress(prev => ({
-          ...prev,
-          loaded: prev.loaded + 1,
-        }));
-      } catch (error) {
-        console.warn(`Failed to preload asset: ${src}`, error);
-        // Still mark as "loaded" to not block progress
-        setPreloadProgress(prev => ({
-          ...prev,
-          loaded: prev.loaded + 1,
-        }));
-      }
-    });
+      });
 
-    await Promise.all(loadPromises);
-    
-    setPreloadProgress(prev => ({
-      ...prev,
-      isComplete: true,
-    }));
-  }, []);
+      await Promise.all(loadPromises);
+
+      setPreloadProgress(prev => ({
+        ...prev,
+        isComplete: true,
+      }));
+    },
+    []
+  );
 
   const preloadImage = (src: string): Promise<void> => {
     return new Promise((resolve, reject) => {
@@ -97,9 +102,11 @@ export function useAssetPreloader() {
       const video = document.createElement('video');
       video.preload = 'auto';
       video.muted = true;
-      
+
       // Also preload the poster image if it exists
-      const posterSrc = src.replace('.mp4', '.jpg').replace('/mov/', '/mov/poster/');
+      const posterSrc = src
+        .replace('.mp4', '.jpg')
+        .replace('/mov/', '/mov/poster/');
       preloadImage(posterSrc).catch(() => {
         // Poster might not exist, that's okay
       });
@@ -109,7 +116,7 @@ export function useAssetPreloader() {
         // Clean up the video element
         video.remove();
       };
-      
+
       video.onerror = () => reject(new Error(`Failed to load video: ${src}`));
       video.src = src;
       video.load();

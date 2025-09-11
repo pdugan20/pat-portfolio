@@ -12,7 +12,7 @@ export function useDarkVariants() {
 
   useEffect(() => {
     setMounted(true);
-    
+
     // Load the dark variants manifest
     fetch('/dark-variants.json')
       .then(res => res.json())
@@ -26,11 +26,11 @@ export function useDarkVariants() {
   const getImageSrc = (originalSrc: string): string => {
     if (!mounted || !manifest) return originalSrc;
 
-    const isDark = 
-      theme === 'dark' || 
-      (theme === 'system' && 
-       typeof window !== 'undefined' && 
-       window.matchMedia('(prefers-color-scheme: dark)').matches);
+    const isDark =
+      theme === 'dark' ||
+      (theme === 'system' &&
+        typeof window !== 'undefined' &&
+        window.matchMedia('(prefers-color-scheme: dark)').matches);
 
     if (!isDark) return originalSrc;
 
