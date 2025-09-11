@@ -11,7 +11,7 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "lint:fix": "next lint --fix",
-    "generate-dark-variants": "node scripts/generate-dark-variants.js",
+    "generate-dark-variants": "node scripts/generate-dark-variants.mjs",
     "prepare": "husky",
     "install-hooks": "husky"
   },
