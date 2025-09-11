@@ -180,12 +180,13 @@ export default function PostMovie({ videos, className = '' }: PostMovieProps) {
           return (
             <div
               key={video.src}
-              className='relative h-full w-full'
+              className='relative w-full'
               style={{
                 backgroundImage: `url(${posterSrc})`,
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
                 backgroundRepeat: 'no-repeat',
+                aspectRatio: '1 / 1', // Square aspect ratio
               }}
             >
               <video

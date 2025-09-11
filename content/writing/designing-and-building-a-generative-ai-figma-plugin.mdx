@@ -1,0 +1,160 @@
+---
+title: 'Designing and building a generative AI Figma plugin'
+date: '2025-09-11'
+description: 'How I built a Figma plugin that utilizes gen-ai to improve my design velocity and throughput.'
+tags: ['figma', 'ai', 'design-systems', 'plugins']
+relatedWriting:
+  - title: 'Building an AI-ready design system in Figma'
+    slug: 'building-an-ai-ready-design-system'
+    description: 'Architecting a modern design system that can seamlessly plug-in to first and third-party AI tools in Figma.'
+    date: '2025-07-03'
+    imageSrc: '/assets/building-an-ai-ready-design-system/img/01.jpg'
+    imageAlt: 'Building an AI-Ready Design System'
+  - title: 'Design Systems in Practice'
+    slug: 'design-systems-practice'
+    description: 'Real-world insights into implementing and maintaining design systems at scale across different organizations and platforms.'
+    date: '2024-06-15'
+    imageSrc: '/assets/building-an-ai-ready-design-system/img/02.jpg'
+    imageAlt: 'Design Systems in Practice'
+---
+
+## Introduction
+
+As coding agents make the actual work associated with building UI and applications faster, the act of _physically moving actual pixels_ around Figma has the potential to increasingly become a bottleneck in the end-to-end product development process.
+
+Figma, to their credit, has added a number of AI tools over the past few months and years that have made the act of designing easier than ever. [Figma Make](https://www.figma.com/make/) allows users to prompt their way into more realistic prototypes that live outside traditional art-boards, [First Draft](https://help.figma.com/hc/en-us/articles/23955143044247-Use-First-Draft-with-Figma-AI) gives users the ability to have Figma create a first pass at new UI elements, and [Text Suggestions](https://help.figma.com/hc/en-us/articles/31326388366871-AI-text-suggestions) provides suggested text for components like buttons and form fields. There are [many more](https://help.figma.com/hc/en-us/articles/23870272542231-Use-AI-tools-in-Figma-Design), and I'm sure there will be even more beyond by the time you're reading this post.
+
+These tools seem to generally fall into two buckets - generative and automative. On the generative side, Figma Make allows you to explore concepts in a richer fidelity than what you'd be able to manually stitch together using a traditional Figma prototype that leverages Smart Animate, but it can be unwieldy and frustrating to use since it doesn't always directly map well to your existing UI system or components. First Draft also does a great job pointing you in the right direction while you're ideating, but you have very little ability to actually iterate or nudge it in different directions once it spits out UI.
+
+On the other hand, the second bucket of tools broadly fall into automative quality of life improvements that allow designers to increase their velocity. The Renaming Layers feature for example is a simple, but amazing feature that has finally allowed me to replace all the Rectangle 12s and Frame 20s in my design files with human (and machine) readable labels that provide clarity that helps improve how rapidly designs can be translated into code.
+
+As part of a challenge to myself, I decided it would be fun to develop a proof of concept tool using [Figma's plugin API](https://www.figma.com/plugin-docs/) that fit somewhere between those two buckets - something that would use generative AI but also effectively leverage an existing design system in a way that Figma Make can't yet do.
+
+## The Bottleneck Problem
+
+The primary issue here is that the traditional design process, especially as agentic coding continues to grow in popularity, increasingly feels like a bottleneck as teams are trying to move more quickly.
+
+In my own practice, I've always looked to find ways to eliminate repetitive or mundane portions of the design process in order to better allocate my time more evenly across the spectrum of tasks and stages that go into understanding and finding software oriented solutions to different problems.
+
+There have always been a number of ways to try and free up your time as a designer, an obvious example being something like creating a robust design system with extensible components and well documented usage examples gives designers a foundation to build upon rapidly and in a way thats consistent with the rest of their team. I documented in a previous post, [Building an AI-ready design system in Figma](https://pat.codes/writing/building-an-ai-ready-design-system), best practices for following when building such a system in Figma.
+
+## Further Optimizations Atop a Design System
+
+Using the UI kit I built as a part of that previous post as a through-line, I'll use it as a jumping off point for the problem I'm approaching in this post of how to leverage AI in order to optimize additional mundane portions of the design process.
+
+Designers working on conversational interfaces like Facebook Messenger or iMessage face a problem somewhat unique to 'chat' apps, in that well designed conversational interfaces are so contextual in nature, the majority of your UI appears when it's needed and then recedes into the background when its no longer relevant.
+
+With that in mind, I generally start new projects mapping the things I'm designing to realistic scenarios, keeping those scenarios as grounded as possible within the human nature of the actual problems I'm aiming to solve. This generally means sitting down, creating personas, and then mapping those personas to a real conversation people are having with one another (or increasingly with AI).
+
+It's a labor intensive and manual process, and I thought this would make for a great example of a very specific problem I could try and solve in a more automated way for myself going forward.
+
+## Defining the Scope of Our Plugin
+
+The goal I laid out for this project was was: how do I automate the process of creating standalone UI artifacts to kick-off new projects, in addition to having those artifacts be assembled from an existing UI kit, use consistent personas, and contain conversations that were correct tonally and topically for the type of problem I was designing around.
+
+That also meant making the designs we would generate using this tool parameter driven. Because we'd be using pre-assembled components from our UI kit, which themselves inherited from our existing variable system, it would be easy to tap into parameters like setting the theme of our UI to light or dark, but we'd also need to pass parameters like the number of conversation participants and the tone and topic of our conversation into an external API in order to ensure we were able to generate data correcetly.
+
+As a bonus, I thought it would be nice to make it so that the UI we generated programmatically within Figma was prototype-ready, meaning that I could open it up in Figma's prototyping tool and have it look as close as possible to a real iMessage UI while being scrollable and interactive.
+
+I initially thought I'd be able to leverage Apple's existing self-published [iMessage and App Stickers](https://www.figma.com/community/file/1367916269438172112/imessage-apps-and-stickers) design library, but I realized fairly quickly this wasn't going to be possible. The library was fairly out of date, the components weren't built with auto-layout support, and in many cases the UI throughout the file didn't match the production versions of Apple iMessage.
+
+## Getting Ready to Build
+
+As we discussed in [a previous post](https://pat.codes/writing/building-an-ai-ready-design-system), building an AI tool that integrates well with Figma still starts with actually constructing your components and designs in Figma in a way that makes it easy to manipulate those components programatically.
+
+For example, using auto-layout at a component level without our UI kit means that when we generate new components like fully assembled screens programmatically, we can apply auto-layout to parent containers much more easily. It also requires that, just like when building components in code, we've already accounted for dynamic content.
+
+In our case, this meant when we were designing our bubble components, we built a number of different variations that could be grouped together dynamically and include all types of possible permutations for how they rendered. For example, we build 48 different component configurations for sender and recipient text bubble groups.
+
+This also means that that the component names, and individual property configuration are both human and machine readable in a way that makes them easy to manipulate depending on the type of data we're receiving.
+
+## Plugin Architecture & Implementation
+
+Building a plugin in Figma is... surprisingly not that difficult. Figma has a [well documented plugin API](https://www.figma.com/plugin-docs/), and while it isn't the greatest set of developer docs I've ever worked with, its very passable. They also have a great, albeit dated, [multi-part Youtube series](https://www.youtube.com/watch?v=4G9RHt2OyuY) targeted at designers with limited technical expertise.
+
+For my own plugin, the source code for which [lives here](https://github.com/pdugan20/chat-builder-plugin/), I choose to build it in as modular of a fashion as possible, leveraging React, Typescript, and Tailwind to build what essentially is a self-contained app container. I also set a goal of making it look and feel like as much of a native part of Figma as possible, with a goal of making it essentially indistinguishable from the rest of Figma's user interface.
+
+While I do think Figma could do more to make their component system more usable by third-party developers in an off-the-shelf fashion, to their credit they did do a great job exposing things like their [theme variables and color system](https://www.figma.com/plugin-docs/css-variables/) in a manner that made it very easy to develop atop.
+
+Without going to into the weeds, the way this plugin works is that:
+
+- A user passes in information about the type of chat they'd like to generate
+- That information is validated locally on the client and then passed to a third-party API (in this case Claude)
+- Claude processes, and then returns data in a stream that we then parse and use to asynchronously traverse our UI kit's component system and assemble component primitives into a new set of dynamic components
+- In instances where a user has indicated they want the chat to be prototype-ready, we do some additional UI manipulation and assembly after we've assembled that chat object itself
+
+When laid out like that, pretty simple, right? The main type of artifact we're looking to receive from Claude here is a json object with individual messages that look like this:
+
+```json title="sample-output.json"
+[
+  {
+    "role": "sender|recipient",
+    "name": "Person Name",
+    "gender": "male|female",
+    "message": "Message content",
+    "messagesInGroup": 1,
+    "emojiReaction": "thumbs_up" // optional
+  }
+]
+```
+
+Like with any AI system, part of the fun here is refining your prompt in order to prevent failures and balance the system between quality and speed. The prompt we eventually landed on was:
+
+```prompt-template title="utils/prompt.ts"
+Generate an iMessage GROUP CHAT conversation as a valid JSON array. Follow this exact format:
+
+REQUIREMENTS:
+- Topic/Tone: ${prompt}
+- Max messages: ${maxMessages}
+- Total participants: ${participants} (1 sender + ${recipientCount} recipient${recipientCount > 1 ? 's' : ''})
+- EXACTLY ONE participant with role "sender" (the person whose phone this is)
+- EXACTLY ${recipientCount} different participant${recipientCount > 1 ? 's' : ''} with role "recipient"
+- Each participant must have a unique realistic first+last name and gender (male/female)
+- Messages should show natural group chat dynamics with all ${participants} people participating
+- Times in "H:MM AM/PM" format, chronological order
+- emojiReaction: null OR one of: heart, haha, exclamation, thumbsUp, thumbsDown, question
+- Use emoji reactions SPARINGLY - only 2-4 total reactions per conversation, not on every message
+```
+
+We also follow best practices and pass through more information on sample formatting and and ideal output, as well as specify the default conversational tone and grouping logic, but that's mostly to get the prompt performing well on the more performance oriented Claude tiers.
+
+To dive quickly into a few technical decisions I made when developing this plugin. Rather than try and programmatically create a generate completely unique personas with unique profile photos each time the plugin runs, I instead choose to generate new chat participant names each time we sent a new query to the Claude API, and then map those names to the correct gender of pre-defined personas we had already built into our UI kit. In this manner we were able to further optimize the performance and response time while also making it easier to extend those personas to other portions of our UI kit outside of the chat thread.
+
+I additionally elected to allow users to bring-their-own API keys, rather that offer some free/paid-tier of the plugin. It would have been relatively trivial to create a third-party auth mechanism that allowed users some number of free chat generations per month with a paid tier to unlock if they wanted more, but the goal here was to demonstrate the feasibility of building a plugin like this, not to try and monetize it.
+
+## Results and Impact
+
+So again, this is a proof of concept - and certainly in no way would I present this as a some kind of all encompassing solution. But what I do think it does a great job of, is showing whats possible, and of providing a _type of thinking_ and approaching problems that is useful to keep in mind when working to better allocate your time an energy professionally.
+
+Even at it's most simple, this plugin still allows us to thematically accomplish a few things. It allows us to automate a mundane portion of the design process, and replaces what was a manual and non-creative part of every project in a way thats automated and high quality.
+
+It allows us to manipulate our existing component system in a way thats error-free, and instantaneous. Rather than manually assembling, and spacing apart individual or grouped text and image bubbles, specifying personas, and updating profile images, we now get all of that for free and with just the click of a button.
+
+And finally, it unlocks time for more rapid iteration. Projects get off the ground faster, prototypes can be generated and updated more speedily and without error, and it allows us as designers to use our time where it can provide the most value - solving real problems, not just pushing pixels around the screen.
+
+## Where AI-Assisted Design Goes Next
+
+In a world where a medium-sized team is working on a conversational interface like the iMessage example we've used here, there are any number of ways you could extend or expand upon this tool to allow a team to more forward with greater velocity.
+
+Just a few examples of how it might be used out of the box in it's current form:
+
+- User researchers could use a tool like this to generate static or interactive interfaces for research in a way that didn't tie down a product designer
+- Marketing teams could use it to generate promotional assets
+- User support teams could use it to generate assistive aids for customer scenarios they might encounter
+- Content designers could use it to rapidly a/b test the copy announcing new features
+
+In a world where we wanted to develop this plugin further, or great some internal system of adjacent plugins that worked well together, we could:
+
+- Allow UI we were developing to instantly be show an different breakpoints we specified
+- Automatically detect and insert different types of user responses (sharing a video on Youtube, a song on Spotify, their current location, etc) to see how contextual UI worked together in a single conversation
+- Build more realistic prototypes for user testing or as an artifact that works as a part of an engineering handoff
+
+This list goes on, and I'm sure you could easily think of a few examples not listed here.
+
+## Wrapping it all up
+
+So where does this leave us? In a world where teams continue to accelerate the pace at which they identify problems and ship new solutions, I think it becomes increasingly important the designers not only work to not become a bottle-neck in that product development process, but that they also contribute to accelerating the process itself where appropriate.
+
+That also increasingly means that designers should work with their own functions, or with assistance from their engineering partners to _build tools, and not just use them_. It's easy to imagine a world where small and mid-size design teams have their own customized suite of self-built and maintained private Figma tooling that not only increases the speed with which they design, and the quality of those design outputs, but also makes it easier to translate those designs into code.
+
+Again, generalized Figma plugins have existed for years that accomplish tasks like this s a more generic and and generalized manner, the exciting part about unlocking this next generation of tooling is that it's now easier than ever to build the exact tool you need to solve the exact problem you and your team are facing. You don't have to wait for someone else to build it, you don't have to take a generalized tool and try and adapt it as best you can to your unique situation, you can have the exact thing you want, in a way that unlocks you to focus on the things that allow you to generate the most value for your users, and I find that really exciting.

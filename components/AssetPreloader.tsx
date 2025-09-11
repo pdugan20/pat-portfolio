@@ -15,7 +15,9 @@ export function AssetPreloader({ children }: { children: React.ReactNode }) {
   // Optionally show a subtle loading indicator
   // You can remove this if you don't want any visual feedback
   if (!allAssetsLoaded && preloadProgress.total > 0) {
-    console.log(`Preloading assets: ${preloadProgress.loaded}/${preloadProgress.total}`);
+    console.log(
+      `Preloading assets: ${preloadProgress.loaded}/${preloadProgress.total}`
+    );
   }
 
   return <>{children}</>;
