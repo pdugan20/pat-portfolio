@@ -4,7 +4,6 @@ import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import { PreviousIcon, NextIcon } from './icons';
 import { useDarkVariants } from '../hooks/useDarkVariants';
-import { useAssetPreloader } from '../hooks/useAssetPreloader';
 import { useTheme } from 'next-themes';
 
 interface ImageItem {
@@ -33,8 +32,7 @@ export default function PostImage({
   const [mounted, setMounted] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const isCarousel = images.length > 1;
-  const { getImageSrc, manifest } = useDarkVariants();
-  const { allAssetsLoaded } = useAssetPreloader();
+  const { manifest } = useDarkVariants();
   const { theme } = useTheme();
 
   useEffect(() => {
@@ -91,10 +89,12 @@ export default function PostImage({
             const lightSrc = image.src;
             const darkSrc = manifest?.[image.src] || image.src;
             const hasDarkVariant = darkSrc !== lightSrc;
-            const isDark = mounted && (theme === 'dark' || 
-              (theme === 'system' && 
-               typeof window !== 'undefined' && 
-               window.matchMedia('(prefers-color-scheme: dark)').matches));
+            const isDark =
+              mounted &&
+              (theme === 'dark' ||
+                (theme === 'system' &&
+                  typeof window !== 'undefined' &&
+                  window.matchMedia('(prefers-color-scheme: dark)').matches));
 
             return (
               <div
@@ -113,7 +113,9 @@ export default function PostImage({
                   height={imgHeight}
                   className={`h-auto w-full object-contain transition-opacity duration-300 ease-in-out ${
                     index === currentIndex
-                      ? (isDark && hasDarkVariant) ? 'opacity-0' : 'opacity-100'
+                      ? isDark && hasDarkVariant
+                        ? 'opacity-0'
+                        : 'opacity-100'
                       : 'opacity-0'
                   }`}
                   sizes='(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px'
@@ -128,7 +130,9 @@ export default function PostImage({
                     height={imgHeight}
                     className={`absolute inset-0 h-auto w-full object-contain transition-opacity duration-300 ease-in-out ${
                       index === currentIndex
-                        ? isDark ? 'opacity-100' : 'opacity-0'
+                        ? isDark
+                          ? 'opacity-100'
+                          : 'opacity-0'
                         : 'opacity-0'
                     }`}
                     sizes='(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px'

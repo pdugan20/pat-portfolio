@@ -11,7 +11,14 @@ const rehypePrettyCodeOptions: Partial<Options> = {
   getHighlighter: async () => {
     return await createHighlighter({
       themes: ['github-light', 'github-dark'],
-      langs: ['javascript', 'typescript', 'json', 'bash', 'text', promptTemplateLang]
+      langs: [
+        'javascript',
+        'typescript',
+        'json',
+        'bash',
+        'text',
+        promptTemplateLang,
+      ],
     });
   },
   onVisitLine(node) {
