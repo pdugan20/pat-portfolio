@@ -37,7 +37,11 @@ export const promptTemplateLang: LanguageRegistration = {
     },
     string: {
       match: '"[^"]*"',
-      name: 'string.quoted.double',
+      name: 'entity.name.type',
+    },
+    timeFormat: {
+      match: 'H:MM\\s+AM/PM',
+      name: 'constant.numeric',
     },
   },
   patterns: [
@@ -45,5 +49,6 @@ export const promptTemplateLang: LanguageRegistration = {
     { include: '#header' },
     { include: '#bullet' },
     { include: '#string' },
+    { include: '#timeFormat' },
   ],
 };

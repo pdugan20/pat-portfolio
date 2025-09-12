@@ -101,19 +101,27 @@ When laid out like that, pretty simple, right? The main type of artifact we're l
 Like with any AI system, part of the fun here is refining your prompt in order to prevent failures and balance the system between quality and speed. The prompt we eventually landed on was:
 
 ```prompt-template title="utils/prompt.ts"
-Generate an iMessage GROUP CHAT conversation as a valid JSON array. Follow this exact format:
+Generate an iMessage GROUP CHAT conversation as a valid JSON array.
+Follow this exact format:
 
 REQUIREMENTS:
 - Topic/Tone: ${prompt}
 - Max messages: ${maxMessages}
-- Total participants: ${participants} (1 sender + ${recipientCount} recipient${recipientCount > 1 ? 's' : ''})
-- EXACTLY ONE participant with role "sender" (the person whose phone this is)
-- EXACTLY ${recipientCount} different participant${recipientCount > 1 ? 's' : ''} with role "recipient"
-- Each participant must have a unique realistic first+last name and gender (male/female)
-- Messages should show natural group chat dynamics with all ${participants} people participating
+- Total participants: ${participants}
+    (1 sender + ${recipientCount} ${pluralize('recipient', recipientCount)})
+- EXACTLY ONE participant with role "sender"
+    (the person whose phone this is)
+- EXACTLY ${recipientCount} different
+    ${pluralize('participant', recipientCount)} with role "recipient"
+- Each participant must have a unique realistic first+last name
+    and gender (male/female)
+- Messages should show natural group chat dynamics
+    with all ${participants} people participating
 - Times in "H:MM AM/PM" format, chronological order
-- emojiReaction: null OR one of: heart, haha, exclamation, thumbsUp, thumbsDown, question
-- Use emoji reactions SPARINGLY - only 2-4 total reactions per conversation, not on every message
+- emojiReaction: null OR one of: heart, haha, exclamation,
+    thumbsUp, thumbsDown, question
+- Use emoji reactions SPARINGLY - only 2-4 total reactions
+    per conversation, not on every message
 ```
 
 We also follow best practices and pass through more information on sample formatting and and ideal output, as well as specify the default conversational tone and grouping logic, but that's mostly to get the prompt performing well on the more performance oriented Claude tiers.
