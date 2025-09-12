@@ -105,7 +105,6 @@ code[data-theme*=' '] span {
 /* Title styling for code blocks */
 .mdx-content figure > figcaption[data-rehype-pretty-code-title] {
   color: var(--color-text-secondary);
-  text-align: left;
   padding: var(--spacing-3) var(--spacing-4);
   font-family: var(--font-sans);
   font-size: var(--text-sm-custom);
@@ -114,6 +113,28 @@ code[data-theme*=' '] span {
   margin: 0;
   border-bottom: 1px solid var(--color-border-primary);
   border-radius: var(--spacing-3) var(--spacing-3) 0 0;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 2.5rem;
+}
+
+/* Copy button positioning */
+.mdx-content
+  figure
+  > figcaption[data-rehype-pretty-code-title]
+  .copy-button-container {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+/* Title text should not take up more space than needed */
+.mdx-content figure > figcaption[data-rehype-pretty-code-title] .title-text {
+  flex-grow: 1;
+  margin-right: var(--spacing-2);
 }
 
 .dark .mdx-content figure > figcaption[data-rehype-pretty-code-title] {

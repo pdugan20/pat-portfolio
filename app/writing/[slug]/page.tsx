@@ -5,6 +5,7 @@ import { getBlogPost, getAllBlogSlugs } from '@/lib/mdx';
 import { getMDXComponents } from '@/lib/mdx-components';
 import AboutAuthor from '@/components/AboutAuthor';
 import RelatedWriting from '@/components/RelatedWriting';
+import CodeBlockEnhancer from '@/components/CodeBlockEnhancer';
 import type { Metadata } from 'next';
 import { SITE_CONFIG } from '@/lib/constants';
 import { rehypePrettyCodeOptions } from '@/lib/mdx-config';
@@ -90,6 +91,7 @@ export default async function BlogPostPage({
               }}
               components={components}
             />
+            <CodeBlockEnhancer />
           </div>
 
           <AboutAuthor />
