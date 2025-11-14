@@ -1,26 +1,19 @@
-import { dirname } from 'path';
-import { fileURLToPath } from 'url';
-import { FlatCompat } from '@eslint/eslintrc';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-const compat = new FlatCompat({
-  baseDirectory: __dirname,
-});
+import eslintConfigNext from 'eslint-config-next/core-web-vitals';
+import eslintPluginPrettier from 'eslint-plugin-prettier/recommended';
 
 const eslintConfig = [
-  ...compat.extends('next/core-web-vitals', 'next/typescript'),
+  ...eslintConfigNext,
+  eslintPluginPrettier,
   {
-    files: ['**/*.{js,jsx,ts,tsx}'],
-    plugins: {
-      prettier: (await import('eslint-plugin-prettier')).default,
-    },
     rules: {
       'prettier/prettier': 'error',
       'arrow-body-style': 'off',
       'prefer-arrow-callback': 'off',
       quotes: 'off',
+      // Temporarily disable stricter React 19/Next.js 16 rules
+      'react-hooks/set-state-in-effect': 'warn',
+      'react-hooks/refs': 'warn',
+      'react-hooks/immutability': 'warn',
     },
   },
 ];
