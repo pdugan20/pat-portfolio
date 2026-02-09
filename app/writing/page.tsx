@@ -6,15 +6,7 @@ import { SITE_CONFIG } from '@/lib/constants';
 
 export const metadata: Metadata = {
   title: `Writing - ${SITE_CONFIG.author}`,
-  description:
-    'Thoughts, tutorials, and insights about web development and technology',
-  alternates: {
-    types: {
-      'application/rss+xml': '/api/feeds/rss',
-      'application/atom+xml': '/api/feeds/atom',
-      'application/json': '/api/feeds/json',
-    },
-  },
+  description: SITE_CONFIG.feedDescription,
 };
 
 export default function BlogPage() {
