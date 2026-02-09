@@ -1,39 +1,13 @@
-import { posts as allPosts } from '#content';
-import { SITE_CONFIG } from '@/lib/constants';
-import { NextResponse } from 'next/server';
+import { buildFeed } from '@/lib/feeds';
 
-export async function GET() {
-  const posts = [...allPosts].sort(
-    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
-  );
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://yourdomain.com';
+export const dynamic = 'force-static';
 
-  const jsonFeed = {
-    version: 'https://jsonfeed.org/version/1.1',
-    title: `${SITE_CONFIG.author}'s Writing`,
-    description:
-      'Thoughts, tutorials, and insights about web development and technology',
-    home_page_url: baseUrl,
-    feed_url: `${baseUrl}/api/feeds/json`,
-    language: 'en-US',
-    authors: [
-      {
-        name: SITE_CONFIG.author,
-      },
-    ],
-    items: posts.map(post => ({
-      id: `${baseUrl}/writing/${post.slug}`,
-      url: `${baseUrl}/writing/${post.slug}`,
-      title: post.title,
-      summary: post.description,
-      date_published: new Date(post.date).toISOString(),
-      date_modified: new Date(post.date).toISOString(),
-      tags: post.tags,
-    })),
-  };
+export function GET() {
+  const feed = buildFeed();
 
-  return NextResponse.json(jsonFeed, {
+  return new Response(feed.json1(), {
     headers: {
+      'Content-Type': 'application/feed+json; charset=utf-8',
       'Cache-Control': 'public, max-age=3600, s-maxage=3600',
     },
   });
