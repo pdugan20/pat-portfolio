@@ -1,9 +1,11 @@
-import { getBlogPosts } from '@/lib/mdx';
+import { posts as allPosts } from '#content';
 import { SITE_CONFIG } from '@/lib/constants';
 import { NextResponse } from 'next/server';
 
 export async function GET() {
-  const posts = getBlogPosts();
+  const posts = [...allPosts].sort(
+    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+  );
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://yourdomain.com';
 
   const jsonFeed = {

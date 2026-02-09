@@ -1,110 +1,105 @@
 # Patrick Dugan's Portfolio
 
-A modern portfolio website built with Next.js 15, TypeScript, and Tailwind CSS. Features a blog section with MDX support for writing technical articles and project showcases.
+[![CI](https://github.com/pdugan20/pat-portfolio/actions/workflows/ci.yml/badge.svg)](https://github.com/pdugan20/pat-portfolio/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Next.js](https://img.shields.io/badge/Next.js-16-black?logo=next.js)](https://nextjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-v4-06B6D4?logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
+
+A portfolio and blog built with Next.js 16, TypeScript, and Tailwind CSS v4. Features MDX content compiled at build time with Velite, dark mode with automatic asset variants, and optimized video delivery.
 
 ## Features
 
-- **Portfolio Section**: Showcase your projects, skills, and experience
-- **Blog Section**: Write and publish technical articles using MDX
-- **Responsive Design**: Mobile-first approach with Tailwind CSS
-- **Theme System**: Light, dark, and system theme support with automatic preference detection
-- **TypeScript**: Full type safety throughout the application
-- **MDX Support**: Write blog posts with Markdown and React components
+- **Writing and Projects** - MDX-powered blog posts and project case studies with syntax highlighting
+- **Dark Mode** - Light, dark, and system theme support with automatic image/video variants via CSS class toggling
+- **RSS Feeds** - RSS, Atom, and JSON feed endpoints
+- **Optimized Media** - WebM video with MP4 fallback, compressed poster images, dark mode variants
+- **Type-Safe Content** - Velite compiles MDX at build time with Zod schema validation and generated TypeScript types
+- **Code Quality** - ESLint, Prettier, Husky pre-commit hooks, and CI pipeline
+
+## Tech Stack
+
+- **Framework** - [Next.js 16](https://nextjs.org/) with App Router and Turbopack
+- **Language** - [TypeScript](https://www.typescriptlang.org/)
+- **Content** - [Velite](https://velite.js.org/) with MDX, [rehype-pretty-code](https://github.com/rehype-pretty/rehype-pretty-code) + Shiki
+- **Styling** - [Tailwind CSS v4](https://tailwindcss.com/)
+- **Themes** - [next-themes](https://github.com/pacocoursey/next-themes)
+- **Testing** - [Vitest](https://vitest.dev/) with jsdom
+- **Runtime** - Node.js 22
 
 ## Project Structure
 
-```
+```text
 pat-portfolio/
-├── app/                    # Next.js App Router
-│   ├── page.tsx            # Home (portfolio)
-│   ├── globals.css         # Global styles
-│   └── blog/
-│       ├── page.tsx        # Blog index
-│       └── [slug]/page.tsx # Individual posts
+├── app/                        # Next.js App Router
+│   ├── layout.tsx              # Root layout with theme provider
+│   ├── page.tsx                # Homepage
+│   ├── writing/                # Blog section
+│   │   ├── page.tsx            # Post listing
+│   │   └── [slug]/page.tsx     # Individual posts
+│   ├── projects/               # Projects section
+│   │   ├── page.tsx            # Project listing
+│   │   └── [slug]/page.tsx     # Individual projects
+│   └── api/feeds/              # RSS, Atom, JSON feeds
 ├── content/
-│   └── blog/               # MDX blog posts
-├── components/             # Reusable UI components
-├── lib/                    # Utility functions
-├── styles/                 # Additional CSS styles
-├── public/                 # Static assets
-└── next.config.ts          # Next.js configuration
+│   ├── writing/                # MDX blog posts
+│   └── projects/               # MDX project case studies
+├── components/                 # React components
+│   ├── icons/                  # SVG icon components
+│   └── swatches/               # Design system components
+├── lib/                        # Utilities and configuration
+│   ├── dark-variants.ts        # Generated light-to-dark asset map
+│   └── __tests__/              # Unit tests
+├── styles/                     # CSS modules
+│   ├── components/             # Component-specific styles
+│   └── content/                # Content typography styles
+├── scripts/                    # Build scripts
+├── public/assets/              # Static media assets
+├── velite.config.ts            # Content schema and MDX pipeline
+└── .github/workflows/ci.yml   # CI pipeline
 ```
 
 ## Getting Started
 
-1. **Install dependencies**:
-
-   ```bash
-   npm install
-   ```
-
-2. **Run the development server**:
-
-   ```bash
-   npm run dev
-   ```
-
-3. **Open your browser** and navigate to `http://localhost:3000`
-
-## Writing Blog Posts
-
-Blog posts are written in MDX format and stored in the `content/blog/` directory. Each post should include frontmatter with the following fields:
-
-```mdx
----
-title: 'Your Post Title'
-date: '2024-01-15'
-description: 'A brief description of your post'
-tags: ['tag1', 'tag2', 'tag3']
----
-
-# Your Post Content
-
-Write your blog post content here using Markdown syntax.
-```
-
-## Customization
-
-### Portfolio Content
-
-Edit `app/page.tsx` to customize your portfolio content, including:
-
-- Personal information
-- Skills and experience
-- Project showcases
-- Contact information
-
-### Styling
-
-- Global styles: `app/globals.css`
-- Blog-specific styles: `styles/blog.css`
-- Component styles: Use Tailwind CSS classes
-
-### Components
-
-- Layout: `components/Layout.tsx`
-- Blog cards: `components/BlogCard.tsx`
-- Add new components in the `components/` directory
-
-## Technologies Used
-
-- **Next.js 15**: React framework with App Router
-- **TypeScript**: Type safety
-- **Tailwind CSS**: Utility-first CSS framework
-- **MDX**: Markdown with JSX support
-- **next-mdx-remote**: MDX rendering
-- **gray-matter**: Frontmatter parsing
-- **next-themes**: Theme management with system preference detection
-
-## Deployment
-
-This project can be deployed to Vercel, Netlify, or any other platform that supports Next.js.
+**Prerequisites:** Node.js 22 (see `.nvmrc`)
 
 ```bash
-npm run build
-npm start
+# Install dependencies
+npm install
+
+# Start development server (Velite watch + Next.js Turbopack)
+npm run dev
+
+# Open http://localhost:3000
 ```
+
+## Scripts
+
+| Command                          | Description                                           |
+| -------------------------------- | ----------------------------------------------------- |
+| `npm run dev`                    | Start dev server with Velite watch mode and Turbopack |
+| `npm run build`                  | Production build (dark variants + Velite + Next.js)   |
+| `npm run lint`                   | Run ESLint                                            |
+| `npm run format`                 | Format with Prettier                                  |
+| `npm test`                       | Run tests with Vitest                                 |
+| `npm run test:watch`             | Run tests in watch mode                               |
+| `npm run generate-dark-variants` | Regenerate dark variant asset map                     |
+
+## Writing Content
+
+Blog posts and projects are MDX files in the `content/` directory, compiled at build time by Velite.
+
+**Blog post frontmatter:**
+
+```yaml
+title: 'Post Title'
+date: '2025-01-15'
+description: 'A brief description'
+tags: ['design', 'engineering']
+```
+
+**Custom MDX components:** PostImage, PostMovie, ColorSwatch, TextSwatch, PullQuote
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+MIT - see [LICENSE](LICENSE) for details.

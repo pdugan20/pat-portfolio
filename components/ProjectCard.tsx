@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Project } from '@/lib/projects';
+import type { Project } from '#content';
 
 interface ProjectCardProps {
   project: Project;

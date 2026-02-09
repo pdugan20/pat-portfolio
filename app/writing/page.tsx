@@ -1,6 +1,6 @@
 import Layout from '@/components/Layout';
 import BlogCard from '@/components/BlogCard';
-import { getBlogPosts } from '@/lib/mdx';
+import { posts } from '#content';
 import type { Metadata } from 'next';
 import { SITE_CONFIG } from '@/lib/constants';
 
@@ -18,7 +18,9 @@ export const metadata: Metadata = {
 };
 
 export default function BlogPage() {
-  const posts = getBlogPosts();
+  const sortedPosts = [...posts].sort(
+    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+  );
 
   return (
     <Layout>
@@ -71,7 +73,7 @@ export default function BlogPage() {
           </div>
         </div>
 
-        {posts.length === 0 ? (
+        {sortedPosts.length === 0 ? (
           <div className='py-12 text-center'>
             <p className='text-text-secondary dark:text-text-dark-secondary'>
               No writing yet. Check back soon!
@@ -79,7 +81,7 @@ export default function BlogPage() {
           </div>
         ) : (
           <div className='grid gap-8 md:grid-cols-2'>
-            {posts.map(post => (
+            {sortedPosts.map(post => (
               <BlogCard key={post.slug} post={post} />
             ))}
           </div>

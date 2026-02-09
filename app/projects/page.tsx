@@ -1,6 +1,6 @@
 import Layout from '@/components/Layout';
 import ProjectCard from '@/components/ProjectCard';
-import { getAllProjects } from '@/lib/projects';
+import { projects } from '#content';
 import type { Metadata } from 'next';
 import { SITE_CONFIG } from '@/lib/constants';
 
@@ -11,7 +11,9 @@ export const metadata: Metadata = {
 };
 
 export default function ProjectsPage() {
-  const projects = getAllProjects();
+  const sortedProjects = [...projects].sort(
+    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+  );
 
   return (
     <Layout>
@@ -26,7 +28,7 @@ export default function ProjectsPage() {
           </p>
         </div>
 
-        {projects.length === 0 ? (
+        {sortedProjects.length === 0 ? (
           <div className='py-12 text-center'>
             <p className='text-text-secondary dark:text-text-dark-secondary'>
               No projects yet. Check back soon!
@@ -34,7 +36,7 @@ export default function ProjectsPage() {
           </div>
         ) : (
           <div className='grid gap-8 md:grid-cols-2 lg:grid-cols-3'>
-            {projects.map(project => (
+            {sortedProjects.map(project => (
               <ProjectCard key={project.slug} project={project} />
             ))}
           </div>

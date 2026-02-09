@@ -3,7 +3,7 @@
 import { useRef, useEffect, useState } from 'react';
 import { useTheme } from 'next-themes';
 import { PlayIcon, PauseIcon, RestartIcon } from './icons';
-import { useDarkVariants } from '../hooks/useDarkVariants';
+import { darkVariants } from '@/lib/dark-variants';
 
 interface VideoItem {
   src: string;
@@ -14,6 +14,23 @@ interface VideoItem {
 interface PostMovieProps {
   videos: VideoItem[];
   className?: string;
+}
+
+function getVideoSrc(src: string, isDark: boolean): string {
+  if (!isDark) return src;
+  return darkVariants[src] || src;
+}
+
+function getWebmSrc(mp4Src: string): string {
+  return mp4Src.replace('.mp4', '.webm');
+}
+
+function getPosterSrc(videoSrc: string, isDark: boolean): string {
+  const posterPath = videoSrc
+    .replace('.mp4', '.jpg')
+    .replace('/mov/', '/mov/poster/');
+  if (!isDark) return posterPath;
+  return darkVariants[posterPath] || posterPath;
 }
 
 export default function PostMovie({ videos, className = '' }: PostMovieProps) {
@@ -28,60 +45,56 @@ export default function PostMovie({ videos, className = '' }: PostMovieProps) {
   } | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
-  const { getImageSrc } = useDarkVariants();
+  const hasEndedRef = useRef(false);
   const { theme } = useTheme();
+
+  const isDark =
+    mounted &&
+    (theme === 'dark' ||
+      (theme === 'system' &&
+        typeof window !== 'undefined' &&
+        window.matchMedia('(prefers-color-scheme: dark)').matches));
+
+  // Keep ref in sync with state for use in observer callback
+  useEffect(() => {
+    hasEndedRef.current = hasEnded;
+  }, [hasEnded]);
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
   useEffect(() => {
-    // Observer for initial fade-in (triggers earlier)
-    const fadeObserver = new IntersectionObserver(
+    const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting && !hasInitiallyAppeared) {
+        const ratio = entry.intersectionRatio;
+
+        // Fade in at 10% visibility (one-time)
+        if (ratio >= 0.1) {
           setHasInitiallyAppeared(true);
         }
-      },
-      { threshold: 0.1 } // Trigger when 10% of video is visible
-    );
 
-    // Observer for autoplay (triggers later)
-    const autoplayObserver = new IntersectionObserver(
-      ([entry]) => {
-        const isIntersecting = entry.isIntersecting;
-
-        // Auto-play when entering viewport, pause when leaving
+        // Autoplay at 50% visibility
         if (videoRef.current) {
-          if (isIntersecting && !hasEnded) {
-            videoRef.current.play().catch(() => {
-              // Handle autoplay restrictions gracefully
-              console.log('Autoplay prevented by browser');
-            });
+          if (ratio >= 0.5 && !hasEndedRef.current) {
+            videoRef.current.play().catch(() => {});
             setIsCurrentlyPlaying(true);
-            // Only set hasEverStarted once, not every time it enters viewport
-            if (!hasEverStarted) {
-              setHasEverStarted(true);
-            }
-          } else if (!isIntersecting) {
+            setHasEverStarted(true);
+          } else if (ratio < 0.5) {
             videoRef.current.pause();
             setIsCurrentlyPlaying(false);
           }
         }
       },
-      { threshold: 0.5 } // Trigger when 50% of video is visible
+      { threshold: [0.1, 0.5] }
     );
 
     if (containerRef.current) {
-      fadeObserver.observe(containerRef.current);
-      autoplayObserver.observe(containerRef.current);
+      observer.observe(containerRef.current);
     }
 
-    return () => {
-      fadeObserver.disconnect();
-      autoplayObserver.disconnect();
-    };
-  }, [hasEnded, hasInitiallyAppeared, hasEverStarted]);
+    return () => observer.disconnect();
+  }, []);
 
   const togglePlay = () => {
     if (videoRef.current) {
@@ -89,7 +102,6 @@ export default function PostMovie({ videos, className = '' }: PostMovieProps) {
         videoRef.current.pause();
         setIsCurrentlyPlaying(false);
       } else {
-        // Reset ended state when manually playing
         setHasEnded(false);
         videoRef.current.play().catch(() => {
           console.log('Play prevented by browser');
@@ -117,13 +129,11 @@ export default function PostMovie({ videos, className = '' }: PostMovieProps) {
 
   const handleVideoPlay = () => {
     setHasEverStarted(true);
-    // Reset ended state when video starts playing
     setHasEnded(false);
   };
 
   const handleVideoPause = () => {
     setIsCurrentlyPlaying(false);
-    // Don't set hasEnded when video is just paused
   };
 
   const handleVideoLoadedMetadata = () => {
@@ -138,7 +148,6 @@ export default function PostMovie({ videos, className = '' }: PostMovieProps) {
   // Reset player controls when theme changes
   useEffect(() => {
     if (videoRef.current && mounted) {
-      // Reset to paused state when theme changes
       setIsCurrentlyPlaying(false);
       setHasEnded(false);
     }
@@ -172,10 +181,9 @@ export default function PostMovie({ videos, className = '' }: PostMovieProps) {
           }
         `}</style>
         {videos.map(video => {
-          const videoSrc = getImageSrc(video.src);
-          const posterSrc = getImageSrc(
-            video.src.replace('.mp4', '.jpg').replace('/mov/', '/mov/poster/')
-          );
+          const mp4Src = getVideoSrc(video.src, isDark);
+          const webmSrc = getWebmSrc(mp4Src);
+          const posterSrc = getPosterSrc(video.src, isDark);
 
           return (
             <div
@@ -186,31 +194,28 @@ export default function PostMovie({ videos, className = '' }: PostMovieProps) {
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
                 backgroundRepeat: 'no-repeat',
-                aspectRatio: '1 / 1', // Square aspect ratio
+                aspectRatio: '1 / 1',
               }}
             >
               <video
-                key={`${video.src}-${videoSrc}`} // Force re-render when src changes
+                key={`${video.src}-${mp4Src}`}
                 ref={videoRef}
-                src={videoSrc}
                 className={`h-auto w-full border-0 transition-opacity duration-300 outline-none ${
                   hasEverStarted ? 'opacity-100' : 'opacity-0'
                 }`}
                 playsInline
-                preload='auto'
+                preload='metadata'
                 muted
                 onEnded={handleVideoEnded}
                 onPlay={handleVideoPlay}
                 onPause={handleVideoPause}
                 onLoadedMetadata={handleVideoLoadedMetadata}
                 onTimeUpdate={() => {
-                  // Ensure ended state is false when video is playing
                   if (videoRef.current && !videoRef.current.ended && hasEnded) {
                     setHasEnded(false);
                   }
                 }}
                 onLoadedData={() => {
-                  // Reset ended state when video loads
                   setHasEnded(false);
                 }}
                 style={{
@@ -227,7 +232,8 @@ export default function PostMovie({ videos, className = '' }: PostMovieProps) {
                     }),
                 }}
               >
-                Your browser does not support the video tag.
+                <source src={webmSrc} type='video/webm' />
+                <source src={mp4Src} type='video/mp4' />
               </video>
             </div>
           );
@@ -239,7 +245,7 @@ export default function PostMovie({ videos, className = '' }: PostMovieProps) {
             onClick={hasEnded ? restartVideo : togglePlay}
             className='rounded-full bg-gray-200/80 p-2.5 text-gray-500 transition-all duration-200 hover:cursor-pointer hover:bg-gray-300/80 dark:bg-gray-700/40 dark:text-gray-300 dark:hover:bg-gray-700/60'
           >
-            {hasEnded && videoRef.current?.ended ? (
+            {hasEnded ? (
               <RestartIcon />
             ) : isCurrentlyPlaying ? (
               <PauseIcon />

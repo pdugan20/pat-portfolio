@@ -1,17 +1,14 @@
 import { notFound } from 'next/navigation';
-import { MDXRemote } from 'next-mdx-remote/rsc';
 import Layout from '@/components/Layout';
-import { getProject, getAllProjectSlugs } from '@/lib/projects';
-
+import { projects } from '#content';
+import { MDXContent } from '@/components/MDXContent';
 import ProjectImage from '@/components/ProjectImage';
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import { SITE_CONFIG } from '@/lib/constants';
 
-// MDX components that can be used in project files
 const mdxComponents = {
   ProjectImage,
-  // You can add more custom components here
 };
 
 interface ProjectPageProps {
@@ -24,7 +21,7 @@ export async function generateMetadata({
   params,
 }: ProjectPageProps): Promise<Metadata> {
   const resolvedParams = await params;
-  const project = getProject(resolvedParams.slug);
+  const project = projects.find(p => p.slug === resolvedParams.slug);
 
   if (!project) {
     return {
@@ -34,20 +31,19 @@ export async function generateMetadata({
 
   return {
     title: `${project.title} - ${SITE_CONFIG.author}`,
-    description: project.longDescription,
+    description: project.description,
   };
 }
 
 export async function generateStaticParams() {
-  const slugs = getAllProjectSlugs();
-  return slugs.map(slug => ({
-    slug,
+  return projects.map(project => ({
+    slug: project.slug,
   }));
 }
 
 export default async function ProjectPage({ params }: ProjectPageProps) {
   const resolvedParams = await params;
-  const project = getProject(resolvedParams.slug);
+  const project = projects.find(p => p.slug === resolvedParams.slug);
 
   if (!project) {
     notFound();
@@ -83,7 +79,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
             </h1>
 
             <p className='text-text-secondary dark:text-text-dark-secondary mb-6 text-xl'>
-              {project.longDescription}
+              {project.description}
             </p>
 
             <div className='mb-6 flex flex-wrap gap-2'>
@@ -177,13 +173,10 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
             </section>
 
             {/* MDX Content Section */}
-            {project.content && (
+            {project.body && (
               <section className='mb-8'>
                 <div className='prose prose-lg dark:prose-invert max-w-none'>
-                  <MDXRemote
-                    source={project.content}
-                    components={mdxComponents}
-                  />
+                  <MDXContent code={project.body} components={mdxComponents} />
                 </div>
               </section>
             )}

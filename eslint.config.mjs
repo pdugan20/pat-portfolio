@@ -2,6 +2,7 @@ import eslintConfigNext from 'eslint-config-next/core-web-vitals';
 import eslintPluginPrettier from 'eslint-plugin-prettier/recommended';
 
 const eslintConfig = [
+  { ignores: ['.velite/'] },
   ...eslintConfigNext,
   eslintPluginPrettier,
   {

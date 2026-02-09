@@ -3,8 +3,7 @@
 import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import { PreviousIcon, NextIcon } from './icons';
-import { useDarkVariants } from '../hooks/useDarkVariants';
-import { useTheme } from 'next-themes';
+import { darkVariants } from '@/lib/dark-variants';
 
 interface ImageItem {
   src: string;
@@ -29,15 +28,8 @@ export default function PostImage({
 }: PostImageProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
-  const [mounted, setMounted] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const isCarousel = images.length > 1;
-  const { manifest } = useDarkVariants();
-  const { theme } = useTheme();
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -79,22 +71,14 @@ export default function PostImage({
           className={`relative w-full overflow-hidden rounded-2xl bg-gray-50 dark:bg-neutral-900 ${
             width ? 'post-image-wide-xl' : ''
           }`}
-          style={width ? {} : {}}
         >
           {images.map((image, index) => {
-            // Use image-specific dimensions, component props, or defaults
             const imgWidth = image.width || width || 1200;
             const imgHeight = image.height || height || 800;
 
             const lightSrc = image.src;
-            const darkSrc = manifest?.[image.src] || image.src;
-            const hasDarkVariant = darkSrc !== lightSrc;
-            const isDark =
-              mounted &&
-              (theme === 'dark' ||
-                (theme === 'system' &&
-                  typeof window !== 'undefined' &&
-                  window.matchMedia('(prefers-color-scheme: dark)').matches));
+            const darkSrc = darkVariants[image.src];
+            const hasDarkVariant = !!darkSrc;
 
             return (
               <div
@@ -102,39 +86,39 @@ export default function PostImage({
                 className={`${
                   index === currentIndex
                     ? 'relative z-10'
-                    : 'absolute inset-0 z-0'
+                    : 'absolute inset-0 z-0 opacity-0'
                 }`}
               >
-                {/* Light mode image */}
-                <Image
-                  src={lightSrc}
-                  alt={image.alt}
-                  width={imgWidth}
-                  height={imgHeight}
-                  className={`h-auto w-full object-contain transition-opacity duration-300 ease-in-out ${
-                    index === currentIndex
-                      ? isDark && hasDarkVariant
-                        ? 'opacity-0'
-                        : 'opacity-100'
-                      : 'opacity-0'
-                  }`}
-                  sizes='(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px'
-                  priority={index === 0}
-                />
-                {/* Dark mode image (if exists) */}
-                {hasDarkVariant && (
+                {hasDarkVariant ? (
+                  <>
+                    {/* Light mode image - hidden in dark mode */}
+                    <Image
+                      src={lightSrc}
+                      alt={image.alt}
+                      width={imgWidth}
+                      height={imgHeight}
+                      className='h-auto w-full object-contain dark:hidden'
+                      sizes='(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px'
+                      priority={index === 0}
+                    />
+                    {/* Dark mode image - hidden in light mode */}
+                    <Image
+                      src={darkSrc}
+                      alt={image.alt}
+                      width={imgWidth}
+                      height={imgHeight}
+                      className='hidden h-auto w-full object-contain dark:block'
+                      sizes='(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px'
+                      priority={index === 0}
+                    />
+                  </>
+                ) : (
                   <Image
-                    src={darkSrc}
+                    src={lightSrc}
                     alt={image.alt}
                     width={imgWidth}
                     height={imgHeight}
-                    className={`absolute inset-0 h-auto w-full object-contain transition-opacity duration-300 ease-in-out ${
-                      index === currentIndex
-                        ? isDark
-                          ? 'opacity-100'
-                          : 'opacity-0'
-                        : 'opacity-0'
-                    }`}
+                    className='h-auto w-full object-contain'
                     sizes='(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px'
                     priority={index === 0}
                   />

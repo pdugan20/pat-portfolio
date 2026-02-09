@@ -1,8 +1,8 @@
 import Link from 'next/link';
-import { BlogPost } from '@/lib/mdx';
+import type { Post } from '#content';
 
 interface BlogCardProps {
-  post: BlogPost;
+  post: Post;
 }
 
 export default function BlogCard({ post }: BlogCardProps) {

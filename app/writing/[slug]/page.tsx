@@ -1,15 +1,13 @@
 import { notFound } from 'next/navigation';
-import { MDXRemote } from 'next-mdx-remote/rsc';
 import Layout from '@/components/Layout';
-import { getBlogPost, getAllBlogSlugs } from '@/lib/mdx';
+import { posts } from '#content';
 import { getMDXComponents } from '@/lib/mdx-components';
+import { MDXContent } from '@/components/MDXContent';
 import AboutAuthor from '@/components/AboutAuthor';
 import RelatedWriting from '@/components/RelatedWriting';
 import CodeBlockEnhancer from '@/components/CodeBlockEnhancer';
 import type { Metadata } from 'next';
 import { SITE_CONFIG } from '@/lib/constants';
-import { rehypePrettyCodeOptions } from '@/lib/mdx-config';
-import rehypePrettyCode from 'rehype-pretty-code';
 
 export async function generateMetadata({
   params,
@@ -17,7 +15,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const resolvedParams = await params;
-  const post = getBlogPost(resolvedParams.slug);
+  const post = posts.find(p => p.slug === resolvedParams.slug);
 
   if (!post) {
     return {
@@ -32,9 +30,8 @@ export async function generateMetadata({
 }
 
 export async function generateStaticParams() {
-  const slugs = getAllBlogSlugs();
-  return slugs.map(slug => ({
-    slug,
+  return posts.map(post => ({
+    slug: post.slug,
   }));
 }
 
@@ -44,14 +41,13 @@ export default async function BlogPostPage({
   params: Promise<{ slug: string }>;
 }) {
   const resolvedParams = await params;
-  const post = getBlogPost(resolvedParams.slug);
+  const post = posts.find(p => p.slug === resolvedParams.slug);
 
   if (!post) {
     notFound();
   }
 
-  // Get only the components that are actually used in this post
-  const components = await getMDXComponents(resolvedParams.slug);
+  const components = getMDXComponents(resolvedParams.slug);
 
   return (
     <Layout>
@@ -82,15 +78,7 @@ export default async function BlogPostPage({
           </header>
 
           <div className='mdx-content'>
-            <MDXRemote
-              source={post.content}
-              options={{
-                mdxOptions: {
-                  rehypePlugins: [[rehypePrettyCode, rehypePrettyCodeOptions]],
-                },
-              }}
-              components={components}
-            />
+            <MDXContent code={post.body} components={components} />
             <CodeBlockEnhancer />
           </div>
 
