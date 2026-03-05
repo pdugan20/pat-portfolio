@@ -1,10 +1,11 @@
 # Patrick Dugan's Portfolio
 
 [![CI](https://github.com/pdugan20/pat-portfolio/actions/workflows/ci.yml/badge.svg)](https://github.com/pdugan20/pat-portfolio/actions/workflows/ci.yml)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Next.js](https://img.shields.io/badge/Next.js-16-black?logo=next.js)](https://nextjs.org/)
+[![Node.js](https://img.shields.io/badge/Node.js-22-339933?logo=node.js&logoColor=white)](https://nodejs.org/)
+[![Next.js](https://img.shields.io/badge/Next.js-16-black?logo=next.js&logoColor=white)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-v4-06B6D4?logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-06B6D4?logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?logo=opensourceinitiative&logoColor=white)](LICENSE)
 
 A portfolio and blog built with Next.js 16, TypeScript, and Tailwind CSS v4. Features MDX content compiled at build time with Velite, dark mode with automatic asset variants, and optimized video delivery.
 
@@ -99,7 +100,3 @@ tags: ['design', 'engineering']
 ```
 
 **Custom MDX components:** PostImage, PostMovie, ColorSwatch, TextSwatch, PullQuote
-
-## License
-
-MIT - see [LICENSE](LICENSE) for details.
