@@ -5,6 +5,10 @@ updates:
     schedule:
       interval: weekly
     open-pull-requests-limit: 10
+    assignees:
+      - pdugan20
+    reviewers:
+      - pdugan20
     groups:
       minor-and-patch:
         update-types:
@@ -15,3 +19,7 @@ updates:
     directory: /
     schedule:
       interval: weekly
+    assignees:
+      - pdugan20
+    reviewers:
+      - pdugan20
