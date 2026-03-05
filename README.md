@@ -27,22 +27,24 @@ Personal portfolio and blog built with Next.js 16, TypeScript, and Tailwind CSS 
 
 ## Getting Started
 
-```bash
-npm install
-npm run dev       # Velite watch + Next.js Turbopack
-```
-
 Requires Node.js 22 (see `.nvmrc`).
+
+```bash
+git clone https://github.com/pdugan20/pat-portfolio.git
+cd pat-portfolio
+npm install
+npm run dev
+```
 
 ## Development
 
 ```bash
-npm run dev            # Start dev server
-npm run build          # Production build
-npm run lint           # ESLint
-npm run format:check   # Prettier check
-npm test               # Vitest
-npm run test:coverage  # Tests with coverage
+npm run dev             # Velite watch + Next.js Turbopack
+npm run build           # Production build
+npm run lint            # ESLint
+npm run format:check    # Prettier check
+npm test                # Vitest
+npm run test:coverage   # Tests with coverage
 ```
 
 ## Architecture
