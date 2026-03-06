@@ -1,80 +1,53 @@
 'use client';
 
-import { SITE_CONFIG, SOCIAL_LINKS } from '@/lib/constants';
+import { SOCIAL_LINKS } from '@/lib/constants';
 import { ThemeToggle } from './ThemeToggle';
 
-const socialItems = [
-  { label: 'X', href: SOCIAL_LINKS.x },
-  { label: 'GitHub', href: SOCIAL_LINKS.github },
-  { label: 'Figma', href: SOCIAL_LINKS.figma },
-  { label: 'Email', href: `mailto:${SOCIAL_LINKS.email}` },
-];
+const textLinkClass =
+  'text-text-muted hover:text-text-primary dark:text-text-dark-muted dark:hover:text-text-dark-primary text-sm underline underline-offset-4 decoration-gray-300 dark:decoration-gray-600 transition-colors';
 
-// Toggle this to preview variants: 'minimal' | 'structured'
-const FOOTER_VARIANT: 'minimal' | 'structured' = 'minimal';
-
-function FooterMinimal() {
+export default function Footer() {
   return (
     <footer className='mx-auto w-full max-w-[653px] px-6'>
-      <div className='border-border-primary dark:border-border-dark-primary flex items-center justify-between border-t py-8'>
-        <nav className='flex items-center gap-4'>
-          {socialItems.map((item, index) => (
-            <span key={item.label} className='flex items-center gap-4'>
-              <a
-                href={item.href}
-                className='text-text-muted hover:text-text-primary dark:text-text-dark-muted dark:hover:text-text-dark-primary text-sm transition-colors'
-                {...(item.label !== 'Email'
-                  ? { target: '_blank', rel: 'noopener noreferrer' }
-                  : {})}
-              >
-                {item.label}
-              </a>
-              {index < socialItems.length - 1 && (
-                <span className='text-text-muted dark:text-text-dark-muted text-xs'>
-                  ·
-                </span>
-              )}
-            </span>
-          ))}
-        </nav>
-        <ThemeToggle />
-      </div>
-    </footer>
-  );
-}
-
-function FooterStructured() {
-  return (
-    <footer className='mx-auto w-full max-w-[653px] px-6'>
-      <div className='border-border-primary dark:border-border-dark-primary border-t py-8'>
-        <nav className='mb-4 flex items-center justify-center gap-6'>
-          {socialItems.map(item => (
+      <div className='border-border-primary border-t pt-6 pb-8 dark:border-white/[0.08]'>
+        <div className='flex items-start justify-between gap-6'>
+          <p className='text-text-muted dark:text-text-dark-muted text-sm leading-relaxed'>
+            I&apos;m on{' '}
             <a
-              key={item.label}
-              href={item.href}
-              className='text-text-muted hover:text-text-primary dark:text-text-dark-muted dark:hover:text-text-dark-primary text-sm transition-colors'
-              {...(item.label !== 'Email'
-                ? { target: '_blank', rel: 'noopener noreferrer' }
-                : {})}
+              href={SOCIAL_LINKS.x}
+              className={textLinkClass}
+              target='_blank'
+              rel='noopener noreferrer'
             >
-              {item.label}
+              X
             </a>
-          ))}
-        </nav>
-        <div className='flex items-center justify-between'>
-          <p className='text-text-muted dark:text-text-dark-muted text-xs'>
-            &copy; {new Date().getFullYear()} {SITE_CONFIG.author}
+            ,{' '}
+            <a
+              href={SOCIAL_LINKS.github}
+              className={textLinkClass}
+              target='_blank'
+              rel='noopener noreferrer'
+            >
+              GitHub
+            </a>
+            , and{' '}
+            <a
+              href={SOCIAL_LINKS.figma}
+              className={textLinkClass}
+              target='_blank'
+              rel='noopener noreferrer'
+            >
+              Figma
+            </a>
+            . Always reachable by{' '}
+            <a href={`mailto:${SOCIAL_LINKS.email}`} className={textLinkClass}>
+              email
+            </a>
+            .
           </p>
           <ThemeToggle />
         </div>
       </div>
     </footer>
   );
-}
-
-export default function Footer() {
-  if (FOOTER_VARIANT === 'structured') {
-    return <FooterStructured />;
-  }
-  return <FooterMinimal />;
 }
