@@ -8,7 +8,7 @@ interface MDXLinkProps {
 
 export default function MDXLink({ href, children, className }: MDXLinkProps) {
   const isExternal = href.startsWith('http://') || href.startsWith('https://');
-  const linkClasses = `text-blue-600 underline hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 ${className || ''}`;
+  const linkClasses = `text-text-primary dark:text-text-dark-primary underline decoration-gray-300 dark:decoration-gray-600 underline-offset-2 transition-opacity hover:opacity-50 ${className || ''}`;
 
   if (isExternal) {
     return (

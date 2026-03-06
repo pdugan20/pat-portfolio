@@ -8,6 +8,7 @@ import RelatedWriting from '@/components/RelatedWriting';
 import CodeBlockEnhancer from '@/components/CodeBlockEnhancer';
 import type { Metadata } from 'next';
 import { SITE_CONFIG } from '@/lib/constants';
+import Link from 'next/link';
 
 export async function generateMetadata({
   params,
@@ -58,6 +59,15 @@ export default async function BlogPostPage({
         >
           <header className='mb-8'>
             <div className='mb-5 flex items-center'>
+              <Link
+                href='/'
+                className='text-text-muted dark:text-text-dark-muted text-sm font-semibold tracking-[-0.016em] transition-opacity hover:opacity-50'
+              >
+                Patrick Dugan
+              </Link>
+              <span className='text-text-muted dark:text-text-dark-muted mx-2 text-sm'>
+                /
+              </span>
               <time
                 dateTime={post.date}
                 className='text-text-muted dark:text-text-dark-muted text-sm leading-[1.2857742857] font-semibold tracking-[-0.016em]'

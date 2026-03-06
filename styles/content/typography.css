@@ -11,7 +11,7 @@
 
 .mdx-content h2 {
   color: var(--color-text-primary);
-  font-weight: var(--font-weight-bold);
+  font-weight: var(--font-weight-semibold);
   font-size: var(--text-2xl);
   margin-top: var(--spacing-12);
   margin-bottom: var(--spacing-2);

@@ -15,7 +15,7 @@ interface RelatedWritingProps {
 
 export default function RelatedWriting({ posts }: RelatedWritingProps) {
   return (
-    <div className='mt-13 border-t border-gray-200 pt-13 dark:dark:border-gray-600/60'>
+    <div className='border-border-primary mt-13 border-t pt-13 dark:border-white/[0.08]'>
       <h3 className='text-text-primary dark:text-text-dark-primary mb-6 text-2xl leading-[28px] font-bold'>
         Related writing
       </h3>
@@ -25,7 +25,7 @@ export default function RelatedWriting({ posts }: RelatedWritingProps) {
             key={post.slug}
             className={`flex gap-4 ${
               index < posts.length - 1
-                ? 'border-b border-gray-200 pb-6 dark:dark:border-gray-600/60'
+                ? 'border-border-primary border-b pb-6 dark:border-white/[0.08]'
                 : 'pt-6'
             }`}
           >

@@ -1,7 +1,6 @@
 import { defineConfig, defineCollection, s } from 'velite';
 import rehypePrettyCode from 'rehype-pretty-code';
 import rehypeSlug from 'rehype-slug';
-import rehypeAutolinkHeadings from 'rehype-autolink-headings';
 import { rehypePrettyCodeOptions } from './lib/mdx-config';
 
 const posts = defineCollection({
@@ -70,11 +69,7 @@ export default defineConfig({
   },
   collections: { posts, projects },
   mdx: {
-    rehypePlugins: [
-      rehypeSlug,
-      [rehypeAutolinkHeadings, { behavior: 'wrap' }],
-      [rehypePrettyCode, rehypePrettyCodeOptions],
-    ],
+    rehypePlugins: [rehypeSlug, [rehypePrettyCode, rehypePrettyCodeOptions]],
     remarkPlugins: [],
     gfm: true,
   },
