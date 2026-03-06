@@ -16,7 +16,7 @@ export default function BlogPage() {
 
   return (
     <Layout>
-      <div className='mx-auto max-w-4xl'>
+      <div>
         <div className='mb-12 text-center'>
           <h1 className='text-text-primary dark:text-text-dark-primary mb-4 text-4xl font-bold'>
             Writing

@@ -1,59 +1,80 @@
-import Link from 'next/link';
-import { SITE_CONFIG } from '@/lib/constants';
-import SocialPill from './SocialPill';
+'use client';
 
-export default function Footer() {
+import { SITE_CONFIG, SOCIAL_LINKS } from '@/lib/constants';
+import { ThemeToggle } from './ThemeToggle';
+
+const socialItems = [
+  { label: 'X', href: SOCIAL_LINKS.x },
+  { label: 'GitHub', href: SOCIAL_LINKS.github },
+  { label: 'Figma', href: SOCIAL_LINKS.figma },
+  { label: 'Email', href: `mailto:${SOCIAL_LINKS.email}` },
+];
+
+// Toggle this to preview variants: 'minimal' | 'structured'
+const FOOTER_VARIANT: 'minimal' | 'structured' = 'minimal';
+
+function FooterMinimal() {
   return (
-    <footer className='bg-bg-secondary dark:bg-bg-dark-secondary border-t border-gray-200 dark:dark:border-gray-600/60'>
-      <div className='mx-auto max-w-2xl px-4 py-12 sm:px-6 lg:px-8'>
-        <div className='text-center'>
-          <div className='text-text-muted dark:text-text-dark-muted mb-4 text-sm'>
-            <p>
-              &copy; {new Date().getFullYear()} {SITE_CONFIG.author}. Built with
-              intention in ☁️ Seattle, WA
-              {' · '}
-              <Link
-                href='/terms'
-                className='text-text-secondary hover:text-text-primary dark:text-text-dark-muted dark:hover:text-text-dark-primary underline transition-colors'
+    <footer className='mx-auto w-full max-w-[653px] px-6'>
+      <div className='border-border-primary dark:border-border-dark-primary flex items-center justify-between border-t py-8'>
+        <nav className='flex items-center gap-4'>
+          {socialItems.map((item, index) => (
+            <span key={item.label} className='flex items-center gap-4'>
+              <a
+                href={item.href}
+                className='text-text-muted hover:text-text-primary dark:text-text-dark-muted dark:hover:text-text-dark-primary text-sm transition-colors'
+                {...(item.label !== 'Email'
+                  ? { target: '_blank', rel: 'noopener noreferrer' }
+                  : {})}
               >
-                Terms
-              </Link>
-              {' · '}
-              <Link
-                href='/privacy'
-                className='text-text-secondary hover:text-text-primary dark:text-text-dark-muted dark:hover:text-text-dark-primary underline transition-colors'
-              >
-                Privacy
-              </Link>
-            </p>
-          </div>
+                {item.label}
+              </a>
+              {index < socialItems.length - 1 && (
+                <span className='text-text-muted dark:text-text-dark-muted text-xs'>
+                  ·
+                </span>
+              )}
+            </span>
+          ))}
+        </nav>
+        <ThemeToggle />
+      </div>
+    </footer>
+  );
+}
 
-          {/* Compact Social Pills */}
-          <div className='flex justify-center space-x-2'>
-            <SocialPill
-              href='https://github.com/pdugan20'
-              label='GitHub'
-              ariaLabel='GitHub'
-            />
-            <SocialPill
-              href='https://twitter.com/doog'
-              label='Twitter'
-              ariaLabel='Twitter'
-            />
-            <SocialPill
-              href='https://figma.com/@patdugan'
-              label='Figma'
-              ariaLabel='Figma'
-            />
-            <SocialPill
-              href='mailto:dugan.pat@gmail.com'
-              label='Email'
-              ariaLabel='Email'
-              isExternal={false}
-            />
-          </div>
+function FooterStructured() {
+  return (
+    <footer className='mx-auto w-full max-w-[653px] px-6'>
+      <div className='border-border-primary dark:border-border-dark-primary border-t py-8'>
+        <nav className='mb-4 flex items-center justify-center gap-6'>
+          {socialItems.map(item => (
+            <a
+              key={item.label}
+              href={item.href}
+              className='text-text-muted hover:text-text-primary dark:text-text-dark-muted dark:hover:text-text-dark-primary text-sm transition-colors'
+              {...(item.label !== 'Email'
+                ? { target: '_blank', rel: 'noopener noreferrer' }
+                : {})}
+            >
+              {item.label}
+            </a>
+          ))}
+        </nav>
+        <div className='flex items-center justify-between'>
+          <p className='text-text-muted dark:text-text-dark-muted text-xs'>
+            &copy; {new Date().getFullYear()} {SITE_CONFIG.author}
+          </p>
+          <ThemeToggle />
         </div>
       </div>
     </footer>
   );
+}
+
+export default function Footer() {
+  if (FOOTER_VARIANT === 'structured') {
+    return <FooterStructured />;
+  }
+  return <FooterMinimal />;
 }

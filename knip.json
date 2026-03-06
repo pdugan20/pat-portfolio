@@ -2,6 +2,5 @@
   "$schema": "https://unpkg.com/knip@latest/schema.json",
   "entry": ["app/**/*.{ts,tsx}", "velite.config.ts"],
   "project": ["**/*.{ts,tsx,mjs}"],
-  "ignore": [".velite/**"],
   "ignoreDependencies": ["postcss", "@testing-library/react"]
 }
