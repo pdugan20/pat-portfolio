@@ -32,28 +32,28 @@ export const PROJECTS = [
   {
     name: 'claudelint',
     description:
-      'An open-source linting tool for Claude Code configuration files.',
+      'An open-source linting tool for Claude Code configuration files',
     url: 'https://github.com/pdugan20/claudelint',
   },
   {
     name: 'claudenotes',
     description:
-      'Claude covers its own beat — a self-published newsletter and podcast.',
+      'Claude covers its own beat — a self-published newsletter and podcast',
     url: 'https://github.com/pdugan20/claudenotes',
   },
   {
     name: 'nextup',
-    description: 'A TV tracking app with AI-powered recommendations.',
+    description: 'A TV tracking app with AI-powered recommendations',
     url: 'https://nextup.tv',
   },
   {
     name: 'e-ink-scoreboard',
-    description: 'A live MLB scoreboard on an e-ink display.',
+    description: 'A live MLB scoreboard on an e-ink display',
     url: 'https://github.com/pdugan20/e-ink-scoreboard',
   },
   {
     name: 'chat-builder-plugin',
-    description: 'A generative AI Figma plugin powered by Anthropic.',
+    description: 'A generative AI Figma plugin powered by Anthropic',
     url: 'https://github.com/pdugan20/chat-builder-plugin',
   },
 ] as const;
@@ -61,6 +61,7 @@ export const PROJECTS = [
 export const EXPERIENCE = [
   {
     company: 'Google',
+    url: 'https://google.com',
     role: 'Senior Interaction Designer',
     period: '2022 — Present',
     description:
@@ -68,6 +69,7 @@ export const EXPERIENCE = [
   },
   {
     company: 'Meta',
+    url: 'https://meta.com',
     role: 'Product Designer',
     period: '2020 — 2022',
     description:
@@ -75,13 +77,15 @@ export const EXPERIENCE = [
   },
   {
     company: 'Quora',
+    url: 'https://quora.com',
     role: 'Product Designer',
     period: '2019 — 2020',
     description:
       'Owned design for content discovery and creator tools. Shipped features that improved engagement and content quality across the platform.',
   },
   {
-    company: 'Chan Zuckerberg Initiative',
+    company: 'CZI',
+    url: 'https://chanzuckerberg.com',
     role: 'Product Designer',
     period: '2018 — 2019',
     description:
@@ -89,6 +93,7 @@ export const EXPERIENCE = [
   },
   {
     company: 'Nextdoor',
+    url: 'https://nextdoor.com',
     role: 'Product Designer',
     period: '2016 — 2018',
     description:

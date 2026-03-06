@@ -26,7 +26,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
           </time>
         </div>
         <Link href={`/projects/${project.slug}`} className='block'>
-          <h2 className='text-text-primary hover:text-primary dark:text-text-dark-primary dark:hover:text-primary-light mb-2 text-xl font-semibold'>
+          <h2 className='text-text-primary dark:text-text-dark-primary mb-2 text-xl font-semibold'>
             {project.title}
           </h2>
         </Link>
