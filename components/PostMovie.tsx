@@ -263,7 +263,7 @@ export default function PostMovie({ videos, className = '' }: PostMovieProps) {
       {/* Caption */}
       {videos[0]?.caption && (
         <div className='relative mt-4 flex items-start justify-between'>
-          <p className='text-text-muted dark:text-text-dark-muted post-movie-caption !text-xs !leading-[1.333373] !font-semibold !tracking-tight transition-opacity duration-500 ease-in-out'>
+          <p className='post-caption post-movie-caption transition-opacity duration-500 ease-in-out'>
             {videos[0].caption}
           </p>
         </div>

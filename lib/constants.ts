@@ -60,43 +60,33 @@ export const PROJECTS = [
 
 export const EXPERIENCE = [
   {
-    company: 'Google',
-    url: 'https://google.com',
-    role: 'Senior Interaction Designer',
-    period: '2022 — Present',
-    description:
-      'Designing core product experiences across Google Search and AI surfaces. Leading design for new generative AI features and cross-functional collaboration with engineering and research teams.',
-  },
-  {
     company: 'Meta',
     url: 'https://meta.com',
-    role: 'Product Designer',
-    period: '2020 — 2022',
-    description:
-      'Designed product experiences across Facebook and Instagram. Led design for key social features, working closely with engineering, data science, and research to ship at scale.',
-  },
-  {
-    company: 'Quora',
-    url: 'https://quora.com',
-    role: 'Product Designer',
-    period: '2019 — 2020',
-    description:
-      'Owned design for content discovery and creator tools. Shipped features that improved engagement and content quality across the platform.',
+    role: 'Staff Product Designer',
+    period: '2021 — 2025',
   },
   {
     company: 'CZI',
     url: 'https://chanzuckerberg.com',
-    role: 'Product Designer',
-    period: '2018 — 2019',
-    description:
-      'Designed tools for education technology initiatives. Worked on personalized learning software used by schools and districts nationwide.',
+    role: 'Staff Product Designer',
+    period: '2019 — 2021',
+  },
+  {
+    company: 'Quora',
+    url: 'https://quora.com',
+    role: 'Product Design Lead',
+    period: '2015 — 2019',
   },
   {
     company: 'Nextdoor',
     url: 'https://nextdoor.com',
     role: 'Product Designer',
-    period: '2016 — 2018',
-    description:
-      'Designed neighborhood-level social features and local business tools. Contributed to the core product experience during a period of rapid growth.',
+    period: '2014 — 2015',
+  },
+  {
+    company: 'Google',
+    url: 'https://google.com',
+    role: 'Interaction Designer',
+    period: '2011 — 2013',
   },
 ] as const;

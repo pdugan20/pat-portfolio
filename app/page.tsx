@@ -3,6 +3,7 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 import { SITE_CONFIG, WORK_HISTORY, PROJECTS } from '@/lib/constants';
 import ExperienceSection from '@/components/ExperienceSection';
+import HoverList from '@/components/HoverList';
 import { posts } from '#content';
 
 export const metadata: Metadata = {
@@ -61,52 +62,50 @@ export default function Home() {
 
         {/* Writing */}
         <section className='mb-16'>
-          <h2 className='text-text-muted dark:text-text-dark-muted mb-6 font-mono text-xs font-normal tracking-wider uppercase'>
+          <h2 className='text-text-muted dark:text-text-dark-muted mb-4 font-mono text-xs font-normal tracking-wider uppercase'>
             Writing
           </h2>
-          <ul className='space-y-3'>
+          <HoverList>
             {sortedPosts.map(post => (
-              <li key={post.slug}>
-                <Link
-                  href={`/writing/${post.slug}`}
-                  className='group flex items-baseline justify-between gap-4'
-                >
-                  <span className='text-text-primary dark:text-text-dark-primary text-base transition-colors'>
-                    {post.title}
-                  </span>
-                  <span className='text-text-muted dark:text-text-dark-muted shrink-0 text-sm'>
-                    {formatDate(post.date)}
-                  </span>
-                </Link>
-              </li>
+              <Link
+                key={post.slug}
+                href={`/writing/${post.slug}`}
+                className='hover-row-link flex items-baseline justify-between gap-4 py-2'
+              >
+                <span className='text-text-primary dark:text-text-dark-primary text-base'>
+                  {post.title}
+                </span>
+                <span className='text-text-muted dark:text-text-dark-muted shrink-0 text-sm'>
+                  {formatDate(post.date)}
+                </span>
+              </Link>
             ))}
-          </ul>
+          </HoverList>
         </section>
 
         {/* Projects */}
         <section className='mb-16'>
-          <h2 className='text-text-muted dark:text-text-dark-muted mb-6 font-mono text-xs font-normal tracking-wider uppercase'>
+          <h2 className='text-text-muted dark:text-text-dark-muted mb-4 font-mono text-xs font-normal tracking-wider uppercase'>
             Projects
           </h2>
-          <ul className='space-y-3'>
+          <HoverList>
             {PROJECTS.map(project => (
-              <li key={project.name}>
-                <a
-                  href={project.url}
-                  target='_blank'
-                  rel='noopener noreferrer'
-                  className='group flex items-baseline justify-between gap-4'
-                >
-                  <span className='text-text-primary dark:text-text-dark-primary text-base transition-colors'>
-                    {project.name}
-                  </span>
-                  <span className='text-text-muted dark:text-text-dark-muted shrink-0 text-sm'>
-                    {project.description}
-                  </span>
-                </a>
-              </li>
+              <a
+                key={project.name}
+                href={project.url}
+                target='_blank'
+                rel='noopener noreferrer'
+                className='hover-row-link flex items-baseline justify-between gap-4 py-2'
+              >
+                <span className='text-text-primary dark:text-text-dark-primary text-base'>
+                  {project.name}
+                </span>
+                <span className='text-text-muted dark:text-text-dark-muted shrink-0 text-sm'>
+                  {project.description}
+                </span>
+              </a>
             ))}
-          </ul>
+          </HoverList>
         </section>
 
         <ExperienceSection />

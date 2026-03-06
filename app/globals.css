@@ -159,26 +159,11 @@ body {
     color 0.3s ease;
 }
 
-/* Homepage link hover: highlight for row links, fade for inline links */
-.home-content a.group {
-  border-radius: 6px;
-  padding: 6px 8px;
-  margin: -6px -8px;
-  transition: background-color 0.15s ease;
-}
-
-.home-content a.group:hover {
-  background-color: rgba(0, 0, 0, 0.03) !important;
-}
-
-.dark .home-content a.group:hover {
-  background-color: rgba(255, 255, 255, 0.04) !important;
-}
-
-.home-content a:not(.group) {
+/* Homepage inline link hover: fade for non-row links */
+.home-content a:not(.hover-row-link) {
   transition: opacity 0.15s ease;
 }
 
-.home-content a:not(.group):hover {
+.home-content a:not(.hover-row-link):hover {
   opacity: 0.5 !important;
 }

@@ -4,3 +4,7 @@ export { default as PlayIcon } from './PlayIcon';
 export { default as PreviousIcon } from './PreviousIcon';
 export { default as RestartIcon } from './RestartIcon';
 export { default as CopyIcon } from './CopyIcon';
+export { default as XIcon } from './XIcon';
+export { default as GitHubIcon } from './GitHubIcon';
+export { default as FigmaIcon } from './FigmaIcon';
+export { default as EmailIcon } from './EmailIcon';

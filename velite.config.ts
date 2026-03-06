@@ -13,6 +13,7 @@ const posts = defineCollection({
       description: s.string(),
       tags: s.array(s.string()).default([]),
       slug: s.path(),
+      metadata: s.metadata(),
       body: s.mdx(),
       relatedWriting: s
         .array(

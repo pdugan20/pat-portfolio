@@ -12,8 +12,8 @@
 .mdx-content h2 {
   color: var(--color-text-primary);
   font-weight: var(--font-weight-semibold);
-  font-size: var(--text-2xl);
-  margin-top: var(--spacing-12);
+  font-size: var(--text-lg);
+  margin-top: var(--spacing-10);
   margin-bottom: var(--spacing-2);
   line-height: var(--leading-snug);
 }
@@ -21,7 +21,7 @@
 .mdx-content h3 {
   color: var(--color-text-primary);
   font-weight: var(--font-weight-semibold);
-  font-size: var(--text-xl);
+  font-size: var(--text-base);
   margin-top: var(--spacing-6);
   margin-bottom: var(--spacing-2);
   line-height: var(--leading-relaxed);
@@ -29,7 +29,8 @@
 
 .mdx-content h4 {
   color: var(--color-text-primary);
-  font-weight: var(--font-weight-semibold);
+  font-weight: var(--font-weight-medium);
+  font-size: var(--text-base);
   margin-top: var(--spacing-6);
   margin-bottom: var(--spacing-2);
   line-height: var(--leading-normal);
@@ -37,17 +38,17 @@
 
 .mdx-content p {
   margin-bottom: var(--spacing-5);
-  font-size: var(--text-base-custom);
-  line-height: var(--leading-normal-tight);
+  font-size: var(--text-base);
+  line-height: var(--leading-relaxed);
   font-weight: var(--font-weight-normal);
   letter-spacing: var(--tracking-normal);
   color: var(--color-text-primary);
 }
 
 .mdx-content li {
-  margin-bottom: var(--spacing-6);
-  font-size: var(--text-base-custom);
-  line-height: var(--leading-normal-tight);
+  margin-bottom: var(--spacing-4);
+  font-size: var(--text-base);
+  line-height: var(--leading-relaxed);
   font-weight: var(--font-weight-normal);
   letter-spacing: var(--tracking-normal);
   color: var(--color-text-primary);
@@ -68,9 +69,9 @@
 
 .mdx-content figcaption {
   font-size: var(--text-sm-custom);
-  line-height: var(--leading-normal-tight);
-  font-weight: var(--font-weight-medium);
-  color: var(--color-text-secondary);
+  line-height: var(--leading-relaxed);
+  font-weight: var(--font-weight-normal);
+  color: var(--color-text-muted);
   text-align: left;
   padding: var(--spacing-3) var(--spacing-4) var(--spacing-3) var(--spacing-4);
   font-family: var(--font-sans);
@@ -92,16 +93,25 @@
 }
 
 .dark .mdx-content figcaption {
-  color: var(--color-text-dark-secondary);
+  color: var(--color-text-dark-muted);
 }
 
-/* Override for PostImage and PostMovie captions */
-.mdx-content .post-image-caption,
-.mdx-content .post-movie-caption {
-  color: var(--color-text-muted) !important;
+/* Inline bold: semibold instead of browser-default bold */
+.mdx-content strong {
+  font-weight: var(--font-weight-medium);
 }
 
-.dark .mdx-content .post-image-caption,
-.dark .mdx-content .post-movie-caption {
-  color: var(--color-text-dark-muted) !important;
+/* Caption styles — scoped under .mdx-content to beat .mdx-content p specificity */
+
+.mdx-content .post-caption {
+  color: var(--color-text-muted);
+  font-size: var(--text-sm-custom);
+  font-weight: var(--font-weight-normal);
+  line-height: var(--leading-relaxed);
+  letter-spacing: var(--tracking-normal);
+  margin-bottom: 0;
+}
+
+.dark .mdx-content .post-caption {
+  color: var(--color-text-dark-muted);
 }

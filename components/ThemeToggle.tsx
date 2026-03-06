@@ -1,9 +1,42 @@
 'use client';
 
 import { useTheme } from 'next-themes';
-import { useEffect, useState, useSyncExternalStore } from 'react';
+import { useSyncExternalStore } from 'react';
 
 const emptySubscribe = () => () => {};
+
+function SunIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      viewBox='0 0 24 24'
+      fill='none'
+      stroke='currentColor'
+      strokeWidth='2'
+      strokeLinecap='round'
+      strokeLinejoin='round'
+    >
+      <circle cx='12' cy='12' r='4' />
+      <path d='M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41' />
+    </svg>
+  );
+}
+
+function MoonIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      viewBox='0 0 24 24'
+      fill='none'
+      stroke='currentColor'
+      strokeWidth='2'
+      strokeLinecap='round'
+      strokeLinejoin='round'
+    >
+      <path d='M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z' />
+    </svg>
+  );
+}
 
 export function ThemeToggle() {
   const mounted = useSyncExternalStore(
@@ -11,60 +44,19 @@ export function ThemeToggle() {
     () => true,
     () => false
   );
-  const [isOpen, setIsOpen] = useState(false);
-  const { theme, setTheme } = useTheme();
+  const { resolvedTheme, setTheme } = useTheme();
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      const target = event.target as Element;
-      if (isOpen && !target.closest('.theme-dropdown')) {
-        setIsOpen(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [isOpen]);
-
-  const themes = [
-    { value: 'system', label: 'System' },
-    { value: 'light', label: 'Light' },
-    { value: 'dark', label: 'Dark' },
-  ];
-
-  const currentTheme = mounted ? theme : 'system';
-  const currentThemeLabel =
-    themes.find(t => t.value === currentTheme)?.label || 'System';
+  const isDark = mounted && resolvedTheme === 'dark';
+  const Icon = isDark ? SunIcon : MoonIcon;
 
   return (
-    <div className='theme-dropdown relative'>
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className='text-text-muted hover:text-text-secondary dark:text-text-dark-muted dark:hover:text-text-dark-secondary cursor-pointer text-sm transition-colors'
-      >
-        {currentThemeLabel}
-      </button>
-
-      {isOpen && (
-        <div className='bg-bg-primary dark:bg-bg-dark-secondary theme-dropdown absolute right-0 bottom-full z-50 mb-2 overflow-hidden rounded-md border border-gray-200 shadow-lg dark:border-gray-600/60'>
-          {themes.map((t, index) => (
-            <button
-              key={t.value}
-              onClick={() => {
-                setTheme(t.value);
-                setIsOpen(false);
-              }}
-              className={`text-text-secondary hover:text-text-primary dark:text-text-dark-secondary dark:hover:text-text-dark-primary block w-full cursor-pointer px-4 py-2 text-left text-sm transition-colors hover:bg-gray-50 dark:hover:bg-gray-800 ${
-                index === 0 ? 'rounded-t-md' : ''
-              } ${index === themes.length - 1 ? 'rounded-b-md' : ''}`}
-            >
-              {t.label}
-            </button>
-          ))}
-        </div>
-      )}
-    </div>
+    <button
+      type='button'
+      onClick={() => setTheme(isDark ? 'light' : 'dark')}
+      className='text-text-muted hover:text-text-primary dark:text-text-dark-muted dark:hover:text-text-dark-primary cursor-pointer transition-colors'
+      aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+    >
+      <Icon className='h-4 w-4' />
+    </button>
   );
 }

@@ -165,9 +165,7 @@ export default function PostImage({
               index === currentIndex ? 'opacity-100' : 'absolute opacity-0'
             }`}
           >
-            <p className='text-text-muted dark:text-text-dark-muted post-image-caption !text-xs !leading-[1.333373] !font-semibold !tracking-tight'>
-              {image.caption}
-            </p>
+            <p className='post-caption post-image-caption'>{image.caption}</p>
           </div>
         ))}
       </div>
