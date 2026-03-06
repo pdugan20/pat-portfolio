@@ -1,9 +1,11 @@
 'use client';
 
-import { useRef, useEffect, useState } from 'react';
+import { useRef, useEffect, useState, useSyncExternalStore } from 'react';
 import { useTheme } from 'next-themes';
 import { PlayIcon, PauseIcon, RestartIcon } from './icons';
 import { darkVariants } from '@/lib/dark-variants';
+
+const emptySubscribe = () => () => {};
 
 interface VideoItem {
   src: string;
@@ -38,7 +40,11 @@ export default function PostMovie({ videos, className = '' }: PostMovieProps) {
   const [isCurrentlyPlaying, setIsCurrentlyPlaying] = useState(false);
   const [hasEverStarted, setHasEverStarted] = useState(false);
   const [hasEnded, setHasEnded] = useState(false);
-  const [mounted, setMounted] = useState(false);
+  const mounted = useSyncExternalStore(
+    emptySubscribe,
+    () => true,
+    () => false
+  );
   const [videoDimensions, setVideoDimensions] = useState<{
     width: number;
     height: number;
@@ -59,10 +65,6 @@ export default function PostMovie({ videos, className = '' }: PostMovieProps) {
   useEffect(() => {
     hasEndedRef.current = hasEnded;
   }, [hasEnded]);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -145,13 +147,15 @@ export default function PostMovie({ videos, className = '' }: PostMovieProps) {
     }
   };
 
-  // Reset player controls when theme changes
-  useEffect(() => {
-    if (videoRef.current && mounted) {
+  // Reset player controls when theme changes (render-time state adjustment)
+  const [prevTheme, setPrevTheme] = useState(theme);
+  if (theme !== prevTheme) {
+    setPrevTheme(theme);
+    if (mounted) {
       setIsCurrentlyPlaying(false);
       setHasEnded(false);
     }
-  }, [theme, mounted]);
+  }
 
   return (
     <div
