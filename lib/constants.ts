@@ -87,6 +87,6 @@ export const EXPERIENCE = [
     company: 'Google',
     url: 'https://google.com',
     role: 'Interaction Designer',
-    period: '2011 — 2013',
+    period: '2010 — 2013',
   },
 ] as const;
