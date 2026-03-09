@@ -1,0 +1,39 @@
+/* Now Playing indicator — animated bars */
+.now-playing-indicator {
+  display: inline-flex;
+  align-items: flex-end;
+  height: 12px;
+  gap: 1px;
+}
+
+.now-playing-bar {
+  width: 2px;
+  background-color: var(--color-primary);
+  border-radius: 1px;
+  animation: now-playing-bounce 1.2s ease-in-out infinite;
+}
+
+.now-playing-bar:nth-child(1) {
+  height: 4px;
+  animation-delay: 0s;
+}
+
+.now-playing-bar:nth-child(2) {
+  height: 8px;
+  animation-delay: 0.2s;
+}
+
+.now-playing-bar:nth-child(3) {
+  height: 6px;
+  animation-delay: 0.4s;
+}
+
+@keyframes now-playing-bounce {
+  0%,
+  100% {
+    transform: scaleY(0.4);
+  }
+  50% {
+    transform: scaleY(1);
+  }
+}
