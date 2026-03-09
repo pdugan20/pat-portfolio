@@ -8,3 +8,8 @@ export { default as XIcon } from './XIcon';
 export { default as GitHubIcon } from './GitHubIcon';
 export { default as FigmaIcon } from './FigmaIcon';
 export { default as EmailIcon } from './EmailIcon';
+export { default as GoogleLogo } from './GoogleLogo';
+export { default as MetaLogo } from './MetaLogo';
+export { default as QuoraLogo } from './QuoraLogo';
+export { default as NextdoorLogo } from './NextdoorLogo';
+export { default as CZILogo } from './CZILogo';

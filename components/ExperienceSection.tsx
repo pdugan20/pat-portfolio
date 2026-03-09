@@ -1,4 +1,20 @@
+import type { ComponentType } from 'react';
 import { EXPERIENCE } from '@/lib/constants';
+import {
+  GoogleLogo,
+  MetaLogo,
+  QuoraLogo,
+  NextdoorLogo,
+  CZILogo,
+} from '@/components/icons';
+
+const companyLogos: Record<string, ComponentType<{ className?: string }>> = {
+  Google: GoogleLogo,
+  Meta: MetaLogo,
+  Quora: QuoraLogo,
+  Nextdoor: NextdoorLogo,
+  CZI: CZILogo,
+};
 
 export default function ExperienceSection() {
   return (
@@ -7,27 +23,35 @@ export default function ExperienceSection() {
         Experience
       </h2>
       <ul className='divide-border-primary divide-y dark:divide-white/[0.08]'>
-        {EXPERIENCE.map(job => (
-          <li
-            key={`${job.company}-${job.role}`}
-            className='flex items-baseline gap-4 py-3 first:pt-0 last:pb-0'
-          >
-            <a
-              href={job.url}
-              target='_blank'
-              rel='noopener noreferrer'
-              className='text-text-primary dark:text-text-dark-primary w-24 shrink-0 text-base font-medium transition-colors'
+        {EXPERIENCE.map(job => {
+          const Logo = companyLogos[job.company];
+          return (
+            <li
+              key={`${job.company}-${job.role}`}
+              className='flex items-center gap-4 py-3 first:pt-0 last:pb-0'
             >
-              {job.company}
-            </a>
-            <span className='text-text-secondary dark:text-text-dark-secondary flex-1 text-base'>
-              {job.role}
-            </span>
-            <span className='text-text-muted dark:text-text-dark-muted shrink-0 text-sm'>
-              {job.period}
-            </span>
-          </li>
-        ))}
+              <div className='flex w-32 shrink-0 items-center gap-2'>
+                <span className='flex w-5 shrink-0 items-center justify-center'>
+                  {Logo && <Logo className='h-4 w-auto' />}
+                </span>
+                <a
+                  href={job.url}
+                  target='_blank'
+                  rel='noopener noreferrer'
+                  className='text-text-primary dark:text-text-dark-primary text-base font-medium transition-colors'
+                >
+                  {job.company}
+                </a>
+              </div>
+              <span className='text-text-secondary dark:text-text-dark-secondary flex-1 text-base'>
+                {job.role}
+              </span>
+              <span className='text-text-muted dark:text-text-dark-muted shrink-0 text-sm'>
+                {job.period}
+              </span>
+            </li>
+          );
+        })}
       </ul>
     </section>
   );
