@@ -18,7 +18,7 @@ export interface PaginatedResponse<T> {
 // Images
 
 export interface ImageAttachment {
-  url: string;
+  cdn_url: string;
   thumbhash: string | null;
   dominant_color: string | null;
   accent_color: string | null;

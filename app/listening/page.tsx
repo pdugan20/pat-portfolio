@@ -4,7 +4,7 @@ import Layout from '@/components/Layout';
 import DomainNav from '@/components/DomainNav';
 import StatBar from '@/components/StatBar';
 import { rewind } from '@/lib/rewind/client';
-import type { ListeningStats } from '@/lib/rewind/types';
+import type { ListeningStats, StreaksResponse } from '@/lib/rewind/types';
 import NowPlaying from '@/components/listening/NowPlaying';
 import ListeningContent from './ListeningContent';
 
@@ -14,9 +14,10 @@ export const metadata: Metadata = {
 };
 
 export default async function ListeningPage() {
-  const stats = await rewind<ListeningStats>('/listening/stats');
-
-  const yearsSince = stats.years_tracking;
+  const [stats, streaks] = await Promise.all([
+    rewind<ListeningStats>('/listening/stats'),
+    rewind<StreaksResponse>('/listening/streaks').catch(() => null),
+  ]);
 
   return (
     <Layout>
@@ -48,7 +49,18 @@ export default async function ListeningPage() {
               label: 'Albums',
               value: stats.unique_albums.toLocaleString(),
             },
-            { label: 'Tracking since', value: `${yearsSince} years` },
+            {
+              label: 'Tracking since',
+              value: `${stats.years_tracking} years`,
+            },
+            ...(streaks
+              ? [
+                  {
+                    label: 'Current streak',
+                    value: `${streaks.current.days}d`,
+                  },
+                ]
+              : []),
           ]}
         />
 

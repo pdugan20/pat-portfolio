@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import type { TopItem } from '@/lib/listening/types';
 
 interface AlbumGridProps {
@@ -36,13 +37,15 @@ export default function AlbumGrid({ items, loading }: AlbumGridProps) {
           title={`${item.name} — ${item.detail}`}
         >
           {item.image ? (
-            <img
+            <Image
               src={item.image}
               alt={`${item.name} by ${item.detail}`}
               width={300}
               height={300}
               className='h-full w-full object-cover transition-transform duration-200 group-hover:scale-105'
-              loading='lazy'
+              {...(item.blurDataURL
+                ? { placeholder: 'blur', blurDataURL: item.blurDataURL }
+                : {})}
             />
           ) : (
             <div className='bg-bg-secondary dark:bg-bg-dark-secondary text-text-muted dark:text-text-dark-muted flex h-full w-full items-center justify-center text-xs'>

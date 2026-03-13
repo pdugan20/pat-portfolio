@@ -47,6 +47,11 @@ Shared Rewind API client, types, and utilities that all three pages build on.
 - [x] **0.11** Install `@visx/*` and `react-activity-calendar`
 - [x] **0.12** Refactor `/listening` to use shared `StatBar` and `DomainNav`
 
+#### 0D: Homepage Now Section
+
+- [x] **0.13** Create `components/NowSection.tsx` — homepage widget showing latest data from each domain
+- [x] **0.14** Add `NowSection` to `app/page.tsx` between intro and Writing sections
+
 ### Phase 1: Migrate /listening to Rewind API
 
 Replace direct Last.fm API calls with Rewind API. Keep existing UI components, add new features unlocked by Rewind.
@@ -69,22 +74,26 @@ Replace direct Last.fm API calls with Rewind API. Keep existing UI components, a
 
 #### 1C: New Features (Rewind-Enabled)
 
-- [ ] **1.11** Add streaks to stats bar (`/v1/listening/streaks`) — current and longest streak
-- [ ] **1.12** Create `app/api/listening/calendar/route.ts` → call `/v1/listening/calendar`
-- [ ] **1.13** Add `CalendarHeatmap` to listening page — daily scrobble counts, year selector
-- [ ] **1.14** Create `app/api/listening/trends/route.ts` → call `/v1/listening/trends`
-- [ ] **1.15** Create `components/listening/ListeningTrends.tsx` — weekly scrobble line chart (recharts)
+- [x] **1.11** Add streaks to stats bar (`/v1/listening/streaks`) — current and longest streak
+- [x] **1.12** Create `app/api/listening/calendar/route.ts` → call `/v1/listening/calendar`
+- [x] **1.13** Add `CalendarHeatmap` to listening page — daily scrobble counts, year selector
+- [x] **1.14** Create `app/api/listening/trends/route.ts` → call `/v1/listening/trends`
+- [x] **1.15** Create `components/listening/ListeningTrends.tsx` — monthly scrobble line chart (visx)
 
 #### 1D: Image Upgrade
 
-- [ ] **1.16** Migrate album/artist images to Rewind CDN URLs with thumbhash blur placeholders
-- [ ] **1.17** Switch `<img>` tags to `next/image` with `remotePatterns` for CDN
+- [x] **1.16** Migrate album/artist images to Rewind CDN URLs with thumbhash blur placeholders
+- [x] **1.17** Switch `<img>` tags to `next/image` with `remotePatterns` for CDN
 
 #### 1E: Verification
 
 - [x] **1.18** Verify all existing functionality works with Rewind data source
-- [ ] **1.19** Test dark mode, loading states, error states, responsive layout
-- [ ] **1.20** Confirm `LASTFM_API_KEY` env var is no longer needed; remove from Vercel if so
+- [ ] **1.19** Test dark mode rendering — calendar heatmap colors, trends chart colors, stat bar
+- [ ] **1.20** Test loading states — skeleton shows while calendar/trends/top lists fetch
+- [ ] **1.21** Test error states — verify graceful degradation when Rewind API is unreachable (calendar shows empty, trends hides, stats bar still renders from SSR cache)
+- [ ] **1.22** Test responsive layout — calendar heatmap overflow on mobile, trends chart axis labels, top list truncation
+- [ ] **1.23** Test year selector — switching years updates calendar + trends, edge cases (first year 2012, current year)
+- [ ] **1.24** Confirm `LASTFM_API_KEY` env var is no longer needed; remove from Vercel if so
 
 ### Phase 2: /watching Page (Movies)
 
@@ -92,7 +101,7 @@ New page displaying movie watching data. No TV shows initially.
 
 #### 2A: Route Handlers
 
-- [ ] **2.1** Create `app/api/watching/recent/route.ts` → `/v1/watching/recent` (5-min cache)
+- [x] **2.1** Create `app/api/watching/recent/route.ts` → `/v1/watching/recent` (5-min cache)
 - [ ] **2.2** Create `app/api/watching/stats/route.ts` → `/v1/watching/stats` (1-hour cache)
 - [ ] **2.3** Create `app/api/watching/movies/route.ts` → `/v1/watching/movies` (1-hour cache)
 - [ ] **2.4** Create `app/api/watching/ratings/route.ts` → `/v1/watching/ratings` (1-hour cache)
@@ -109,7 +118,7 @@ New page displaying movie watching data. No TV shows initially.
 - [ ] **2.9** Create `components/watching/RecentWatches.tsx` — poster row of 5 most recent movies
 - [ ] **2.10** Create `components/watching/WatchingStats.tsx` — stats bar: total films, avg rating, hours watched, unique directors
 - [ ] **2.11** Create `components/watching/PosterGrid.tsx` — filterable/sortable movie poster grid with genre and decade filters
-- [ ] **2.12** Create `components/watching/RatingsHistogram.tsx` — bar chart of rating distribution (recharts)
+- [ ] **2.12** Create `components/watching/RatingsHistogram.tsx` — bar chart of rating distribution (visx)
 - [ ] **2.13** Create `components/watching/GenreBreakdown.tsx` — horizontal bar chart of top genres
 - [ ] **2.14** Create `components/watching/DecadeBreakdown.tsx` — bar chart of films by release decade
 - [ ] **2.15** Create `components/watching/TopDirectors.tsx` — ranked list of most-watched directors
@@ -128,7 +137,7 @@ New page displaying running data from Strava via Rewind.
 #### 3A: Route Handlers
 
 - [ ] **3.1** Create `app/api/running/stats/route.ts` → `/v1/running/stats` (1-hour cache)
-- [ ] **3.2** Create `app/api/running/recent/route.ts` → `/v1/running/recent` (5-min cache)
+- [x] **3.2** Create `app/api/running/recent/route.ts` → `/v1/running/recent` (5-min cache)
 - [ ] **3.3** Create `app/api/running/prs/route.ts` → `/v1/running/prs` (1-hour cache)
 - [ ] **3.4** Create `app/api/running/gear/route.ts` → `/v1/running/gear` (24-hour cache)
 - [ ] **3.5** Create `app/api/running/races/route.ts` → `/v1/running/races` (1-hour cache)
@@ -157,11 +166,7 @@ New page displaying running data from Strava via Rewind.
 
 ### Phase 4: Calendar Heatmaps and Trends
 
-Add calendar heatmaps and trend visualizations across all three pages using the shared `CalendarHeatmap` component and `recharts`.
-
-#### 4A: Dependencies
-
-- [ ] **4.1** Install `recharts` (if not already installed in Phase 1)
+Add calendar heatmaps and trend visualizations across all three pages using the shared `CalendarHeatmap` component and `visx`.
 
 #### 4B: Listening
 
@@ -184,7 +189,7 @@ Add calendar heatmaps and trend visualizations across all three pages using the 
 Running-specific chart visualizations. These endpoints return pre-computed chart data from Rewind.
 
 - [ ] **5.1** Create `app/api/running/charts/cumulative/route.ts` → `/v1/running/charts/cumulative`
-- [ ] **5.2** Create `components/running/CumulativeChart.tsx` — year-over-year cumulative distance lines (recharts)
+- [ ] **5.2** Create `components/running/CumulativeChart.tsx` — year-over-year cumulative distance lines (visx)
 - [ ] **5.3** Create `app/api/running/charts/pace-trend/route.ts` → `/v1/running/charts/pace-trend`
 - [ ] **5.4** Create `components/running/PaceTrendChart.tsx` — rolling average pace over time
 - [ ] **5.5** Create `app/api/running/charts/time-of-day/route.ts` → `/v1/running/charts/time-of-day`

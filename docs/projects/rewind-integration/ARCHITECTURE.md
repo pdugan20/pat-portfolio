@@ -164,10 +164,10 @@ components/{domain}/
 
 ## Dependencies
 
-| Dependency  | Phase                | Purpose                                |
-| ----------- | -------------------- | -------------------------------------- |
-| `recharts`  | 1 (listening trends) | Line charts, bar charts, scatter plots |
-| `thumbhash` | 0 (images)           | Decode thumbhash to blur placeholder   |
+| Dependency  | Phase      | Purpose                                |
+| ----------- | ---------- | -------------------------------------- |
+| `@visx/*`   | 0 (shared) | Line charts, bar charts, scatter plots |
+| `thumbhash` | 0 (images) | Decode thumbhash to blur placeholder   |
 
 No database, no direct API clients, no sync infrastructure. The portfolio is a thin presentation layer over Rewind.
 

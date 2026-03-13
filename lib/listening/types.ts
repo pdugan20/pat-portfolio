@@ -17,6 +17,7 @@ export interface NowPlayingData {
     artist: string;
     album: string;
     image: string;
+    blurDataURL?: string;
     url: string;
     playedAt?: string;
   };
@@ -28,6 +29,7 @@ export interface TopItem {
   detail: string;
   playcount: number;
   image: string;
+  blurDataURL?: string;
   url: string;
 }
 

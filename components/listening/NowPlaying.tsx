@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState, useCallback } from 'react';
+import Image from 'next/image';
 import type { NowPlayingData } from '@/lib/listening/types';
 
 export default function NowPlaying() {
@@ -34,13 +35,15 @@ export default function NowPlaying() {
           rel='noopener noreferrer'
           className='shrink-0'
         >
-          <img
+          <Image
             src={data.track.image}
             alt={`${data.track.album} album art`}
             width={48}
             height={48}
             className='rounded-md'
-            loading='lazy'
+            {...(data.track.blurDataURL
+              ? { placeholder: 'blur', blurDataURL: data.track.blurDataURL }
+              : {})}
           />
         </a>
       )}

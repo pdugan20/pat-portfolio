@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { ActivityCalendar } from 'react-activity-calendar';
 import { useTheme } from 'next-themes';
 import type { CalendarDay } from '@/lib/rewind/types';
@@ -64,6 +65,11 @@ export default function CalendarHeatmap({
   loading = false,
 }: CalendarHeatmapProps) {
   const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const activities = assignLevels(data, year, maxCount);
 
@@ -74,6 +80,8 @@ export default function CalendarHeatmap({
     });
     return `${count} on ${formatted}`;
   };
+
+  if (!mounted) return null;
 
   return (
     <ActivityCalendar

@@ -5,7 +5,7 @@ import type { ImageAttachment } from '../rewind/types';
 describe('getImageUrl', () => {
   it('returns the URL from an ImageAttachment', () => {
     const image: ImageAttachment = {
-      url: 'https://cdn.rewind.rest/images/listening/album/123/md',
+      cdn_url: 'https://cdn.rewind.rest/images/listening/album/123/md',
       thumbhash: null,
       dominant_color: '#1a1a2e',
       accent_color: '#e94560',
@@ -27,7 +27,7 @@ describe('getImageUrl', () => {
 describe('getPlaceholderColor', () => {
   it('returns dominant_color when available', () => {
     const image: ImageAttachment = {
-      url: 'https://cdn.rewind.rest/test',
+      cdn_url: 'https://cdn.rewind.rest/test',
       thumbhash: null,
       dominant_color: '#ff0000',
       accent_color: null,
@@ -41,7 +41,7 @@ describe('getPlaceholderColor', () => {
 
   it('returns fallback color when dominant_color is null', () => {
     const image: ImageAttachment = {
-      url: 'https://cdn.rewind.rest/test',
+      cdn_url: 'https://cdn.rewind.rest/test',
       thumbhash: null,
       dominant_color: null,
       accent_color: null,

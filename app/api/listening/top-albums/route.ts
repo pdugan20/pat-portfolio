@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { rewind } from '@/lib/rewind/client';
-import { getImageUrl } from '@/lib/rewind/images';
+import { getImageUrl, getBlurDataURL } from '@/lib/rewind/images';
 import type { TopItemsResponse } from '@/lib/rewind/types';
 import type { TimePeriod } from '@/lib/listening/types';
 
@@ -32,6 +32,7 @@ export async function GET(request: NextRequest) {
       detail: item.detail,
       playcount: item.playcount,
       image: getImageUrl(item.image),
+      blurDataURL: getBlurDataURL(item.image),
       url: item.url,
     }));
 
