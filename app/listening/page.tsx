@@ -1,8 +1,10 @@
 import type { Metadata } from 'next';
 import { SITE_CONFIG } from '@/lib/constants';
 import Layout from '@/components/Layout';
-import { getStats } from '@/lib/listening/lastfm';
-import ListeningStats from '@/components/listening/ListeningStats';
+import DomainNav from '@/components/DomainNav';
+import StatBar from '@/components/StatBar';
+import { rewind } from '@/lib/rewind/client';
+import type { ListeningStats } from '@/lib/rewind/types';
 import NowPlaying from '@/components/listening/NowPlaying';
 import ListeningContent from './ListeningContent';
 
@@ -12,11 +14,15 @@ export const metadata: Metadata = {
 };
 
 export default async function ListeningPage() {
-  const stats = await getStats();
+  const stats = await rewind<ListeningStats>('/listening/stats');
+
+  const yearsSince = stats.years_tracking;
 
   return (
     <Layout>
       <div>
+        <DomainNav />
+
         <section className='mb-12'>
           <h1 className='text-text-primary dark:text-text-dark-primary mb-1 text-2xl font-semibold tracking-tight'>
             Listening
@@ -28,7 +34,23 @@ export default async function ListeningPage() {
 
         <NowPlaying />
 
-        <ListeningStats stats={stats} />
+        <StatBar
+          stats={[
+            {
+              label: 'Scrobbles',
+              value: stats.total_scrobbles.toLocaleString(),
+            },
+            {
+              label: 'Artists',
+              value: stats.unique_artists.toLocaleString(),
+            },
+            {
+              label: 'Albums',
+              value: stats.unique_albums.toLocaleString(),
+            },
+            { label: 'Tracking since', value: `${yearsSince} years` },
+          ]}
+        />
 
         <ListeningContent />
       </div>

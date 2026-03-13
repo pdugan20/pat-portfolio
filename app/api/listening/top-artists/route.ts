@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import { getTopArtists, normalizeTopArtists } from '@/lib/listening/lastfm';
-import { LASTFM_CONFIG } from '@/lib/listening/constants';
+import { rewind } from '@/lib/rewind/client';
+import { getImageUrl } from '@/lib/rewind/images';
+import type { TopItemsResponse } from '@/lib/rewind/types';
 import type { TimePeriod } from '@/lib/listening/types';
 
 const VALID_PERIODS: TimePeriod[] = [
@@ -20,22 +21,23 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    const data = await getTopArtists(
-      period as TimePeriod,
-      LASTFM_CONFIG.fetchLimit
-    );
-    const items = normalizeTopArtists(data).slice(
-      0,
-      LASTFM_CONFIG.displayLimit
-    );
+    const data = await rewind<TopItemsResponse>('/listening/top/artists', {
+      period,
+      limit: '10',
+    });
+
+    const items = data.data.map(item => ({
+      rank: item.rank,
+      name: item.name,
+      detail: item.detail,
+      playcount: item.playcount,
+      image: getImageUrl(item.image),
+      url: item.url,
+    }));
 
     return NextResponse.json(
       { items },
-      {
-        headers: {
-          'Cache-Control': 'public, max-age=3600, s-maxage=3600',
-        },
-      }
+      { headers: { 'Cache-Control': 'public, max-age=3600, s-maxage=3600' } }
     );
   } catch {
     return NextResponse.json({ items: [] }, { status: 500 });

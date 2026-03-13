@@ -28,20 +28,24 @@ Shared Rewind API client, types, and utilities that all three pages build on.
 
 #### 0A: API Client
 
-- [ ] **0.1** Add `REWIND_API_KEY` to `.env.local` and `.env.example`
+- [x] **0.1** Add `REWIND_API_KEY` to `.env.local` and `.env.example`
 - [ ] **0.2** Add `REWIND_API_KEY` to Vercel environment settings (all environments)
-- [ ] **0.3** Create `lib/rewind/client.ts` — typed fetch wrapper with Bearer auth, error handling, base URL config
-- [ ] **0.4** Create `lib/rewind/types.ts` — shared response types: `PaginationMeta`, `ImageAttachment`, `CalendarDay`, `FeedItem`
+- [x] **0.3** Create `lib/rewind/client.ts` — typed fetch wrapper with Bearer auth, error handling, base URL config
+- [x] **0.4** Create `lib/rewind/types.ts` — shared response types: `PaginationMeta`, `ImageAttachment`, `CalendarDay`, `FeedItem`
 
 #### 0B: Image Utilities
 
-- [ ] **0.5** Create `lib/rewind/images.ts` — CDN URL builder for `cdn.rewind.rest` with size params, thumbhash decode for blur placeholders, dominant/accent color extraction
-- [ ] **0.6** Add `cdn.rewind.rest` and `api.rewind.rest` to `next.config.ts` `images.remotePatterns`
+- [x] **0.5** Create `lib/rewind/images.ts` — CDN URL builder for `cdn.rewind.rest` with size params, thumbhash decode for blur placeholders, dominant/accent color extraction
+- [x] **0.6** Add `cdn.rewind.rest` and `api.rewind.rest` to `next.config.ts` `images.remotePatterns`
 
 #### 0C: Shared Components
 
-- [ ] **0.7** Create `components/CalendarHeatmap.tsx` — reusable GitHub-style heatmap (used by listening, watching, running). Props: `data: CalendarDay[]`, `year`, `colorScale`, `tooltipFormatter`
-- [ ] **0.8** Create `components/StatBar.tsx` — reusable stats display row (used by all pages). Props: `stats: { label, value, detail? }[]`
+- [x] **0.7** Create `components/CalendarHeatmap.tsx` — reusable GitHub-style heatmap (used by listening, watching, running). Props: `data: CalendarDay[]`, `year`, `colorScale`, `tooltipFormatter`
+- [x] **0.8** Create `components/StatBar.tsx` — reusable stats display row (used by all pages). Props: `stats: { label, value, detail? }[]`
+- [x] **0.9** Create `components/DomainNav.tsx` — shared tab navigation across listening/watching/running
+- [x] **0.10** Create `components/YearSelector.tsx` — year toggle for calendar heatmaps and year-scoped data
+- [x] **0.11** Install `@visx/*` and `react-activity-calendar`
+- [x] **0.12** Refactor `/listening` to use shared `StatBar` and `DomainNav`
 
 ### Phase 1: Migrate /listening to Rewind API
 
@@ -49,19 +53,19 @@ Replace direct Last.fm API calls with Rewind API. Keep existing UI components, a
 
 #### 1A: Route Handler Migration
 
-- [ ] **1.1** Update `app/api/listening/now-playing/route.ts` → call `/v1/listening/now-playing`
-- [ ] **1.2** Update `app/api/listening/recent/route.ts` → call `/v1/listening/recent`
-- [ ] **1.3** Update `app/api/listening/top-artists/route.ts` → call `/v1/listening/top/artists`
-- [ ] **1.4** Update `app/api/listening/top-albums/route.ts` → call `/v1/listening/top/albums`
-- [ ] **1.5** Update `app/api/listening/top-tracks/route.ts` → call `/v1/listening/top/tracks`
-- [ ] **1.6** Update stats fetch in `app/listening/page.tsx` → call `/v1/listening/stats`
+- [x] **1.1** Update `app/api/listening/now-playing/route.ts` → call `/v1/listening/now-playing`
+- [x] **1.2** Update `app/api/listening/recent/route.ts` → call `/v1/listening/recent`
+- [x] **1.3** Update `app/api/listening/top-artists/route.ts` → call `/v1/listening/top/artists`
+- [x] **1.4** Update `app/api/listening/top-albums/route.ts` → call `/v1/listening/top/albums`
+- [x] **1.5** Update `app/api/listening/top-tracks/route.ts` → call `/v1/listening/top/tracks`
+- [x] **1.6** Update stats fetch in `app/listening/page.tsx` → call `/v1/listening/stats`
 
 #### 1B: Remove Direct Last.fm Code
 
-- [ ] **1.7** Delete `lib/listening/lastfm.ts` (replaced by Rewind client)
-- [ ] **1.8** Delete `lib/listening/filters.ts` (filtering now handled server-side by Rewind)
-- [ ] **1.9** Update `lib/listening/types.ts` — replace Last.fm response types with Rewind response types
-- [ ] **1.10** Update or remove `lib/__tests__/lastfm.test.ts`
+- [x] **1.7** Delete `lib/listening/lastfm.ts` (replaced by Rewind client)
+- [x] **1.8** Delete `lib/listening/filters.ts` (filtering now handled server-side by Rewind)
+- [x] **1.9** Update `lib/listening/types.ts` — replace Last.fm response types with Rewind response types
+- [x] **1.10** Update or remove `lib/__tests__/lastfm.test.ts`
 
 #### 1C: New Features (Rewind-Enabled)
 
@@ -78,7 +82,7 @@ Replace direct Last.fm API calls with Rewind API. Keep existing UI components, a
 
 #### 1E: Verification
 
-- [ ] **1.18** Verify all existing functionality works with Rewind data source
+- [x] **1.18** Verify all existing functionality works with Rewind data source
 - [ ] **1.19** Test dark mode, loading states, error states, responsive layout
 - [ ] **1.20** Confirm `LASTFM_API_KEY` env var is no longer needed; remove from Vercel if so
 

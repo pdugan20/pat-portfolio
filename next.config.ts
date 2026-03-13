@@ -7,6 +7,18 @@ const withBundleAnalyzer = bundleAnalyzer({
 
 const nextConfig: NextConfig = {
   pageExtensions: ['js', 'jsx', 'ts', 'tsx'],
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'cdn.rewind.rest',
+      },
+      {
+        protocol: 'https',
+        hostname: 'api.rewind.rest',
+      },
+    ],
+  },
 };
 
 export default withBundleAnalyzer(nextConfig);
