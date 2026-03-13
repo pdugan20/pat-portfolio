@@ -4,6 +4,7 @@ import type { Metadata } from 'next';
 import { SITE_CONFIG, WORK_HISTORY, PROJECTS } from '@/lib/constants';
 import ExperienceSection from '@/components/ExperienceSection';
 import HoverList from '@/components/HoverList';
+import NowSection from '@/components/NowSection';
 import { posts } from '#content';
 
 export const metadata: Metadata = {
@@ -59,6 +60,8 @@ export default function Home() {
             make things.
           </p>
         </section>
+
+        <NowSection />
 
         {/* Writing */}
         <section className='mb-16'>
