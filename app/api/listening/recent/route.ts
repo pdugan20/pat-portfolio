@@ -1,31 +1,29 @@
 import { NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
 import { rewind } from '@/lib/rewind/client';
-import { getImageUrl } from '@/lib/rewind/images';
 import type { RecentScrobblesResponse } from '@/lib/rewind/types';
 
-export const dynamic = 'force-dynamic';
+export async function GET(request: NextRequest) {
+  const limit = request.nextUrl.searchParams.get('limit') ?? '10';
+  const date = request.nextUrl.searchParams.get('date');
 
-export async function GET() {
   try {
-    const data = await rewind<RecentScrobblesResponse>('/listening/recent', {
-      limit: '10',
-    });
+    const params: Record<string, string> = { limit };
+    if (date) params.date = date;
 
-    const tracks = data.data.map(scrobble => ({
-      name: scrobble.track.name,
-      artist: scrobble.artist.name,
-      album: scrobble.album.name ?? '',
-      image: getImageUrl(scrobble.album.image),
-      url: scrobble.track.url ?? '',
-      playedAt: scrobble.scrobbled_at,
-      isPlaying: false,
-    }));
-
-    return NextResponse.json(
-      { tracks },
-      { headers: { 'Cache-Control': 'public, max-age=60, s-maxage=60' } }
+    const data = await rewind<RecentScrobblesResponse>(
+      '/listening/recent',
+      params
     );
+
+    return NextResponse.json(data, {
+      headers: {
+        'Cache-Control': date
+          ? 'public, max-age=3600, s-maxage=3600'
+          : 'public, max-age=60, s-maxage=60',
+      },
+    });
   } catch {
-    return NextResponse.json({ tracks: [] }, { status: 500 });
+    return NextResponse.json({ data: [] }, { status: 500 });
   }
 }

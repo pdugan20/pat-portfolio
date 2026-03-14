@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, cloneElement } from 'react';
 import { ActivityCalendar } from 'react-activity-calendar';
 import { useTheme } from 'next-themes';
 import type { CalendarDay } from '@/lib/rewind/types';
@@ -8,13 +8,12 @@ import type { CalendarDay } from '@/lib/rewind/types';
 interface CalendarHeatmapProps {
   data: CalendarDay[];
   year: number;
-  /** Maximum count value for scaling levels. If omitted, derived from data. */
   maxCount?: number;
-  /** Color theme — two colors [lowest, highest] per scheme */
   colors?: { light: [string, string]; dark: [string, string] };
-  /** Tooltip text formatter */
   formatTooltip?: (date: string, count: number) => string;
   loading?: boolean;
+  onDayClick?: (date: string) => void;
+  selectedDay?: string | null;
 }
 
 const DEFAULT_COLORS = {
@@ -27,13 +26,9 @@ function assignLevels(
   year: number,
   maxCount?: number
 ): { date: string; count: number; level: number }[] {
-  // Build a map of date → count
   const countMap = new Map(days.map(d => [d.date, d.count]));
-
-  // Determine the max for scaling
   const derivedMax = maxCount ?? Math.max(...days.map(d => d.count), 1);
 
-  // Generate all days in the year
   const result: { date: string; count: number; level: number }[] = [];
   const start = new Date(year, 0, 1);
   const end = new Date(year, 11, 31);
@@ -41,15 +36,8 @@ function assignLevels(
   for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
     const dateStr = d.toISOString().slice(0, 10);
     const count = countMap.get(dateStr) ?? 0;
-
-    let level: number;
-    if (count === 0) {
-      level = 0;
-    } else {
-      // Scale to 1-4
-      level = Math.min(4, Math.ceil((count / derivedMax) * 4));
-    }
-
+    const level =
+      count === 0 ? 0 : Math.min(4, Math.ceil((count / derivedMax) * 4));
     result.push({ date: dateStr, count, level });
   }
 
@@ -63,6 +51,8 @@ export default function CalendarHeatmap({
   colors = DEFAULT_COLORS,
   formatTooltip,
   loading = false,
+  onDayClick,
+  selectedDay,
 }: CalendarHeatmapProps) {
   const { resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
@@ -92,12 +82,32 @@ export default function CalendarHeatmap({
         light: colors.light,
         dark: colors.dark,
       }}
-      blockSize={11}
-      blockMargin={3}
+      blockSize={10}
+      blockMargin={2}
       blockRadius={2}
-      fontSize={11}
+      fontSize={10}
       showTotalCount={false}
+      showColorLegend={false}
       showWeekdayLabels={['mon', 'wed', 'fri']}
+      renderBlock={(block, activity) =>
+        cloneElement(block, {
+          onClick: () => {
+            if (onDayClick && activity.count > 0) {
+              onDayClick(activity.date);
+            }
+          },
+          style: {
+            ...block.props.style,
+            cursor: onDayClick && activity.count > 0 ? 'pointer' : undefined,
+            ...(selectedDay === activity.date
+              ? {
+                  stroke: resolvedTheme === 'dark' ? '#fff' : '#000',
+                  strokeWidth: 2,
+                }
+              : {}),
+          },
+        })
+      }
       tooltips={{
         activity: {
           text: activity =>

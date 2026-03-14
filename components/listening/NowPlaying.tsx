@@ -27,7 +27,7 @@ export default function NowPlaying() {
   if (!data?.track) return null;
 
   return (
-    <div className='mb-12 flex items-center gap-3'>
+    <div className='flex items-center gap-2'>
       {data.track.image && (
         <a
           href={data.track.url}
@@ -38,37 +38,32 @@ export default function NowPlaying() {
           <Image
             src={data.track.image}
             alt={`${data.track.album} album art`}
-            width={48}
-            height={48}
-            className='rounded-md'
+            width={28}
+            height={28}
+            className='rounded'
             {...(data.track.blurDataURL
               ? { placeholder: 'blur', blurDataURL: data.track.blurDataURL }
               : {})}
           />
         </a>
       )}
-      <div className='min-w-0 flex-1'>
-        <div className='flex items-center gap-2'>
-          {data.isPlaying && (
-            <span className='now-playing-indicator flex items-center gap-1'>
-              <span className='now-playing-bar' />
-              <span className='now-playing-bar' />
-              <span className='now-playing-bar' />
-            </span>
-          )}
-          <span className='text-text-muted dark:text-text-dark-muted text-xs'>
-            {data.isPlaying ? 'Now playing' : 'Last played'}
+      <div className='flex min-w-0 items-center gap-1.5'>
+        {data.isPlaying && (
+          <span className='now-playing-indicator flex items-center gap-0.5'>
+            <span className='now-playing-bar' />
+            <span className='now-playing-bar' />
+            <span className='now-playing-bar' />
           </span>
-        </div>
+        )}
         <a
           href={data.track.url}
           target='_blank'
           rel='noopener noreferrer'
-          className='text-text-primary dark:text-text-dark-primary block truncate text-sm font-medium hover:underline'
+          className='text-text-primary dark:text-text-dark-primary truncate text-xs font-medium hover:underline'
         >
           {data.track.name}
         </a>
-        <span className='text-text-secondary dark:text-text-dark-secondary block truncate text-sm'>
+        <span className='text-text-muted dark:text-text-dark-muted hidden shrink-0 text-xs sm:inline'>
           {data.track.artist}
         </span>
       </div>

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useCallback, useRef } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { ParentSize } from '@visx/responsive';
 import { scaleLinear, scaleTime } from '@visx/scale';
 import { AreaClosed, LinePath, Bar } from '@visx/shape';
@@ -21,7 +21,10 @@ function parsePeriod(period: string): Date {
 
 function formatMonth(period: string): string {
   const date = parsePeriod(period);
-  return date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+  return date.toLocaleDateString('en-US', {
+    month: 'short',
+    year: 'numeric',
+  });
 }
 
 const bisectDate = bisector<TrendPoint, Date>(d => parsePeriod(d.period)).left;
@@ -67,7 +70,6 @@ function Chart({
 
   const tickColor = isDark ? 'hsl(0, 0%, 45%)' : 'hsl(0, 0%, 65%)';
   const lineColor = isDark ? 'hsl(131, 50%, 50%)' : 'hsl(131, 50%, 40%)';
-  const fillColor = lineColor;
 
   function handleHover(event: React.MouseEvent<SVGRectElement>) {
     const point = localPoint(event);
@@ -102,7 +104,7 @@ function Chart({
           y={d => yScale(d.value)}
           yScale={yScale}
           curve={curveMonotoneX}
-          fill={fillColor}
+          fill={lineColor}
           fillOpacity={0.1}
         />
         <LinePath
@@ -205,20 +207,29 @@ function Chart({
 }
 
 interface ListeningTrendsProps {
-  year: number;
+  /** Pass data directly (year mode) or omit to fetch all-time from API */
+  data?: TrendPoint[];
 }
 
-export default function ListeningTrends({ year }: ListeningTrendsProps) {
-  const [allData, setAllData] = useState<TrendPoint[]>([]);
-  const [loading, setLoading] = useState(true);
+export default function ListeningTrends({
+  data: propData,
+}: ListeningTrendsProps) {
+  const [fetchedData, setFetchedData] = useState<TrendPoint[]>([]);
+  const [loading, setLoading] = useState(!propData);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (propData) return;
     async function fetchData() {
       try {
         const res = await fetch('/api/listening/trends');
         if (res.ok) {
           const json = await res.json();
-          setAllData(json.data ?? []);
+          setFetchedData(json.data ?? []);
         }
       } catch {
         // silent
@@ -227,9 +238,11 @@ export default function ListeningTrends({ year }: ListeningTrendsProps) {
       }
     }
     fetchData();
-  }, []);
+  }, [propData]);
 
-  const filtered = allData.filter(d => d.period.startsWith(String(year)));
+  const chartData = propData ?? fetchedData;
+
+  if (!mounted) return null;
 
   if (loading) {
     return (
@@ -237,13 +250,13 @@ export default function ListeningTrends({ year }: ListeningTrendsProps) {
     );
   }
 
-  if (filtered.length === 0) return null;
+  if (chartData.length === 0) return null;
 
   return (
     <div className='h-[200px]'>
       <ParentSize>
         {({ width, height }) => (
-          <Chart data={filtered} width={width} height={height} />
+          <Chart data={chartData} width={width} height={height} />
         )}
       </ParentSize>
     </div>

@@ -108,6 +108,20 @@
   /* Legacy black color */
   --color-black: #1d1d1f;
 
+  /* shadcn/ui semantic colors (resolved via CSS vars in :root/.dark) */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-destructive: var(--destructive);
+
   /* Spacing Variables */
   --spacing-0: 0px;
   --spacing-1: 0.25rem; /* 4px */
@@ -153,6 +167,38 @@
 }
 
 @custom-variant dark (&:where(.dark, .dark *));
+
+/* shadcn/ui color tokens mapped to existing design system */
+:root {
+  --radius: 0.5rem;
+  --background: var(--color-bg-primary);
+  --foreground: var(--color-text-primary);
+  --popover: var(--color-bg-primary);
+  --popover-foreground: var(--color-text-primary);
+  --muted: var(--color-bg-secondary);
+  --muted-foreground: var(--color-text-muted);
+  --accent: var(--color-bg-tertiary);
+  --accent-foreground: var(--color-text-primary);
+  --border: var(--color-border-primary);
+  --input: var(--color-border-primary);
+  --ring: var(--color-primary);
+  --destructive: #ef4444;
+}
+
+.dark {
+  --background: var(--color-bg-dark-primary);
+  --foreground: var(--color-text-dark-primary);
+  --popover: var(--color-bg-dark-secondary);
+  --popover-foreground: var(--color-text-dark-primary);
+  --muted: var(--color-bg-dark-secondary);
+  --muted-foreground: var(--color-text-dark-muted);
+  --accent: var(--color-bg-dark-tertiary);
+  --accent-foreground: var(--color-text-dark-primary);
+  --border: var(--color-border-dark-primary);
+  --input: var(--color-border-dark-primary);
+  --ring: var(--color-primary-light);
+  --destructive: #ef4444;
+}
 
 body {
   transition:

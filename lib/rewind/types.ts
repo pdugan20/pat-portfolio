@@ -149,3 +149,46 @@ export interface RecentScrobble {
 export interface RecentScrobblesResponse {
   data: RecentScrobble[];
 }
+
+// Listening Year Summary
+
+export interface YearTopArtist {
+  id: number;
+  name: string;
+  scrobbles: number;
+  image: ImageAttachment | null;
+}
+
+export interface YearTopAlbum {
+  id: number;
+  name: string;
+  artist: string;
+  scrobbles: number;
+  image: ImageAttachment | null;
+}
+
+export interface YearTopTrack {
+  id: number;
+  name: string;
+  artist: string;
+  scrobbles: number;
+}
+
+export interface YearMonth {
+  month: string; // "2024-01"
+  scrobbles: number;
+  unique_artists: number;
+  unique_albums: number;
+}
+
+export interface ListeningYearResponse {
+  year: number;
+  total_scrobbles: number;
+  unique_artists: number;
+  unique_albums: number;
+  unique_tracks: number;
+  top_artists: YearTopArtist[];
+  top_albums: YearTopAlbum[];
+  top_tracks: YearTopTrack[];
+  monthly: YearMonth[];
+}

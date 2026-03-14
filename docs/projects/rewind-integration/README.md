@@ -20,6 +20,12 @@ Rewind is a personal data aggregation service that syncs Last.fm, Strava, Plex, 
 - **Pagination**: `{ data: [...], pagination: { page, limit, total, total_pages } }`
 - **OpenAPI spec**: [pdugan20/rewind](https://github.com/pdugan20/rewind) `openapi.snapshot.json`
 
+## Rewind API Updates (2026-03-13)
+
+- **Date filtering on `/recent` endpoints**: All `/recent` endpoints now support `date`, `from`, and `to` query params for date-scoped queries (fixes [rewind#3](https://github.com/pdugan20/rewind/issues/3))
+- **Audiobook/holiday filtering on top endpoints**: `/top/*` and `/year/*` endpoints now respect `is_filtered` flag, excluding audiobooks and holiday music from rankings (fixes [rewind#2](https://github.com/pdugan20/rewind/issues/2))
+- **On-this-day endpoint**: `/v1/feed/on-this-day?month=M&day=D` returns cross-domain historical data for a given calendar date
+
 ## Task Tracker
 
 ### Phase 0: Foundation
@@ -202,7 +208,7 @@ Running-specific chart visualizations. These endpoints return pre-computed chart
 
 Annual summary pages for each domain, powered by Rewind's `/year/{year}` endpoints.
 
-- [ ] **6.1** Create `app/api/listening/year/[year]/route.ts` → `/v1/listening/year/{year}`
+- [x] **6.1** Create `app/api/listening/year/[year]/route.ts` → `/v1/listening/year/{year}`
 - [ ] **6.2** Create `app/listening/year/[year]/page.tsx` — annual listening summary
 - [ ] **6.3** Create `app/api/watching/year/[year]/route.ts` → `/v1/watching/year/{year}`
 - [ ] **6.4** Create `app/watching/year/[year]/page.tsx` — annual watching summary

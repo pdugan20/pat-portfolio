@@ -6,9 +6,15 @@ import type { CalendarResponse } from '@/lib/rewind/types';
 
 interface ListeningCalendarProps {
   year: number;
+  onDayClick?: (date: string) => void;
+  selectedDay?: string | null;
 }
 
-export default function ListeningCalendar({ year }: ListeningCalendarProps) {
+export default function ListeningCalendar({
+  year,
+  onDayClick,
+  selectedDay,
+}: ListeningCalendarProps) {
   const [data, setData] = useState<CalendarResponse | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -37,6 +43,8 @@ export default function ListeningCalendar({ year }: ListeningCalendarProps) {
         year={year}
         maxCount={data?.max_day?.count}
         loading={loading}
+        onDayClick={onDayClick}
+        selectedDay={selectedDay}
         formatTooltip={(date, count) => {
           const formatted = new Date(date + 'T00:00:00').toLocaleDateString(
             'en-US',
