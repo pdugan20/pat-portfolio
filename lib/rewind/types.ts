@@ -181,6 +181,18 @@ export interface YearMonth {
   unique_albums: number;
 }
 
+// Genre breakdown by period
+
+export interface GenrePeriod {
+  period: string; // "2025-01"
+  genres: Record<string, number>; // { "Rock": 245, "Hip-Hop": 112, "Other": 89 }
+  total: number;
+}
+
+export interface GenreResponse {
+  data: GenrePeriod[];
+}
+
 export interface ListeningYearResponse {
   year: number;
   total_scrobbles: number;

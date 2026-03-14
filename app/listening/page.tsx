@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import type { Metadata } from 'next';
 import { SITE_CONFIG } from '@/lib/constants';
 import Layout from '@/components/Layout';
@@ -19,7 +20,9 @@ export default function ListeningPage() {
           Listening
         </h1>
 
-        <ListeningContent />
+        <Suspense>
+          <ListeningContent />
+        </Suspense>
       </div>
     </Layout>
   );

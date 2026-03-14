@@ -4,10 +4,12 @@ import { useEffect, useState, useCallback } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import ListeningTrends from '@/components/listening/ListeningTrends';
+import GenreChart from '@/components/listening/GenreChart';
 import type {
   ListeningYearResponse,
   ListeningStats,
   StreaksResponse,
+  GenrePeriod,
 } from '@/lib/rewind/types';
 import { getImageUrl, getBlurDataURL } from '@/lib/rewind/images';
 import {
@@ -220,6 +222,7 @@ export default function ListeningContent() {
   );
   const [allTimeStats, setAllTimeStats] = useState<ListeningStats | null>(null);
   const [streaks, setStreaks] = useState<StreaksResponse | null>(null);
+  const [genreData, setGenreData] = useState<GenrePeriod[]>([]);
   const [loading, setLoading] = useState(true);
   const [monthLoading, setMonthLoading] = useState(false);
 
@@ -260,6 +263,28 @@ export default function ListeningContent() {
   useEffect(() => {
     fetchYearData(selectedYear ?? currentYear);
   }, [selectedYear, currentYear, fetchYearData]);
+
+  // Fetch genre data when a year is selected
+  useEffect(() => {
+    if (!selectedYear) {
+      setGenreData([]);
+      return;
+    }
+    async function fetchGenres() {
+      try {
+        const res = await fetch(
+          `/api/listening/genres?group_by=month&from=${selectedYear}-01-01&to=${selectedYear}-12-31&limit=8`
+        );
+        if (res.ok) {
+          const json = await res.json();
+          setGenreData(json.data ?? []);
+        }
+      } catch {
+        // silent
+      }
+    }
+    fetchGenres();
+  }, [selectedYear]);
 
   // Fetch month-scoped data when a month is selected
   useEffect(() => {
@@ -403,14 +428,29 @@ export default function ListeningContent() {
       {/* Chart */}
       <section className='mb-10'>
         {selectedYear ? (
-          trendPoints.length > 0 && (
-            <ListeningTrends
-              data={trendPoints}
+          genreData.length > 0 ? (
+            <GenreChart
+              data={genreData}
+              selectedMonth={selectedMonth}
+              scheme='blue'
               onBarClick={month => {
                 setSelectedMonth(prev => (prev === month ? null : month));
                 updateUrl(selectedYear, selectedMonth === month ? null : month);
               }}
             />
+          ) : (
+            trendPoints.length > 0 && (
+              <ListeningTrends
+                data={trendPoints}
+                onBarClick={month => {
+                  setSelectedMonth(prev => (prev === month ? null : month));
+                  updateUrl(
+                    selectedYear,
+                    selectedMonth === month ? null : month
+                  );
+                }}
+              />
+            )
           )
         ) : (
           <ListeningTrends />
