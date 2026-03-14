@@ -334,97 +334,88 @@ export default function ListeningContent() {
     yearOptions.push({ value: String(y), label: String(y) });
   }
 
-  // Build scoped stats
-  const scopedStats =
-    displayData && !isDisplayLoading
-      ? [
-          {
-            label: 'scrobbles',
-            value: displayData.total_scrobbles.toLocaleString(),
-          },
-          {
-            label: 'artists',
-            value: displayData.unique_artists.toLocaleString(),
-          },
-          {
-            label: 'albums',
-            value: displayData.unique_albums.toLocaleString(),
-          },
-          {
-            label: 'tracks',
-            value: displayData.unique_tracks.toLocaleString(),
-          },
-        ]
-      : [];
+  // Scrobble count for the sentence
+  const scrobbleCount =
+    !selectedYear && allTimeStats
+      ? allTimeStats.total_scrobbles.toLocaleString()
+      : displayData && !isDisplayLoading
+        ? displayData.total_scrobbles.toLocaleString()
+        : '...';
 
   return (
     <>
-      {/* Subtitle with all-time stats */}
-      <p className='text-text-secondary dark:text-text-dark-secondary mb-8 text-sm leading-relaxed'>
-        {allTimeStats
-          ? `${allTimeStats.total_scrobbles.toLocaleString()} scrobbles across ${allTimeStats.unique_artists.toLocaleString()} artists since 2012.`
-          : 'What I\u2019ve been listening to, tracked since 2012.'}
+      {/* Scrobble count sentence with inline dropdowns */}
+      <p className='text-text-secondary dark:text-text-dark-secondary mb-8 inline-flex flex-wrap items-baseline gap-1.5 text-sm leading-relaxed'>
+        <span className='text-text-primary dark:text-text-dark-primary font-semibold'>
+          {scrobbleCount}
+        </span>
+        <span>scrobbles in</span>
+        <Select
+          value={selectedYear ? String(selectedYear) : 'all'}
+          onValueChange={handleYearChange}
+        >
+          <SelectTrigger size='sm'>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            {yearOptions.map(opt => (
+              <SelectItem key={opt.value} value={opt.value}>
+                {opt.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        {selectedYear && (
+          <>
+            <span>showing</span>
+            <Select
+              value={selectedMonth ? String(selectedMonth) : 'all'}
+              onValueChange={(value: string | null) => {
+                const month =
+                  !value || value === 'all' ? null : parseInt(value);
+                setSelectedMonth(month);
+                if (!month) setMonthData(null);
+                updateUrl(selectedYear, month);
+              }}
+            >
+              <SelectTrigger size='sm'>
+                <SelectValue>
+                  {(value: string | null) => {
+                    if (!value || value === 'all') return 'all months';
+                    const idx = parseInt(value) - 1;
+                    return MONTH_LABELS[idx] ?? value;
+                  }}
+                </SelectValue>
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value='all'>all months</SelectItem>
+                {MONTH_LABELS.map((label, i) => (
+                  <SelectItem key={label} value={String(i + 1)}>
+                    {label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </>
+        )}
       </p>
-
-      {/* Controls bar: dropdowns + now playing */}
-      <div className='mb-10 flex items-center justify-between'>
-        <div className='flex items-center gap-3'>
-          <Select
-            value={selectedYear ? String(selectedYear) : 'all'}
-            onValueChange={handleYearChange}
-          >
-            <SelectTrigger size='sm'>
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {yearOptions.map(opt => (
-                <SelectItem key={opt.value} value={opt.value}>
-                  {opt.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          {selectedYear && (
-            <>
-              <span className='text-text-muted dark:text-text-dark-muted text-xs'>
-                /
-              </span>
-              <Select
-                value={selectedMonth ? String(selectedMonth) : 'all'}
-                onValueChange={handleMonthChange}
-              >
-                <SelectTrigger size='sm'>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value='all'>All Months</SelectItem>
-                  {MONTH_LABELS.map((label, i) => (
-                    <SelectItem key={label} value={String(i + 1)}>
-                      {label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </>
-          )}
-        </div>
-      </div>
 
       {/* Chart */}
       <section className='mb-10'>
         {selectedYear ? (
-          trendPoints.length > 0 && <ListeningTrends data={trendPoints} />
+          trendPoints.length > 0 && (
+            <ListeningTrends
+              data={trendPoints}
+              onBarClick={month => {
+                setSelectedMonth(prev => (prev === month ? null : month));
+                updateUrl(selectedYear, selectedMonth === month ? null : month);
+              }}
+            />
+          )
         ) : (
           <ListeningTrends />
         )}
       </section>
-
-      {/* Scoped stats bar */}
-      {scopedStats.length > 0 && (
-        <div className='mb-12'>
-          <StatBar stats={scopedStats} />
-        </div>
-      )}
 
       {/* Top Lists */}
       {displayData && !isDisplayLoading && (
