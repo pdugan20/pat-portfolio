@@ -40,6 +40,7 @@ interface StackedChartProps {
   height: number;
   colorMap: Map<string, string>;
   genreKeys: string[];
+  selectedMonth: number | null;
   onBarClick?: (month: number) => void;
 }
 
@@ -49,6 +50,7 @@ function StackedChart({
   height,
   colorMap,
   genreKeys,
+  selectedMonth,
   onBarClick,
 }: StackedChartProps) {
   const { resolvedTheme } = useTheme();
@@ -93,7 +95,7 @@ function StackedChart({
   });
 
   return (
-    <svg width={width} height={height}>
+    <svg width={width} height={height} style={{ overflow: 'visible' }}>
       {/* Month labels outside chart */}
       <Group left={0} top={stackMargin.top}>
         {data.map(d => {
@@ -198,11 +200,21 @@ function StackedChart({
                 );
               }
             }
-            return [...barsByPeriod.entries()].map(([period, rects]) => (
-              <g key={period} clipPath={`url(#clip-${period})`}>
-                {rects}
-              </g>
-            ));
+            return [...barsByPeriod.entries()].map(([period, rects]) => {
+              const rowMonth = parseInt(period.split('-')[1]);
+              const dimmed =
+                selectedMonth !== null && rowMonth !== selectedMonth;
+              return (
+                <g
+                  key={period}
+                  clipPath={`url(#clip-${period})`}
+                  opacity={dimmed ? 0.25 : 1}
+                  style={{ transition: 'opacity 0.2s ease' }}
+                >
+                  {rects}
+                </g>
+              );
+            });
           }}
         </BarStackHorizontal>
 
@@ -486,42 +498,21 @@ export default function GenreChart({
 
   if (data.length === 0) return null;
 
-  // Month detail: find the selected period and show individual bars
-  const selectedPeriod = selectedMonth
-    ? data.find(d => {
-        const m = parseInt(d.period.split('-')[1]);
-        return m === selectedMonth;
-      })
-    : null;
-
-  const chartHeight = selectedPeriod
-    ? Math.max(Object.keys(selectedPeriod.genres).length * 32 + 80, 200)
-    : 340;
-
   return (
     <div className='bg-bg-secondary dark:bg-bg-dark-secondary rounded-xl px-3 pt-5 pb-3'>
-      {/* <GenreLegend genreKeys={genreKeys} colorMap={colorMap} /> */}
-      <div style={{ height: chartHeight }}>
+      <div style={{ height: 340 }}>
         <ParentSize>
-          {({ width, height }) =>
-            selectedPeriod ? (
-              <DetailChart
-                genres={selectedPeriod.genres}
-                width={width}
-                height={height}
-                colorMap={colorMap}
-              />
-            ) : (
-              <StackedChart
-                data={data}
-                width={width}
-                height={height}
-                colorMap={colorMap}
-                genreKeys={genreKeys}
-                onBarClick={onBarClick}
-              />
-            )
-          }
+          {({ width, height }) => (
+            <StackedChart
+              data={data}
+              width={width}
+              height={height}
+              colorMap={colorMap}
+              genreKeys={genreKeys}
+              selectedMonth={selectedMonth}
+              onBarClick={onBarClick}
+            />
+          )}
         </ParentSize>
       </div>
     </div>

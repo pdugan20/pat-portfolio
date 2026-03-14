@@ -58,15 +58,17 @@ function StatBar({ stats }: { stats: { label: string; value: string }[] }) {
 
 function TopArtistsGrid({
   artists,
+  scopeLabel,
 }: {
   artists: ListeningYearResponse['top_artists'];
+  scopeLabel: string;
 }) {
   if (artists.length === 0) return null;
 
   return (
     <section className='mb-16'>
       <h2 className='text-text-muted dark:text-text-dark-muted mb-4 font-mono text-xs font-normal tracking-wider uppercase'>
-        Top Artists
+        Top Artists · {scopeLabel}
       </h2>
       <div className='space-y-0'>
         {artists.map((artist, i) => (
@@ -104,15 +106,17 @@ function TopArtistsGrid({
 
 function TopAlbumsGrid({
   albums,
+  scopeLabel,
 }: {
   albums: ListeningYearResponse['top_albums'];
+  scopeLabel: string;
 }) {
   if (albums.length === 0) return null;
 
   return (
     <section className='mb-16'>
       <h2 className='text-text-muted dark:text-text-dark-muted mb-4 font-mono text-xs font-normal tracking-wider uppercase'>
-        Top Albums
+        Top Albums · {scopeLabel}
       </h2>
       <div className='grid grid-cols-3 gap-2 sm:grid-cols-4 md:grid-cols-5'>
         {albums.map(album => (
@@ -157,15 +161,17 @@ function TopAlbumsGrid({
 
 function TopTracksList({
   tracks,
+  scopeLabel,
 }: {
   tracks: ListeningYearResponse['top_tracks'];
+  scopeLabel: string;
 }) {
   if (tracks.length === 0) return null;
 
   return (
     <section className='mb-16'>
       <h2 className='text-text-muted dark:text-text-dark-muted mb-4 font-mono text-xs font-normal tracking-wider uppercase'>
-        Top Tracks
+        Top Tracks · {scopeLabel}
       </h2>
       <div className='space-y-0'>
         {tracks.map((track, i) => (
@@ -413,7 +419,7 @@ export default function ListeningContent() {
                 </SelectValue>
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value='all'>all months</SelectItem>
+                <SelectItem value='all'>All months</SelectItem>
                 {MONTH_LABELS.map((label, i) => (
                   <SelectItem key={label} value={String(i + 1)}>
                     {label}
@@ -460,9 +466,18 @@ export default function ListeningContent() {
       {/* Top Lists */}
       {displayData && !isDisplayLoading && (
         <>
-          <TopArtistsGrid artists={displayData.top_artists} />
-          <TopAlbumsGrid albums={displayData.top_albums} />
-          <TopTracksList tracks={displayData.top_tracks} />
+          <TopArtistsGrid
+            artists={displayData.top_artists}
+            scopeLabel={scopeLabel}
+          />
+          <TopAlbumsGrid
+            albums={displayData.top_albums}
+            scopeLabel={scopeLabel}
+          />
+          <TopTracksList
+            tracks={displayData.top_tracks}
+            scopeLabel={scopeLabel}
+          />
         </>
       )}
     </>
