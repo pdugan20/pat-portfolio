@@ -103,38 +103,39 @@ Replace direct Last.fm API calls with Rewind API. Keep existing UI components, a
 
 ### Phase 2: /watching Page (Movies)
 
-New page displaying movie watching data. No TV shows initially.
+New page displaying movie watching data from Rewind. Rewind merges Plex (real-time watch events) and Letterboxd (ratings, reviews, rewatch flags) into a unified watch history with a `source` field (`plex` | `letterboxd` | `manual`). The portfolio consumes the merged data — no Letterboxd-specific code needed. TV show data exists in Rewind but is deferred to a future phase.
 
 #### 2A: Route Handlers
 
 - [x] **2.1** Create `app/api/watching/recent/route.ts` → `/v1/watching/recent` (5-min cache)
-- [ ] **2.2** Create `app/api/watching/stats/route.ts` → `/v1/watching/stats` (1-hour cache)
-- [ ] **2.3** Create `app/api/watching/movies/route.ts` → `/v1/watching/movies` (1-hour cache)
-- [ ] **2.4** Create `app/api/watching/ratings/route.ts` → `/v1/watching/ratings` (1-hour cache)
-- [ ] **2.5** Create `app/api/watching/stats/genres/route.ts` → `/v1/watching/stats/genres`
-- [ ] **2.6** Create `app/api/watching/stats/decades/route.ts` → `/v1/watching/stats/decades`
-- [ ] **2.7** Create `app/api/watching/stats/directors/route.ts` → `/v1/watching/stats/directors`
+- [x] **2.2** Create `app/api/watching/stats/route.ts` → `/v1/watching/stats` (1-hour cache). Returns: total_movies, total_watch_time_hours, movies_this_year, avg_per_month, top_genre, top_decade, top_director, total_shows, total_episodes_watched. Supports date filtering (`date`, `from`, `to`).
+- [x] **2.3** Create `app/api/watching/movies/route.ts` → `/v1/watching/movies` (1-hour cache). Supports server-side filtering: `genre`, `decade`, `director`, `year`. Sort: `watched_at` (default), `title`, `year`, `rating`. Paginated.
+- [x] **2.4** Create `app/api/watching/ratings/route.ts` → `/v1/watching/ratings` (1-hour cache). Returns movies with user ratings (from Letterboxd or manual). Sort: `rating` (default), `date`.
+- [x] **2.5** Create `app/api/watching/stats/genres/route.ts` → `/v1/watching/stats/genres` (1-hour cache). Returns: `{ name, count, percentage }[]`
+- [x] **2.6** Create `app/api/watching/stats/decades/route.ts` → `/v1/watching/stats/decades` (1-hour cache). Returns: `{ decade, count }[]`
+- [x] **2.7** Create `app/api/watching/stats/directors/route.ts` → `/v1/watching/stats/directors` (1-hour cache). Paginated, `limit` param (max 100, default 20).
+- [x] **2.8** Create `app/api/watching/reviews/route.ts` → `/v1/watching/reviews` (1-hour cache). Returns movies with non-empty review text (from Letterboxd). Paginated.
 
 #### 2B: Types
 
-- [ ] **2.8** Create `lib/watching/types.ts` — `Movie`, `WatchStats`, `GenreStat`, `DecadeStat`, `DirectorStat`, `WatchingCalendarDay`
+- [x] **2.9** Create `lib/watching/types.ts` — `Movie` (id, title, year, director, directors[], genres[], duration_min, rating, image, imdb_id, tmdb_id, tmdb_rating, tagline, summary), `WatchEvent` (movie, watched_at, source, user_rating, percent_complete, rewatch), `WatchStats`, `GenreStat` (name, count, percentage), `DecadeStat` (decade, count), `DirectorStat` (name, count), `RatingEntry` (movie, user_rating, watched_at, source), `ReviewEntry` (movie, user_rating, review, watched_at, source), `WatchingYearResponse`
 
 #### 2C: UI Components
 
-- [ ] **2.9** Create `components/watching/RecentWatches.tsx` — poster row of 5 most recent movies
-- [ ] **2.10** Create `components/watching/WatchingStats.tsx` — stats bar: total films, avg rating, hours watched, unique directors
-- [ ] **2.11** Create `components/watching/PosterGrid.tsx` — filterable/sortable movie poster grid with genre and decade filters
-- [ ] **2.12** Create `components/watching/RatingsHistogram.tsx` — bar chart of rating distribution (visx)
-- [ ] **2.13** Create `components/watching/GenreBreakdown.tsx` — horizontal bar chart of top genres
-- [ ] **2.14** Create `components/watching/DecadeBreakdown.tsx` — bar chart of films by release decade
-- [ ] **2.15** Create `components/watching/TopDirectors.tsx` — ranked list of most-watched directors
+- [x] **2.10** Create `components/watching/RecentWatches.tsx` — poster row of 5 most recent movies with title overlay on hover
+- [x] **2.11** Create `components/watching/PosterGrid.tsx` — filterable/sortable movie poster grid using server-side filtering (genre, decade, director params passed to API)
+- [x] **2.12** Create `components/watching/RatingsHistogram.tsx` — bar chart of rating distribution (visx), half-star scale (0.5–5.0)
+- [x] **2.13** Create `components/watching/GenreBreakdown.tsx` — horizontal bar chart of top genres with percentages
+- [x] **2.14** Create `components/watching/DecadeBreakdown.tsx` — bar chart of films by release decade
+- [x] **2.15** Create `components/watching/TopDirectors.tsx` — ranked list of most-watched directors with film count
+- [x] **2.16** Create `components/watching/ReviewsList.tsx` — list of reviewed movies with Letterboxd review text, rating, and movie metadata
 
 #### 2D: Page Assembly
 
-- [ ] **2.16** Create `app/watching/page.tsx` — server component with layout, metadata, server-side stats
-- [ ] **2.17** Create `app/watching/WatchingContent.tsx` — client component managing filters and data fetching
-- [ ] **2.18** Add `/watching` to `app/sitemap.ts`
-- [ ] **2.19** Manual testing — dark mode, loading states, poster loading, responsive layout
+- [x] **2.17** Create `app/watching/page.tsx` — server component with layout, metadata, server-side stats fetch
+- [x] **2.18** Create `app/watching/WatchingContent.tsx` — client component managing filters and data fetching. Stats bar inline (total films, hours watched, avg rating, top genre). Year/filter selectors follow listening page pattern.
+- [x] **2.19** Add `/watching` to `app/sitemap.ts`
+- [ ] **2.20** Manual testing — dark mode, loading states, poster loading, responsive layout
 
 ### Phase 3: /running Page
 
