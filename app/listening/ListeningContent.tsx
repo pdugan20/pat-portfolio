@@ -22,6 +22,10 @@ import {
 
 const FIRST_YEAR = 2012;
 
+function appleMusicSearch(query: string) {
+  return `https://music.apple.com/us/search?term=${encodeURIComponent(query)}`;
+}
+
 const MONTH_LABELS = [
   'January',
   'February',
@@ -91,9 +95,14 @@ function TopArtistsGrid({
                   : {})}
               />
             )}
-            <span className='text-text-primary dark:text-text-dark-primary min-w-0 truncate text-sm'>
+            <a
+              href={appleMusicSearch(artist.name)}
+              target='_blank'
+              rel='noopener noreferrer'
+              className='text-text-primary dark:text-text-dark-primary min-w-0 truncate text-sm hover:underline'
+            >
               {artist.name}
-            </span>
+            </a>
             <span className='text-text-muted dark:text-text-dark-muted ml-auto shrink-0 text-xs'>
               {artist.scrobbles.toLocaleString()} plays
             </span>
@@ -120,8 +129,11 @@ function TopAlbumsGrid({
       </h2>
       <div className='grid grid-cols-3 gap-2 sm:grid-cols-4 md:grid-cols-5'>
         {albums.map(album => (
-          <div
+          <a
             key={album.id}
+            href={appleMusicSearch(`${album.artist} ${album.name}`)}
+            target='_blank'
+            rel='noopener noreferrer'
             className='group relative aspect-square overflow-hidden rounded-lg'
             title={`${album.name} — ${album.artist}`}
           >
@@ -152,7 +164,7 @@ function TopAlbumsGrid({
                 <p className='truncate text-xs text-white/70'>{album.artist}</p>
               </div>
             </div>
-          </div>
+          </a>
         ))}
       </div>
     </section>
@@ -183,9 +195,14 @@ function TopTracksList({
               <span className='text-text-muted dark:text-text-dark-muted w-5 shrink-0 text-right text-sm'>
                 {i + 1}
               </span>
-              <span className='text-text-primary dark:text-text-dark-primary truncate text-sm'>
+              <a
+                href={appleMusicSearch(`${track.artist} ${track.name}`)}
+                target='_blank'
+                rel='noopener noreferrer'
+                className='text-text-primary dark:text-text-dark-primary truncate text-sm hover:underline'
+              >
                 {track.name}
-              </span>
+              </a>
               <span className='text-text-muted dark:text-text-dark-muted hidden shrink-0 text-xs sm:inline'>
                 {track.artist}
               </span>
