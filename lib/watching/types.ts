@@ -100,10 +100,6 @@ export interface WatchingYearResponse {
 
 // API response wrappers
 
-export interface WatchEventsResponse {
-  data: WatchEvent[];
-}
-
 export interface MoviesResponse {
   data: Movie[];
   pagination: PaginationMeta;

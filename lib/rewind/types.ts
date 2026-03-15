@@ -10,11 +10,6 @@ export interface PaginationMeta {
   total_pages: number;
 }
 
-export interface PaginatedResponse<T> {
-  data: T[];
-  pagination: PaginationMeta;
-}
-
 // Images
 
 export interface ImageAttachment {
@@ -51,17 +46,6 @@ export interface TrendsResponse {
 }
 
 // Feed
-
-export interface FeedItem {
-  id: string;
-  domain: string;
-  type: string;
-  title: string;
-  detail: string | null;
-  image: ImageAttachment | null;
-  timestamp: string;
-  url: string | null;
-}
 
 // Streaks (listening + running share this shape)
 
@@ -105,12 +89,6 @@ export interface ListeningStats {
   registered_date: string | null;
   years_tracking: number;
   scrobbles_per_day: number;
-}
-
-export interface NowPlayingTrack {
-  id: number;
-  name: string;
-  url: string | null;
 }
 
 export interface NowPlayingArtist {

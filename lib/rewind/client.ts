@@ -3,7 +3,7 @@
 
 const REWIND_BASE = 'https://api.rewind.rest/v1';
 
-export class RewindError extends Error {
+class RewindError extends Error {
   constructor(
     public path: string,
     public status: number,
