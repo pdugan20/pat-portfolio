@@ -484,7 +484,9 @@ export default function WatchingContent() {
           <div className='mb-6 flex flex-wrap items-center gap-3'>
             <Select
               value={genreFilter ?? 'all'}
-              onValueChange={v => setGenreFilter(v === 'all' ? null : v)}
+              onValueChange={(v: string | null) =>
+                setGenreFilter(!v || v === 'all' ? null : v)
+              }
             >
               <SelectTrigger size='sm'>
                 <SelectValue />
@@ -501,7 +503,9 @@ export default function WatchingContent() {
 
             <Select
               value={decadeFilter ?? 'all'}
-              onValueChange={v => setDecadeFilter(v === 'all' ? null : v)}
+              onValueChange={(v: string | null) =>
+                setDecadeFilter(!v || v === 'all' ? null : v)
+              }
             >
               <SelectTrigger size='sm'>
                 <SelectValue />
@@ -516,7 +520,12 @@ export default function WatchingContent() {
               </SelectContent>
             </Select>
 
-            <Select value={sort} onValueChange={v => setSort(v as SortOption)}>
+            <Select
+              value={sort}
+              onValueChange={(v: string | null) => {
+                if (v) setSort(v as SortOption);
+              }}
+            >
               <SelectTrigger size='sm'>
                 <SelectValue />
               </SelectTrigger>
